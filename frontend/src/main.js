@@ -7,4 +7,10 @@ import 'element-plus/dist/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-createApp(App).use(store).use(router).use(ElementPlus).use(VueAxios, axios).mount('#app')
+createApp(App)
+    .use(store)
+    .use(router)
+    .use(ElementPlus)
+    .use(VueAxios, axios)
+    .mount('#app')
+
