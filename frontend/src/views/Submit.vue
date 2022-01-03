@@ -5,6 +5,7 @@
     </div>
     <div class="box" ref="box">
       <div class="left">
+        <div v-if="result" v-html="result"></div>
         左侧的内容，左侧的内容，左侧的内容，左侧的内容
       </div>
 
@@ -13,7 +14,7 @@
       </div>
       <div class="right">
         <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
-          <MonacoEditor @value="value" :rightWidth="rightWidth"/>
+          <MonacoEditor @data="data" :rightWidth="rightWidth" />
           <el-form-item prop="input">
             <el-col :span="12">
               <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
@@ -22,7 +23,6 @@
           </el-form-item>
           <!-- <el-form-item style="display: inline;"> -->
           <!-- </el-form-item> -->
-          <el-alert v-if="result" title="result" type="success" effect="dark" v-html="result"></el-alert>
         </el-form>
       </div>
     </div>
@@ -75,10 +75,10 @@ export default {
         console.log(error)
       }
     }
-    const value = (c) => {
+    const data = (c) => {
       code = c
     }
-	const rightWidth = ref('')
+    const rightWidth = ref('')
     const dragControllerDiv = () => {
       var resize = document.getElementsByClassName('resize')
       var left = document.getElementsByClassName('left')
@@ -131,8 +131,8 @@ export default {
       ruleFormsss,
       result,
       isLoading,
-      value,
-	  rightWidth,
+      data,
+      rightWidth,
       dragControllerDiv
     }
   }
