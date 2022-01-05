@@ -1,12 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Submit from '../views/Submit.vue'
+import Home from '../views/Main.vue'
+
 
 const routes = [
   {
     path: '/',
-    name: 'Submit',
-    component: Submit
+    name: 'Home',
+    redirect:'/hdoj',
   },
+  {
+    path: '/hdoj',
+    name: 'hdoj',
+    redirect: '/hdoj/bank',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Main.vue'),
+    children: [{
+        path: '/hdoj/bank',
+        name:'Bank',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/Bank.vue'),
+      },
+      {
+        path: '/hdoj/bank/q/:id',
+        name:'Question',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/Question.vue'),
+      },
+      {
+        path: '/hdoj/material',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/Material.vue'),
+      },
+      {
+        path: '/hdoj/myInfo',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/MyInfo.vue'),
+      },
+    ]
+  }
 ]
 
 const router = createRouter({

@@ -1,17 +1,5 @@
 <template>
-  <div class="page">
-    <div class="header">
-
-    </div>
     <div class="box" ref="box">
-      <div class="left">
-        <div v-if="result" v-html="result"></div>
-        左侧的内容，左侧的内容，左侧的内容，左侧的内容
-      </div>
-
-      <div class="resize">
-
-      </div>
       <div class="right">
         <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
           <MonacoEditor @data="data" :rightWidth="rightWidth" />
@@ -25,10 +13,6 @@
           <!-- </el-form-item> -->
         </el-form>
       </div>
-    </div>
-    <div class="footer">
-
-    </div>
   </div>
 </template>
 
@@ -164,12 +148,7 @@ export default {
   display: inline-block;
 }
 /*左侧div样式*/
-.left {
-  width: calc(45% - 10px); /*左侧初始化宽度*/
-  height: 100%;
-  /* background: #ffffff; */ /*影响代码提示 */
-  float: left;
-}
+
 /*拖拽区div样式*/
 .resize {
   cursor: col-resize;
