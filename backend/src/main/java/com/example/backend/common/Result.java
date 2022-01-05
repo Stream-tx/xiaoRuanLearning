@@ -9,8 +9,8 @@ public class Result {
     private String message;
     private Object data;
 
-    public static Result success(Object data){
-        return success(200, "Success !",data);
+    public static Result success(Object data) {
+        return success(200, "Success !", data);
     }
 
     public static Result success(int code, String message, Object data) {
@@ -21,8 +21,8 @@ public class Result {
         return result;
     }
 
-    public static Result fail(String message){
-        return fail(400, message,null);
+    public static Result fail(String message) {
+        return fail(400, message, null);
     }
 
     public static Result fail(int code, String message, Object data) {

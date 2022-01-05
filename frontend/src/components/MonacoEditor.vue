@@ -15,7 +15,7 @@ export default {
   },
   setup (props, ctx) {
     const data = ref('')
-	const container = ref(null)
+    const container = ref(null)
     onMounted(() => {
       var editor = monaco.editor.create(container.value, {
         language: 'java',
@@ -41,7 +41,7 @@ export default {
         const value = editor.getValue() //使value和其值保持一致
         if (value !== data.value) {
           data.value = value
-		  ctx.emit("data", data.value)
+          ctx.emit("data", data.value)
           // this.props.getValue && this.props.getValue(value)
         }
       })
@@ -55,7 +55,7 @@ export default {
     })
     return {
       data,
-	  container
+      container
     }
   },
 }
