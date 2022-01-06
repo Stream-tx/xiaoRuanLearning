@@ -2,6 +2,7 @@ package com.example.backend.service.impl;
 
 import cn.hutool.core.map.MapUtil;
 import com.example.backend.entity.Code;
+import com.example.backend.entity.Question;
 import com.example.backend.entity.User;
 import com.example.backend.repository.CodeRepository;
 import com.example.backend.repository.QuestionRepository;
@@ -12,10 +13,7 @@ import com.example.backend.util.MyBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -49,12 +47,16 @@ public class UserServiceImpl implements UserService {
         String submissionList = user.getSubmissionList();
         String[] submissionQuestions = submissionList.split(",");
         List<Code> submissionCode = new ArrayList<>();
+        List<String> questionNames = new ArrayList<>();
         for (String pQuestion : submissionQuestions) {
             long pid = Long.parseLong(pQuestion);
+            questionRepository.findById(pid).ifPresent(question -> questionNames.add(question.getName()));
             codeRepository.findById(pid).ifPresent(submissionCode::add);
         }
+
         return MapUtil.builder()
                 .put("submissionCode", submissionCode)
+                .put("questionNames",questionNames)
                 .map();
     }
 
