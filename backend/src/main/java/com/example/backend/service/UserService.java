@@ -13,4 +13,6 @@ public interface UserService {
     void saveUser(User user);
 
     Map<Object, Object> getUserQuestions(User user);
+
+    void updateUser(Long id, User user);
 }

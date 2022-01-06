@@ -8,6 +8,7 @@ import com.example.backend.entity.User;
 import com.example.backend.service.QuestionService;
 import com.example.backend.service.UserService;
 import com.example.backend.util.MD5Utils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,6 +62,15 @@ public class UserController {
             return Result.fail("The user doesn't exist!");
         Map<Object, Object> map = userService.getUserQuestions(user);
         return Result.success(map);
+    }
+
+    @PostMapping("updateInfo")
+    public Result update(@Validated @RequestBody User user,HttpSession session){
+        User user1 = (User) session.getAttribute("user");
+        if(user1 == null)
+            return Result.fail("The user doesn't exist!");
+        userService.updateUser(user1.getUserId(),user);
+        return Result.success(null);
     }
 
 }

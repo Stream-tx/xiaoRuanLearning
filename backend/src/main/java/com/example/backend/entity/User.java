@@ -43,7 +43,7 @@ public class User implements Serializable {
         this.email = email;
         this.university = "";
         try {
-            String path = Objects.requireNonNull(User.class.getClassLoader().getResource("")).getPath() + "photo/avatar.jpg";
+            String path = Objects.requireNonNull(User.class.getClassLoader().getResource("")).getPath().split("target")[0] + "src/main/resources/photo/avatar.jpg";
             this.avatar = getByte(new File(path));
         } catch (Exception e) {
             e.printStackTrace();

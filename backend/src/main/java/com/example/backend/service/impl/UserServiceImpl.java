@@ -8,11 +8,14 @@ import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
 import com.example.backend.util.MD5Utils;
+import com.example.backend.util.MyBeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -53,5 +56,13 @@ public class UserServiceImpl implements UserService {
         return MapUtil.builder()
                 .put("submissionCode", submissionCode)
                 .map();
+    }
+
+    @Override
+    public void updateUser(Long id, User user) {
+        User u = userRepository.findById(id).orElse(null);
+        assert u != null;
+        BeanUtils.copyProperties(user,u, MyBeanUtils.getNullPropertyNames(user));
+        userRepository.save(u);
     }
 }
