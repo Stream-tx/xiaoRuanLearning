@@ -1,17 +1,29 @@
 package com.example.backend.service.impl;
 
+import cn.hutool.core.map.MapUtil;
+import com.example.backend.entity.Code;
 import com.example.backend.entity.User;
+import com.example.backend.repository.CodeRepository;
+import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.UserService;
 import com.example.backend.util.MD5Utils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final QuestionRepository questionRepository;
+    private final CodeRepository codeRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, QuestionRepository questionRepository, CodeRepository codeRepository) {
         this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
+        this.codeRepository = codeRepository;
     }
 
     @Override
@@ -25,7 +37,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public Map<Object, Object> getUserQuestions(User user) {
+        String submissionList = user.getSubmissionList();
+        String[] submissionQuestions = submissionList.split(",");
+        List<Code> submissionCode = new ArrayList<>();
+        for (String pQuestion : submissionQuestions) {
+            long pid = Long.parseLong(pQuestion);
+            codeRepository.findById(pid).ifPresent(submissionCode::add);
+        }
+        return MapUtil.builder()
+                .put("submissionCode", submissionCode)
+                .map();
     }
 }

@@ -2,10 +2,7 @@ package com.example.backend.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "sample")
@@ -13,7 +10,7 @@ import javax.persistence.Table;
 public class Sample {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sampleId;
     private Long questionId;
     private String input;

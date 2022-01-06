@@ -1,10 +1,7 @@
 package com.example.backend.entity;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
@@ -21,7 +18,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     @NotBlank(message = "The username can't be blank")
     private String username;
@@ -34,7 +31,7 @@ public class User implements Serializable {
     private byte[] avatar;
     private String profile;
     private String submissionList;
-    private String passList;
+    private Integer age;
 
     public User() {
 
@@ -53,7 +50,6 @@ public class User implements Serializable {
         }
         profile = "";
         submissionList = "";
-        passList = "";
     }
 
     public byte[] getByte(File file) throws Exception {
@@ -140,18 +136,18 @@ public class User implements Serializable {
         this.submissionList = submissionList;
     }
 
-    public String getPassList() {
-        return passList;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setPassList(String passList) {
-        this.passList = passList;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + userId +
+                "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
@@ -159,7 +155,7 @@ public class User implements Serializable {
                 ", avatar=" + Arrays.toString(avatar) +
                 ", profile='" + profile + '\'' +
                 ", submissionList='" + submissionList + '\'' +
-                ", passList='" + passList + '\'' +
+                ", age=" + age +
                 '}';
     }
 }

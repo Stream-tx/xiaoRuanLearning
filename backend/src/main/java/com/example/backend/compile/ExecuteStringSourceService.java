@@ -1,29 +1,33 @@
 package com.example.backend.compile;
 
+import com.example.backend.entity.Question;
+import com.example.backend.service.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.util.List;
+
 import java.util.concurrent.*;
 
 @Service
 public class ExecuteStringSourceService {
-    /* 客户端发来的程序的运行时间限制 */
+
     private static final int RUN_TIME_LIMITED = 15;
 
-    /* N_THREAD = N_CPU + 1，因为是 CPU 密集型的操作 */
     private static final int N_THREAD = 9;
 
-    /* 负责执行客户端代码的线程池，根据《Java 开发手册》不可用 Executor 创建，有 OOM 的可能 */
     private static final ExecutorService pool = new ThreadPoolExecutor(N_THREAD, N_THREAD,
             0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(N_THREAD));
 
     private static final String WAIT_WARNING = "服务器忙，请稍后提交";
     private static final String NO_OUTPUT = "Nothing.";
 
+
     public String execute(String source, String systemIn) {
+        source = handle(source,systemIn);
         DiagnosticCollector<JavaFileObject> compileCollector = new DiagnosticCollector<>(); // 编译结果收集器
 
         // 编译源代码
@@ -44,13 +48,8 @@ public class ExecuteStringSourceService {
         }
 
         // 运行字节码的main方法
-        Callable<String> runTask = new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return JavaClassExecutor.execute(classBytes, systemIn);
-            }
-        };
-        Future<String> res = null;
+        Callable<String> runTask = () -> JavaClassExecutor.execute(classBytes, systemIn);
+        Future<String> res;
         try {
             res = pool.submit(runTask);
         } catch (RejectedExecutionException e) {
@@ -71,5 +70,15 @@ public class ExecuteStringSourceService {
             res.cancel(true);
         }
         return runResult != null ? runResult.replaceAll(System.lineSeparator(), "<br />") : NO_OUTPUT;
+    }
+
+    public String handle(String source, String input) {
+        input = input.replace("{\"", "new String[]{\"");
+        int index = source.indexOf('{');
+        source = source.substring(0, index + 1) + "    public static void main(String[] args) {\n" +
+                "        System.out.println(run(" + input + "));\n" +
+                "    }" + source.substring(index + 1);
+        return source;
+
     }
 }
