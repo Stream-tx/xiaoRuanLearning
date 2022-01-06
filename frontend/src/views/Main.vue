@@ -13,6 +13,7 @@
       <el-menu-item index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
       <el-menu-item index="4" style='position: absolute;right:100px'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
     </el-menu>
+
     <router-view/>
   </div>
 </template>
