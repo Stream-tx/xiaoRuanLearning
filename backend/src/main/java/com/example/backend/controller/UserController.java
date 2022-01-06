@@ -70,6 +70,7 @@ public class UserController {
         if(user1 == null)
             return Result.fail("The user doesn't exist!");
         userService.updateUser(user1.getUserId(),user);
+        session.setAttribute("user",userService.findUserById(user1.getUserId()));
         return Result.success(null);
     }
 
