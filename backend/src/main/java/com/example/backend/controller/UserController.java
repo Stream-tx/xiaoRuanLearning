@@ -36,9 +36,10 @@ public class UserController {
         String username = registerDto.getUsername();
         String email = registerDto.getEmail();
         String password = MD5Utils.code(registerDto.getPassword());
+        String university = registerDto.getUniversity();
         User user = userService.findUserByUsername(username);
         if (user == null) {
-            userService.saveUser(new User(username, password, email));
+            userService.saveUser(new User(username, password, email,university));
             return Result.success(null);
         } else
             return Result.fail("The username already exists!");

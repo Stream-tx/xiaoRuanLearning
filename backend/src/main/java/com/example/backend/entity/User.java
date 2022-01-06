@@ -37,11 +37,11 @@ public class User implements Serializable {
 
     }
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, String university) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.university = "";
+        this.university = university;
         try {
             String path = Objects.requireNonNull(User.class.getClassLoader().getResource("")).getPath().split("target")[0] + "src/main/resources/photo/avatar.jpg";
             this.avatar = getByte(new File(path));

@@ -16,4 +16,7 @@ public class RegisterDto {
     @NotBlank(message = "The email can't be blank")
     @Email(message = "The format of email isn't correct")
     private String email;
+
+    @NotBlank(message = "The university can't be blank")
+    private String university;
 }
