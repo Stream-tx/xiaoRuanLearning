@@ -14,7 +14,7 @@ public class Question {
 
   @Id
   @GeneratedValue
-  private Long qid;
+  private Long questionId;
   private String name;
   private String description;
   private String labels;

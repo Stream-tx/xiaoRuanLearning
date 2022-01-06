@@ -10,11 +10,16 @@ import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long userId;
@@ -41,7 +46,8 @@ public class User {
         this.email = email;
         this.university = "";
         try {
-            this.avatar = getByte(new File("../resource/avatar.jpg"));
+            String path = Objects.requireNonNull(User.class.getClassLoader().getResource("")).getPath() + "photo/avatar.jpg";
+            this.avatar = getByte(new File(path));
         } catch (Exception e) {
             e.printStackTrace();
         }
