@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@RequestMapping("questions")
 public class QuestionController {
 
     private final ExecuteStringSourceService executeStringSourceService;
@@ -39,5 +40,11 @@ public class QuestionController {
                 return Result.success(false);
         }
         return Result.success(true);
+    }
+
+    @PostMapping("listQuestions")
+    public Result listQuestions(){
+        List<Question> questions = questionService.listQuestions();
+        return Result.success(questions);
     }
 }

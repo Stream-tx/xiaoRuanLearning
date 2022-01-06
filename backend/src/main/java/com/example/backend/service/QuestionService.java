@@ -10,4 +10,6 @@ public interface QuestionService {
     List<Sample> listTestSamples(Long questionId);
 
     Question findQuestion(Long questionId);
+
+    List<Question> listQuestions();
 }

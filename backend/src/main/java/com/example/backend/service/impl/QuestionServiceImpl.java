@@ -29,4 +29,9 @@ public class QuestionServiceImpl implements QuestionService {
     public Question findQuestion(Long questionId) {
         return questionRepository.findById(questionId).orElse(null);
     }
+
+    @Override
+    public List<Question> listQuestions() {
+        return questionRepository.findAll();
+    }
 }
