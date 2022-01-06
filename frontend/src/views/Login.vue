@@ -29,7 +29,7 @@
 
 <script>
 import axios from "axios";
-
+import Register from "@/views/Register";
 export default {
   name: "Login",
   data(){
@@ -102,6 +102,7 @@ export default {
       });
     },
   },
+  components: { Register},
 }
 </script>
 
