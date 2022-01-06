@@ -47,19 +47,19 @@ public class UserServiceImpl implements UserService {
         String submissionList = user.getSubmissionList();
         String[] submissionQuestions = submissionList.split(",");
         List<Code> submissionCode = new ArrayList<>();
-        List<String> questionNames = new ArrayList<>();
+        List<Question> questionList = new ArrayList<>();
         for (String pQuestion : submissionQuestions) {
             long cid = Long.parseLong(pQuestion);
             Code code = codeRepository.findById(cid).orElse(null);
             if (code != null) {
                 submissionCode.add(code);
-                questionRepository.findById(code.getQuestionId()).ifPresent(question -> questionNames.add(question.getName()));
+                questionRepository.findById(code.getQuestionId()).ifPresent(questionList::add);
             }
         }
 
         return MapUtil.builder()
                 .put("submissionCode", submissionCode)
-                .put("questionNames", questionNames)
+                .put("questionList", questionList)
                 .put("user", user)
                 .map();
     }

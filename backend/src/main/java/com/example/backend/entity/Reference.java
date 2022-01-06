@@ -13,6 +13,7 @@ public class Reference {
     private Long referenceId;
     private String name;
     private String introduction;
+    private String url;
 
 
 }
