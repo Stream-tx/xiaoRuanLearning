@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         for (String pQuestion : submissionQuestions) {
             long cid = Long.parseLong(pQuestion);
             Code code = codeRepository.findById(cid).orElse(null);
-            if(code != null) {
+            if (code != null) {
                 submissionCode.add(code);
                 questionRepository.findById(code.getQuestionId()).ifPresent(question -> questionNames.add(question.getName()));
             }
@@ -59,7 +59,8 @@ public class UserServiceImpl implements UserService {
 
         return MapUtil.builder()
                 .put("submissionCode", submissionCode)
-                .put("questionNames",questionNames)
+                .put("questionNames", questionNames)
+                .put("user", user)
                 .map();
     }
 
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
         User u = userRepository.findById(id).orElse(null);
         assert u != null;
         user.setPassword(MD5Utils.code(user.getPassword()));
-        BeanUtils.copyProperties(user,u, MyBeanUtils.getNullPropertyNames(user));
+        BeanUtils.copyProperties(user, u, MyBeanUtils.getNullPropertyNames(user));
         userRepository.save(u);
     }
 
