@@ -1,0 +1,29 @@
+package com.example.backend.controller;
+
+
+import com.example.backend.common.Result;
+import com.example.backend.entity.Solution;
+import com.example.backend.service.SolutionService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("solution")
+public class SolutionController {
+
+    private final SolutionService solutionService;
+
+    public SolutionController(SolutionService solutionService) {
+        this.solutionService = solutionService;
+    }
+
+    @PostMapping("listSolutions")
+    public Result listSolutions(@RequestParam Long questionId){
+        List<Solution> solutions = solutionService.listSolutions(questionId);
+        return Result.success(solutions);
+    }
+}
