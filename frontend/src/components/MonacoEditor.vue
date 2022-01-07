@@ -6,6 +6,7 @@
 import * as monaco from "monaco-editor"
 import { ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
+import axios from "axios";
 
 export default {
   props: {
@@ -16,6 +17,7 @@ export default {
   setup (props, ctx) {
     const data = ref('')
     const container = ref(null)
+    const myArgs=ref('');
     onMounted(() => {
       var editor = monaco.editor.create(container.value, {
         language: 'java',
@@ -32,8 +34,25 @@ export default {
         autoIndent: false, //自动布局
         wordWrap: 'on',
       })
+
+
+      /*axios.post("http://localhost:8081/question/getQuestion?questionId=" + window.localStorage.getItem("questionId"))
+          .then(res => {
+            console.log("res.data", res.data);
+            myArgs=res.data.data.argsType;
+          })
+          .catch(err => {
+            console.log(err);
+          })*/
+      /*if(myArgs!=null){
+        myArgs=myArgs.split(",")
+        if(myArgs.length==2)
+          myArgs=myArgs[0]+" arg1,"+myArgs[1]+" arg2";
+        else
+          myArgs=myArgs[0]+" arg1";
+      }*/
       editor.setValue("public class Run {\n"
-        + "    public String run(String s) {\n"
+        + "    public String run() {\n"
         + "        \n"
         + "    }\n"
         + "}")
@@ -52,8 +71,17 @@ export default {
           document.getElementById('container').style.width = val
         }
       )
+      watch(
+          () => props.myArgs,
+          (val,pervVal)=>{
+            myArgs.value=val;
+            console.log(myArgs.value)
+          }
+      )
     })
+
     return {
+      myArgs,
       data,
       container
     }

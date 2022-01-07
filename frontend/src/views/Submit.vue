@@ -2,7 +2,7 @@
     <div class="box" ref="box">
       <div class="right">
         <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
-          <MonacoEditor @data="data" :rightWidth="rightWidth" />
+          <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
           <el-form-item prop="input">
             <el-col :span="12">
               <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
@@ -22,6 +22,7 @@ import { reactive, ref, unref } from '@vue/reactivity'
 import axios from 'axios'
 import MonacoEditor from '../components/MonacoEditor'
 import { onMounted } from 'vue'
+import {watch} from "@vue/runtime-core";
 export default {
   name: "Submit",
   components: {
@@ -32,6 +33,15 @@ export default {
     const ruleForm = reactive({
       input: ''
     })
+    const myArgs=ref('');
+    watch(
+        () => props.myArgs,
+        (val,pervVal)=>{
+          myArgs.value=val;
+          console.log(myArgs.value)
+        }
+    )
+    console.log(myArgs.value)
     const isLoading = ref(false)
     const result = ref('')
     let code = {}
@@ -112,6 +122,7 @@ export default {
       dragControllerDiv()
     })
     return {
+      myArgs,
       ruleForm,
       submit,
       ruleFormsss,

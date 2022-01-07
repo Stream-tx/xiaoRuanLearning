@@ -64,7 +64,7 @@
           style='position:absolute;right:52%;top:9%;!important;'>上传题解</el-button>
       </el-aside>
       <el-main>
-        <Submit @code="handleCode" />
+        <Submit :myArgs="this.myArgs" @code="handleCode" />
       </el-main>
     </el-container>
     <el-divider></el-divider>
@@ -109,23 +109,40 @@
   </el-container>
 
   <el-dialog title="上传题解" v-model="dialogNewVisible">
-    <el-form :model="form" :label-position="right">
-      <el-form-item label="标题:" style="padding-left: 20%">
-        <el-input v-model="form.title" autocomplete="off" style="width: 50%;alignment: left"></el-input>
-      </el-form-item>
-      <el-form-item label="语言:" style="padding-left: 20%">
-        <el-select v-model="form.language" placeholder="请选择编程语言">
+    <el-card style="width:650px;margin:auto;">
+      <el-card-content style="text-align: left">
+        <div>标题：<el-input
+            v-model="this.form.title"
+            placeholder="请输入标题"
+            maxlength="10"
+            show-word-limit
+            type="text"
+        />
+        </div>
+        <div>语言：</div><div><el-select v-model="form.language" placeholder="请选择您使用的编程语言">
           <el-option label="Java" value="Java"></el-option>
           <el-option label="C++/C" value="C++/C"></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="思路:" style="padding-left: 20%">
-        <el-input v-model="form.content" autocomplete="off" style="width: 50%;alignment: left"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
+        </div>
+        <div>思路：<el-input
+            v-model="this.form.content"
+            placeholder="请输入题解的思路"
+            autosize
+            type="textarea"
+        />
+        </div>
+        <div>代码：<el-input
+            v-model="this.form.code"
+            placeholder="请输入题解代码"
+            autosize
+            type="textarea"
+        />
+        </div>
+      </el-card-content>
+    </el-card>
+    <div slot="footer" class="dialog-footer" style="padding-top: 40px">
       <el-button @click="dialogNewVisible = false">取 消</el-button>
-      <el-button type="primary" @click="newSolution()">确 定</el-button>
+      <el-button type="primary" @click="newSolution()">确 定 上 传</el-button>
     </div>
   </el-dialog>
 </template>
@@ -136,6 +153,7 @@ import Submit from "../views/Submit.vue"
 export default {
   data () {
     return {
+      myArgs:'',
       form:{},
       current:'',
       id:'',
@@ -237,6 +255,7 @@ export default {
       this.code=c;
     },
     questionquery() {
+      console.log("this.id", this.id)
       this.$http.post("http://localhost:8081/question/getQuestion?questionId=" + this.id)
           .then(res => {
             this.questionname=res.data.data.name;
@@ -254,11 +273,12 @@ export default {
           })
     }
   },
-  mounted () {
-    this.id = this.$route.params.id
-    this.$refs.nowPage.$el.innerHTML = this.id
-    this.$refs.maxPage.$el.innerHTML = 200
-    this.loaddata();
+  mounted() {
+    this.id=this.$route.params.id;
+    this.$refs.nowPage.$el.innerHTML=this.id;
+    this.$refs.maxPage.$el.innerHTML=200;
+    window.localStorage.setItem("currentQuestionId",this.id);
+    // this.loaddata();
     this.questionquery();
     this.samplequery();
   }
