@@ -16,6 +16,7 @@ export default {
     const data = ref('')
     const container = ref(null)
     const myArgs = ref('')
+    const content = ref('')
     onMounted(() => {
       var editor = monaco.editor.create(container.value, {
         language: 'java',
@@ -33,22 +34,13 @@ export default {
         wordWrap: 'on',
       })
 
-
-      /*axios.post("http://localhost:8081/question/getQuestion?questionId=" + window.localStorage.getItem("questionId"))
-          .then(res => {
-            console.log("res.data", res.data);
-            myArgs=res.data.data.argsType;
-          })
-          .catch(err => {
-            console.log(err);
-          })*/
       watch(
         () => props.myArgs,
         (val, pervVal) => {
           myArgs.value = val
           let type = myArgs.value
-          let args = ''
-          let returnT = type[0]
+          var args = ''
+          var returnT = type[0]
           if (type != null) {
             let t = type[1].split(",")
             if (t.length == 2)
@@ -56,24 +48,21 @@ export default {
             else
               args = t[0] + " arg1"
           }
-          let content = "public class Run {\n"
+          content.value = "public class Run {\n"
             + "    public " + returnT + " run(" + args + ") {\n"
             + "        \n"
             + "    }\n"
             + "}"
           axios.post("http://localhost:8081/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
             .then(res => {
-              if (res != null) {
-                let tmp = res.data.data.content
-                if (tmp.length > 10) {
-                  content = tmp
-                }
+              if (res.data.data.content != '') {
+                content.value = res.data.data.content
+                editor.setValue(content.value)
               }
             })
-          editor.setValue(content)
+          editor.setValue(content.value)
         }
       )
-
       editor.onDidChangeModelContent(e => {
         const value = editor.getValue() //使value和其值保持一致
         if (value !== data.value) {
@@ -87,7 +76,8 @@ export default {
     return {
       myArgs,
       data,
-      container
+      container,
+      content
     }
   },
 }

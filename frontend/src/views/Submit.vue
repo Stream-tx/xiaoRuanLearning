@@ -4,12 +4,9 @@
       <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
         <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
         <el-form-item prop="input">
-          <el-col :span="12">
-            <!--<el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>-->
-         </el-col>
-         <el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>
-       </el-form-item>
-       <!-- <el-form-item style="display: inline;"> -->
+          <el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>
+        </el-form-item>
+        <!-- <el-form-item style="display: inline;"> -->
         <!-- </el-form-item> -->
       </el-form>
     </div>
@@ -28,7 +25,7 @@ export default {
   components: {
     MonacoEditor
   },
-  props:['myArgs'],
+  props: ['myArgs'],
   setup (props, context) {
     const ruleFormsss = ref(null)
     const ruleForm = reactive({
@@ -54,10 +51,10 @@ export default {
         //}
         //console.log(param)
         axios.post(
-          "http://localhost:8081/questionCompile", code
+          "http://localhost:8081/question/compile", { "code": code }
         ).then(res => {
           console.log(res)
-          alert(res)
+          alert(res.data.data)
           result.value = res.data.data
           isLoading.value = false
         })
@@ -114,7 +111,7 @@ export default {
       }
     }
     watchEffect(() => {
-	  myArgs.value = props.myArgs
+      myArgs.value = props.myArgs
     })
     onMounted(() => {
       dragControllerDiv()
