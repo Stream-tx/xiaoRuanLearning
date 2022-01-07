@@ -19,7 +19,7 @@ public class SolutionController {
     }
 
     @PostMapping("listSolutions")
-    public Result listSolutions(@RequestBody Long questionId) {
+    public Result listSolutions(@RequestParam Long questionId) {
         List<Solution> solutions = solutionService.listSolutions(questionId);
         return Result.success(solutions);
     }

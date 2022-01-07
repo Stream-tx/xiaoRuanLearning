@@ -66,7 +66,7 @@
                 :data="tables.slice((this.currentPage - 1) * this.pageSize,this.currentPage * this.pageSize)"
                 style="width: 100%;padding-left: 25%"
                 :row-class-name="tableRowClassName"
-                max-height="500px">
+                max-height="530px">
               <el-table-column label="id" align="center" prop="id" v-if="false" />
               <el-table-column label="labels" align="center" prop="labels" v-if="false"/>
               <el-table-column
@@ -208,11 +208,10 @@ export default {
         solution:'7',
         passingRate:'50%',
         difficulty:'简单',
-        labels:[{
-            value:"迪杰斯特拉"
-          }, {
-            value:"人工智能"
-          }]
+        labels:[
+            "迪杰斯特拉",
+            "人工智能"
+          ]
       },{
         id:'1',
         state:'在做了ing',
@@ -220,11 +219,10 @@ export default {
         solution:'7',
         passingRate:'50%',
         difficulty:'中等',
-        labels:[{
-          value:"迪杰斯特拉"
-        }, {
-          value:"最短路径"
-        }]
+        labels:[
+          "迪杰斯特拉",
+          "最短路径"
+        ]
       },{
         id:'1',
         state:'在做了ing',
@@ -232,9 +230,9 @@ export default {
         solution:'1',
         passingRate:'50%',
         difficulty:'困难',
-        labels:[{
-          value:"迪杰斯特拉"
-        }]
+        labels:[
+          "迪杰斯特拉",
+        ]
       },{
         id:'9',
         state:'已解答√',
@@ -242,11 +240,10 @@ export default {
         solution:'1',
         passingRate:'60%',
         difficulty:'中等',
-        labels:[{
-          value:"数学分析"
-        }, {
-          value:"概率统计"
-        }]
+        labels:[
+            "数学分析",
+            "概率统计"
+        ]
       },],
       qTag:'',
       qTagOptions:[
@@ -346,7 +343,7 @@ export default {
             case '标签':
               let t=0;
               for(let j=0;j<row.labels.length;j++) {
-                if (row.labels[j].value == this.tags[i].text){
+                if (row.labels[j] == this.tags[i].text){
                   t++;
                 }
               }
@@ -359,6 +356,7 @@ export default {
       return true;
     },
     openDetails(row){
+      window.localStorage.setItem("questionId",row.id);
       this.$router.push("/hdoj/bank/q/"+row.id);
     },
     handleClose(tag) {
@@ -414,6 +412,73 @@ export default {
       else
         return 'warning-row';
     },
+  },
+  mounted() {
+    this.$http.post("http://localhost:8081/question/listQuestions")
+        .then(res =>{
+          this.tableData.splice(0,this.tableData.length);
+          const pass=[];
+          console.log(res);
+          for(let i=0;i<res.data.data.length;i++){
+            if(res.data.data[i].submission==0)
+              pass[i]='--';
+            else
+              pass[i]=Math.trunc(res.data.data[i].pass/res.data.data[i].submission*100)+"%";
+            this.tableData.push({
+                'id':res.data.data[i].questionId,
+                'state':'未尝试(--`)',
+                'name':res.data.data[i].questionId+':'+res.data.data[i].name,
+                'solution':0,
+                'passingRate':pass[i],
+                'difficulty':res.data.data[i].difficulty,
+                'labels':res.data.data[i].labels.split(',')
+            })
+            this.$http.post("http://localhost:8081/code/getTheLatestCode?userId=3&questionId="
+                +this.tableData[i].id)
+            .then(res =>{
+              if(res.data.data!=null){
+                if(res.data.data.state==0)
+                  this.tableData[i].state="在做了ing";
+                else
+                  this.tableData[i].state="已解答√";
+              }
+            }).catch(err => {
+              console.log(err);
+            })
+          }
+          this.$http.post("http://localhost:8081/solution/getSolutionCount")
+              .then(res =>{
+                for(let i=0;i<res.data.data.length;i++){
+                  this.tableData[i].solution=res.data.data[i];
+                }
+              }).catch(err => {
+            console.log(err);
+          })
+          console.log(this.tableData)
+          this.qTagOptions.splice(0,this.qTagOptions.length)
+          for(let i=0;i<this.tableData.length;i++){
+            for(let j=0;j<this.tableData[i].labels.length;j++){
+              this.qTagOptions.push({ value: this.tableData[i].labels[j], label: this.tableData[i].labels[j] })
+            }
+          }
+          for (let i = 0; i < this.qTagOptions.length; i++) {//遍历删除重复标签
+            for (let j = i+1; j < this.qTagOptions.length; j++) {
+              if (this.qTagOptions[i].label == this.qTagOptions[j].label) {
+                this.qTagOptions.splice(j,1);
+                j--;
+              }
+            }
+          }
+          for (let i = 0; i < this.qTagOptions.length; i++) {//遍历删除重复标签
+            if (this.qTagOptions[i].label == '') {
+              this.qTagOptions.splice(i,1);
+              break;
+            }
+          }
+          console.log(this.qTagOptions)
+        }).catch(err => {
+          console.log(err);
+        })
   }
 }
 </script>

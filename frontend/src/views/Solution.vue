@@ -37,7 +37,8 @@
       </el-collapse-item>
     </el-collapse>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary"  @click="dialogSolutionVisible = false">确 定</el-button>
+      <el-button type="primary"  @click="uploadComment" style="margin-top: 20px">发布评论</el-button>
+      <el-button type="primary"  @click="dialogSolutionVisible = false" style="margin-top: 20px">关闭</el-button>
     </div>
   </el-dialog>
     <div class="solutionHeader">
@@ -69,10 +70,13 @@
 
 <script>
 import {Star,StarFilled} from '@element-plus/icons-vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 export default {
   components:{
     Star,
     StarFilled,
+    ElMessageBox,
+    ElMessage
   },
   data() {
     return {
@@ -105,7 +109,30 @@ export default {
     };
   },
   methods: {
-
+    uploadComment() {
+      ElMessageBox.prompt('请输入评论内容', 'Comment', {
+        confirmButtonText: '上传',
+        cancelButtonText: '取消',
+        inputErrorMessage: '输入不能为空',
+        inputValidator: (value) => {       // 点击按钮时，对文本框里面的值进行验证
+          if(!value) {
+            return '输入不能为空';
+          }
+        }
+      })
+          .then(({ value }) => {
+            ElMessage({
+              type: 'success',
+              message: `上传成功`,
+            })
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '取消操作',
+            })
+          })
+    },
     thumb(row){
       row.isThumbed=true;
       row.likes++;
@@ -119,6 +146,38 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    alert("asdas")
+    this.$http.post("http://localhost:8081/solution/listSolutions?questionId="+window.localStorage.getItem("currentQuestionId"))
+        .then(res =>{
+          console.log(res)
+          this.solutions.splice(0,this.solutions.length);
+          for(let i=0;i<res.data.data.length;i++){
+            this.solutions.push({
+              'id':res.data.data[i].solutionId,
+              'userName':'',
+              'content':res.data.data[i].content,
+              'userid':res.data.data[i].userId,
+              'qid':res.data.data[i].questionId,
+              'time':res.data.data[i].createdTime,
+              'language':res.data.data[i].language,
+              'title':res.data.data[i].title,
+              'code':res.data.data[i].code,
+              'likes':res.data.data[i].likes,
+              'isThumbed':false
+            })
+            this.$http.post("http://localhost:8081/account/getUserInfo?userId="
+                +this.solutions[i].id)
+            .then(res =>{
+              this.solutions[i].userName=res.data.data;
+            }).catch(err => {
+              console.log(err);
+            })
+          }
+        }).catch(err => {
+        console.log(err);
+    })
   }
 }
 </script>
