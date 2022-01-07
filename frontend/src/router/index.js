@@ -34,6 +34,11 @@ const routes = [
         component: () => import('../views/Material.vue'),
       },
       {
+        path: '/hdoj/online',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/Online.vue'),
+      },
+      {
         path: '/hdoj/myInfo',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/MyInfo.vue'),

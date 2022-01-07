@@ -5,11 +5,11 @@
         <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
         <el-form-item prop="input">
           <el-col :span="12">
-            <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
-          </el-col>
-          <!--<el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>-->
-        </el-form-item>
-        <!-- <el-form-item style="display: inline;"> -->
+            <!--<el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>-->
+         </el-col>
+         <el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>
+       </el-form-item>
+       <!-- <el-form-item style="display: inline;"> -->
         <!-- </el-form-item> -->
       </el-form>
     </div>
@@ -47,16 +47,17 @@ export default {
       try {
         await form.validate()
 
-        console.log(code)
-        var param = {
-          "code": code,
-          "input": input
-        }
-        console.log(param)
+        //console.log(code)
+        //var param = {
+        //  "code": code,
+        //  "input": input
+        //}
+        //console.log(param)
         axios.post(
-          "http://localhost:8081/submit", param
+          "http://localhost:8081/questionCompile", code
         ).then(res => {
           console.log(res)
+          alert(res)
           result.value = res.data.data
           isLoading.value = false
         })

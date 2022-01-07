@@ -1,5 +1,6 @@
 package com.example.backend.compile;
 
+import com.example.backend.entity.Question;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;
@@ -23,9 +24,9 @@ public class ExecuteStringSourceService {
     private static final String NO_OUTPUT = "Nothing.";
 
 
-    public String execute(String source, String systemIn) {
+    public String execute(String source, String systemIn, Question question) {
         if (!systemIn.equals("nullabc"))
-            source = handle(source, systemIn);
+            source = handle(source, systemIn, question);
         DiagnosticCollector<JavaFileObject> compileCollector = new DiagnosticCollector<>(); // 编译结果收集器
 
         // 编译源代码
@@ -70,13 +71,21 @@ public class ExecuteStringSourceService {
         return runResult != null ? runResult.replaceAll(System.lineSeparator(), "") : NO_OUTPUT;
     }
 
-    public String handle(String source, String input) {
+    public String handle(String source, String input, Question question) {
+        String returnOutput = "";
+        String suffix = "";
+        String returnType = question.getReturnType();
+        if (returnType.contains("[")) {
+            returnOutput = "Arrays.toString(";
+            suffix = ")";
+        }
         input = input.replace("[", "{").replace("]", "}");
         input = input.replace("{\"", "new String[]{\"");
-        input = input.replaceAll("(\\{\\d+)", "new int[]{\"");
+        if (!input.contains("String"))
+            input = input.replace("{", "new int[]{");
         int index = source.indexOf('{');
         source = "import java.util.*;\n\n" + source.substring(0, index + 1) + "\n    public static void main(String[] args) {\n" +
-                "        System.out.println(new Run().run(" + input + "));\n" +
+                "        System.out.println(" + returnOutput + "new Run().run(" + input + ")" + suffix + ");\n" +
                 "    }" + source.substring(index + 1);
         return source;
 

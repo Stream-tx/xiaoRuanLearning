@@ -68,7 +68,7 @@
             <version>1.8</version>
             <scope>system</scope>
 <!--            <systemPath>/Users/wangling/Library/Java/JavaVirtualMachines/liberica-1.8.0_312/lib/tools.jar</systemPath>-->
-            <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+            <systemPath>E:/JDK/lib/tools.jar</systemPath>
         </dependency>
     </dependencies>
 

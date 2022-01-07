@@ -23,7 +23,7 @@
             <el-tag v-for="tag in tags" :key="tag.name" :type="tag.type">
               {{tag.name}}
             </el-tag>
-            <br>
+            <br><br>
             题目标签：
             <el-tag v-for="tag in tags0" :key="tag">
               {{tag}}
@@ -38,20 +38,38 @@
             <Solution />
           </el-tab-pane>
           <el-tab-pane label="提交记录">
-            <div class="status">
-              <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
-                <el-table-column label="id" align="center" prop="id" v-if="false" />
-                <el-table-column prop="result" label="提交结果" width="100">
-                </el-table-column>
-                <el-table-column prop="language" label="语言" width="100">
-                </el-table-column>
-                <el-table-column prop="submitTime" label="提交时间" sortable width="150">
-                </el-table-column>
-              </el-table>
-            </div>
+            <el-card style="">
+              <el-card-content v-if="this.result!=''">
+                <!-- 运行成功 -->
+                <div v-if="this.result.code == 200">
+                  执行结果： <span>通过</span><br>
+                  执行用时： <span>{{this.result.data.time}}</span><br>
+                  通过测试用例： <span>{{this.result.data.allCases}}</span> / <span>{{this.result.data.allCases}}</span><br>
+                </div>
+                <!-- 运行失败 -->
+                <div v-else>
+                  执行结果： <span>未通过</span><br>
+                  执行用时： <span>{{this.result.data.time}}</span><br>
+                  通过测试用例： <span>{{this.result.data.testCases}}</span> / <span>{{this.result.data.allCases}}</span><br>
+                  未通过用例： <span>{{this.result.data.input}}</span><br>
+                  错误信息： <span>{{this.result.data.errorMessage}}</span><br>
+                </div>
+              </el-card-content>
+              <el-card-content class="status">
+                <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
+                  <el-table-column label="id" align="center" prop="id" v-if="false" />
+                  <el-table-column prop="result" label="提交结果" width="100">
+                  </el-table-column>
+                  <el-table-column prop="language" label="语言" width="100">
+                  </el-table-column>
+                  <el-table-column prop="submitTime" label="提交时间" sortable width="150">
+                  </el-table-column>
+                </el-table>
+              </el-card-content>
+            </el-card>
           </el-tab-pane>
         </el-tabs>
-        <el-button type="primary" plain v-if="this.current==true" @click="newSolution" size="mini"
+        <el-button type="primary" plain v-if="this.current==true" @click="this.dialogNewVisible = true" size="mini"
           style='position:absolute;right:52%;top:9%;!important;'>上传题解</el-button>
       </el-aside>
       <el-main>
@@ -72,7 +90,7 @@
           </div>
         </el-col>
         <el-col :span="2">
-          <div class="grid-content ">
+          <div class="grid-content">
             <el-button-group>
               <el-button type="text" ref="nowPage"></el-button>
               <el-button type="text">/</el-button>
@@ -90,7 +108,12 @@
             <el-button size="middle" @click="dialogVisible=true">执行代码</el-button>
           </div>
         </el-col>
-        <el-col :span="2" :offset="2">
+        <el-col :span="2">
+          <div class="grid-content">
+            <el-button size="middle" @click="saveCode">保存代码</el-button>
+          </div>
+        </el-col>
+        <el-col :span="2">
           <div class="grid-content">
             <el-button size="middle" @click="submit">提交</el-button>
           </div>
@@ -148,7 +171,8 @@ export default {
       questiondescription: '',
       tags: [],
       tags0: [],
-      samples: []
+      samples: [],
+      result: ''
     }
   },
   components: {
@@ -196,33 +220,94 @@ export default {
         this.current = false
       console.log(this.current)
     },
+    saveCode () {
+      if (this.code == null) {
+        alert("请写点代码再传好吗")
+        return
+      }
+      this.$http.post("http://localhost:8081/code/saveCode", {
+        "userId": JSON.parse(window.localStorage.getItem("token")).id,
+        "codeId": '',
+        'questionId': this.id,
+        "content": this.code,
+        "state": 0,
+        "submitTime": '',
+        "language": ''
+      }).then(res => {
+        console.log(res)
+        alert("保存成功")
+      }).catch(err => {
+        console.log(err)
+        alert("保存失败")
+      })
+    },
     submit () {
       console.log({
         "code": this.code,
         'questionId': this.id,
       })
-      if (this.code == null)
+      if (this.code == null) {
         alert("请写点代码再传好吗")
+        return
+      }
       this.$http.post("http://localhost:8081/question/check", {
         "code": this.code,
         'questionId': this.id,
       }).then(res => {
         console.log(res)
-        alert(res.data.data.result)
+        document.getElementById("tab-2").click()
+        this.result = res.data
       }).catch(err => {
         console.log(err)
       })
     },
     newSolution () {
-      this.dialogNewVisible = true
+      if (this.form.title == '') {
+        alert("标题不能为空")
+        return
+      }
+      if (this.form.language == '') {
+        alert("语言不能为空")
+        return
+      }
+      if (this.form.content == '') {
+        alert("思路不能为空")
+        return
+      }
+      if (this.form.code == '') {
+        alert("代码不能为空")
+        return
+      }
+      this.$http.post("http://localhost:8081/solution/addSolution", {
+        "userId": JSON.parse(window.localStorage.getItem("token")).id,
+        "code": this.form.code,
+        'content': this.form.content,
+        'language': this.form.language,
+        'title': this.form.title,
+        'questionId': this.id,
+        'likes': 0,
+        'createdTime': '',
+      }).then(res => {
+        if (res.data.code == 200)
+          alert("上传成功")
+        else
+          alert("由于未知原因，上传失败")
+        this.dialogNewVisible = false
+      }).catch(err => {
+        alert("由于未知原因，上传失败")
+        console.log(err)
+      })
     },
     runCode () {
       console.log(this.code)
-      if (this.code == null)
+      if (this.code == null) {
         alert("请写点代码再传好吗")
+        return
+      }
       this.$http.post("http://localhost:8081/question/submitTestCase", {
         "code": this.code,
-        'input': this.input
+        'input': this.input,
+        'questionId': this.id
       }).then(res => {
         console.log(res)
         alert(res.data.data.result)
@@ -259,7 +344,7 @@ export default {
   mounted () {
     this.id = this.$route.params.id
     this.$refs.nowPage.$el.innerHTML = this.id
-    this.$refs.maxPage.$el.innerHTML = 200
+    this.$refs.maxPage.$el.innerHTML = JSON.parse(window.localStorage.getItem("maxId"))
     window.localStorage.setItem("currentQuestionId", this.id)
     this.loaddata()
     this.questionquery()
@@ -270,11 +355,14 @@ export default {
 
 <style>
 .el-aside {
-  height: 77vh;
+  height: auto;
 }
 .el-main {
   height: 77vh;
-  background-color: lightgrey;
+  /* background-color: lightgrey; */
 }
-
+.el-tag{
+	margin-right: 10px;
+	border-radius: 50%;
+}
 </style>
