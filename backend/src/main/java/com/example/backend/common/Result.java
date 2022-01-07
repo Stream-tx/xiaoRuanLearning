@@ -13,6 +13,26 @@ public class Result {
         return success(200, "Success !", data);
     }
 
+    public static Result unknownError(Object data) {
+        return fail(201, "未知错误 !", data);
+    }
+    public static Result emptyResponse(Object data) {
+        return fail(202, "没有信息 !", data);
+    }
+    public static Result invalidUser(Object data) {
+        return fail(503, "无效用户 !", data);
+    }
+    public static Result invalidRole(Object data) {
+        return fail(204, "无效角色 !", data);
+    }
+    public static Result invalidPassword(Object data) {
+        return fail(503, "无效密码 !", data);
+    }
+    public static Result invalidService(Object data) {
+        return fail(503, "无效服务 !", data);
+    }
+
+
     public static Result success(int code, String message, Object data) {
         Result result = new Result();
         result.setCode(code);
