@@ -300,17 +300,13 @@ export default {
     },
     runCode () {
       console.log(this.code)
-      if (this.code == null) {
-        alert("请写点代码再传好吗")
-        return
-      }
       this.$http.post("http://localhost:8081/question/submitTestCase", {
         "code": this.code,
         'input': this.input,
         'questionId': this.id
       }).then(res => {
-        console.log(res)
-        alert(res.data.data.result)
+        console.log(res.data.data)
+        alert(res.data.data)
       }).catch(err => {
         console.log(err)
       })

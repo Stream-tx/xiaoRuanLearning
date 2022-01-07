@@ -5,6 +5,8 @@ import com.example.backend.entity.Code;
 import com.example.backend.service.CodeService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("code")
 public class CodeController {
@@ -16,20 +18,27 @@ public class CodeController {
     }
 
     @PostMapping("getCodeByUidAndQid")
-    public Result getCodeByUserIdAndQuestionId(@RequestParam Long userId, @RequestParam Long questionId){
-        return Result.success(codeService.getCodeByUserIdAndQuestionId(userId,questionId));
+    public Result getCodeByUserIdAndQuestionId(@RequestParam Long userId, @RequestParam Long questionId) {
+        return Result.success(codeService.getCodeByUserIdAndQuestionId(userId, questionId));
     }
 
     @PostMapping("getTheLatestCode")
-    public Result getTheLatestCode(@RequestParam Long userId, @RequestParam Long questionId){
-        return Result.success(codeService.getTheLatestCode(userId,questionId));
+    public Result getTheLatestCode(@RequestParam Long userId, @RequestParam Long questionId) {
+        return Result.success(codeService.getTheLatestCode(userId, questionId));
     }
 
     @PostMapping("saveCode")
     public Result saveCode(@RequestBody Code code) {
-        Code c = codeService.findCodeById(code.getCodeId());
-        c.setContent(code.getContent());
-        codeService.updateCode(code);
+        Code c = codeService.getTheLatestCode(code.getUserId(), code.getQuestionId());
+        if (c != null) {
+            c.setContent(code.getContent());
+            codeService.updateCode(c);
+        }
+        else {
+            code.setSubmitTime(LocalDate.now());
+            code.setLanguage("JAVA");
+            codeService.updateCode(code);
+        }
         return Result.success(null);
     }
 

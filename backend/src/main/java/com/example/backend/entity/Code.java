@@ -18,7 +18,6 @@ public class Code {
     private Long userId;
     private Long questionId;
     private String content;
-    private String result;
     private Long state;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate submitTime;
