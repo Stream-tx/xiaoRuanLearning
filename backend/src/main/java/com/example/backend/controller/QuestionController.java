@@ -22,7 +22,7 @@ public class QuestionController {
     public Result submitTestCase(@RequestBody Map<String, String> data) {
         String input = data.get("input");
         String code = data.get("code");
-        List<String> result = questionService.submitTestCase(code, input);
+        String result = questionService.submitTestCase(code, input);
         return Result.success(result);
     }
 
@@ -30,8 +30,7 @@ public class QuestionController {
     public Result check(@RequestBody Map<String, String> data) {
         String code = data.get("code");
         Long questionId = Long.parseLong(data.get("questionId"));
-        Boolean check = questionService.check(code, questionId);
-        return Result.success(check);
+        return questionService.check(code, questionId);
     }
 
     @PostMapping("listQuestions")
@@ -41,7 +40,7 @@ public class QuestionController {
     }
 
     @PostMapping("getQuestion")
-    public Result check(@RequestParam Long questionId) {
+    public Result getQuestion(@RequestParam Long questionId) {
         Question question = questionService.findQuestion(questionId);
         return Result.success(question);
     }

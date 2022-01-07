@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.common.Result;
 import com.example.backend.entity.Question;
 import com.example.backend.entity.Sample;
 
@@ -13,8 +14,8 @@ public interface QuestionService {
 
     List<Question> listQuestions();
 
-    Boolean check(String code,Long questionId);
+    Result check(String code, Long questionId);
 
-    List<String> submitTestCase(String code, String input);
+    String submitTestCase(String code, String input);
 
 }

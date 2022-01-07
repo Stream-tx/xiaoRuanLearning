@@ -66,7 +66,7 @@ public class ExecuteStringSourceService {
         } finally {
             res.cancel(true);
         }
-        return runResult != null ? runResult.replaceAll(System.lineSeparator(), "<br />") : NO_OUTPUT;
+        return runResult != null ? runResult.replaceAll(System.lineSeparator(), "") : NO_OUTPUT;
     }
 
     public String handle(String source, String input) {
@@ -74,7 +74,7 @@ public class ExecuteStringSourceService {
         input = input.replace("{\"", "new String[]{\"");
         input = input.replaceAll("(\\{\\d+)", "new int[]{\"");
         int index = source.indexOf('{');
-        source = source.substring(0, index + 1) + "\n    public static void main(String[] args) {\n" +
+        source = "import java.util.*;\n\n" + source.substring(0, index + 1) + "\n    public static void main(String[] args) {\n" +
                 "        System.out.println(new Run().run(" + input + "));\n" +
                 "    }" + source.substring(index + 1);
         return source;

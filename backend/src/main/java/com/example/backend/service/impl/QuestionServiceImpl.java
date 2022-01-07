@@ -1,5 +1,7 @@
 package com.example.backend.service.impl;
 
+import cn.hutool.core.map.MapUtil;
+import com.example.backend.common.Result;
 import com.example.backend.compile.ExecuteStringSourceService;
 import com.example.backend.entity.Question;
 import com.example.backend.entity.Sample;
@@ -8,7 +10,6 @@ import com.example.backend.repository.SampleRepository;
 import com.example.backend.service.QuestionService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Boolean check(String code, Long questionId) {
+    public Result check(String code, Long questionId) {
         List<Sample> samples = listTestSamples(questionId);
         for (Sample sample : samples) {
             String runResult = executeStringSourceService.execute(code, sample.getInput());
@@ -48,21 +49,24 @@ public class QuestionServiceImpl implements QuestionService {
             if (output.charAt(0) == '"')
                 output = output.substring(1, output.length() - 1);
             if (!runResult.equals(output))
-                return false;
+                return Result.fail(400, "compiler error!", MapUtil.builder()
+                        .put("input", sample.getInput())
+                        .put("errorMessage", runResult)
+                        .map());
         }
-        return true;
+        return Result.success(null);
     }
 
     @Override
-    public List<String> submitTestCase(String code, String input) {
+    public String submitTestCase(String code, String input) {
         String regex = "\n";
         String[] split = input.split(regex);
-        List<String> result = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
         for (String s : split) {
             String runResult = executeStringSourceService.execute(code, s);
-            result.add(runResult);
+            stringBuilder.append(runResult).append(System.lineSeparator());
         }
-        return result;
+        return stringBuilder.toString();
     }
 
 
