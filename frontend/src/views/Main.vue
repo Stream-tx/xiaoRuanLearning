@@ -11,7 +11,11 @@
       <el-menu-item style="padding-left:15% " index="1">HDOJ</el-menu-item>
       <el-menu-item index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
       <el-menu-item index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
-      <el-menu-item index="4" style='position: absolute;right:15%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
+      <el-menu-item index="4" style='position: absolute;right:15%' icon="el-icon-user-solid">
+        <router-link to="/hdoj/myInfo">
+          个人信息
+        </router-link>
+      </el-menu-item>
     </el-menu>
 
     <router-view/>

@@ -50,7 +50,7 @@
             sortable
             width="160">
           <template #default="scope">
-            <div @click="downloadFile(scope.$index)">点击下载</div>
+            <div @click="downloadFile(scope.$index)" style="color: #3491FA;">点击下载</div>
           </template>
         </el-table-column>
 
@@ -68,26 +68,33 @@ export default {
     return {
       contentData:'',
       tableData:[{
-        referenceId:'1',
+        referenceId:'7',
         name:'数据挖掘十大算法',
-        introduction:'数据挖掘十大算法',
+        introduction:'You can find everything you need to know about data mining',
         download:'点击下载',
-        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'http://myweb.sabanciuniv.edu/rdehkharghani/files/2016/02/The-Morgan-Kaufmann-Series-in-Data-Management-Systems-Jiawei-Han-Micheline-Kamber-Jian-Pei-Data-Mining.-Concepts-and-Techniques-3rd-Edition-Morgan-Kaufmann-2011.pdf'
       },{
-        referenceId:'1',
-        name:'SOA与微服务架构',
-        introduction:'',
+        referenceId:'8',
+        name:'Discrete Mathematics',
+        introduction:'This text aims to give an introduction to select topics in discrete mathe- matics at a level appropriate for first or second year undergraduate math majors',
         download:'点击下载',
-        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'http://discrete.openmathbooks.org/pdfs/dmoi-tablet.pdf'
 
       },{
-        referenceId:'1',
+        referenceId:'4',
         name:'数据库原理与应用',
-        introduction:'',
+        introduction:'A database is a collection of information organized to provide efficient retrieval.',
         download:'点击下载',
-        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'http://index-of.es/Databases/Databases%20A%20Beginners%20Guide.pdf'
 
-      }],
+      },
+        {
+          id:'2',
+          name:'软件工程',
+          introduction:'Software Engineering encompasses a process, a collec- tion of methods (practice) and an array of tools that allow profession-\n' +
+              'als to build high-quality computer software.',
+          url:'http://engineering.futureuniversity.com/BOOKS%20FOR%20IT/Software-Engineering-9th-Edition-by-Ian-Sommerville.pdf'
+        }],
       imgs:[{
           name:'数据挖掘十大算法',
           id:'1',

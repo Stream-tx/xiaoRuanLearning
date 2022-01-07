@@ -10,7 +10,7 @@
       <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item label="邮箱" prop="email">
-      <el-input type="email" v-model="ruleForm.emil" auto-complete="off"></el-input>
+      <el-input type="email" v-model="ruleForm.email" auto-complete="off"></el-input>
     </el-form-item>
     <el-form-item label="大学名称" prop="university">
       <el-input type="university" v-model="ruleForm.university" auto-complete="off"></el-input>
@@ -87,13 +87,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let formdata = new FormData();
-          let Epassword = Encrypt(this.ruleForm.pass);
-          formdata.append("userID",this.ruleForm.name);
-          formdata.append("userPassword",Epassword);
-          formdata.append("name",this.ruleForm.username);
-          formdata.append("gender",this.ruleForm.gender);
-          formdata.append("age",this.ruleForm.age);
           //formdata.append("userPassword",this.ruleForm.pass);
           var param = {
             "username": this.ruleForm.name,
