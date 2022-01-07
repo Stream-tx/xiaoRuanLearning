@@ -17,7 +17,7 @@ public class Solution {
   private String content;
   private Long userId;
   private Long questionId;
-  @JsonFormat(pattern = "yyyy-M-d")
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private LocalDate createdTime;
   private String language;
   private String title;

@@ -11,7 +11,7 @@
     <el-container>
       <el-aside width="50%">
         <el-tabs type="border-card" style="height: 100%" @tab-click="changeTabs">
-          <el-tab-pane label="题目描述">
+          <el-tab-pane label="题目描述" style="text-align: left;">
             <div style="font-size:40px">
               {{this.id}}
               {{this.questionname}}
@@ -20,23 +20,19 @@
             {{this.questiondescription}}
             <el-divider></el-divider>
             题目难度：
-            <el-tag
-                v-for="tag in tags"
-                :key="tag.name"
-                :type="tag.type">
-             {{tag.name}}
+            <el-tag v-for="tag in tags" :key="tag.name" :type="tag.type">
+              {{tag.name}}
             </el-tag>
             <br>
             题目标签：
-            <el-tag
-                v-for="tag in tags0"
-                :key="tag">
+            <el-tag v-for="tag in tags0" :key="tag">
               {{tag}}
             </el-tag>
             <el-divider></el-divider>
             <div v-for="sample in samples">
-              样例输入：<span style="color:orangered;width:300px; display:inline-block; text-align:center;">{{sample.input}}</span>
-              输出：<span style="color:green; display:inline-block; text-align:center;">{{sample.output}}</span>
+              样例输入：<span
+                style="color:orangered;width:300px; display:inline-block;">{{sample.input}}</span>
+              输出：<span style="color:green; display:inline-block;">{{sample.output}}</span>
             </div>
           </el-tab-pane>
           <el-tab-pane label="题解">
@@ -107,32 +103,21 @@
   <el-dialog title="上传题解" v-model="dialogNewVisible">
     <el-card style="width:650px;margin:auto;">
       <el-card-content style="text-align: left">
-        <div>标题：<el-input
-            v-model="this.form.title"
-            placeholder="请输入标题"
-            maxlength="10"
-            show-word-limit
-            type="text"
-        />
+        <div>标题：
+          <el-input v-model="this.form.title" placeholder="请输入标题" maxlength="10" show-word-limit type="text" />
         </div>
-        <div>语言：</div><div><el-select v-model="form.language" placeholder="请选择您使用的编程语言">
-          <el-option label="Java" value="Java"></el-option>
-          <el-option label="C++/C" value="C++/C"></el-option>
-        </el-select>
+        <div>语言：</div>
+        <div>
+          <el-select v-model="form.language" placeholder="请选择您使用的编程语言">
+            <el-option label="Java" value="Java"></el-option>
+            <el-option label="C++/C" value="C++/C"></el-option>
+          </el-select>
         </div>
-        <div>思路：<el-input
-            v-model="this.form.content"
-            placeholder="请输入题解的思路"
-            autosize
-            type="textarea"
-        />
+        <div>思路：
+          <el-input v-model="this.form.content" placeholder="请输入题解的思路" autosize type="textarea" />
         </div>
-        <div>代码：<el-input
-            v-model="this.form.code"
-            placeholder="请输入题解代码"
-            autosize
-            type="textarea"
-        />
+        <div>代码：
+          <el-input v-model="this.form.code" placeholder="请输入题解代码" autosize type="textarea" />
         </div>
       </el-card-content>
     </el-card>
@@ -149,23 +134,23 @@ import Submit from "../views/Submit.vue"
 export default {
   data () {
     return {
-      myArgs:'',
-      form:{},
-      current:'',
-      id:'',
-      nowPage:'1',
-      maxPage:'200',
-      tableData:[],
-      code:'',
-      input:'',
-      dialogVisible:false,
-      dialogNewVisible:false,
-      questionname:'',
-      questiondescription:'',
-      tags:[],
-      tags0:[],
-      samples:[]
-    };
+      myArgs: {},
+      form: {},
+      current: '',
+      id: '',
+      nowPage: '1',
+      maxPage: '200',
+      tableData: [],
+      code: '',
+      input: '',
+      dialogVisible: false,
+      dialogNewVisible: false,
+      questionname: '',
+      questiondescription: '',
+      tags: [],
+      tags0: [],
+      samples: []
+    }
   },
   components: {
     Submit,
@@ -204,10 +189,10 @@ export default {
             console.log(error);
           });
     },
-    changeTabs(tab,e){
-      console.log(tab.index);
-      if(tab.index==1)
-        this.current=true;
+    changeTabs (tab, e) {
+      console.log(tab.index)
+      if (tab.index == 1)
+        this.current = true
       else
         this.current = false
       console.log(this.current)
@@ -248,26 +233,27 @@ export default {
       this.dialogVisible = false
       //上传code和input
     },
-    handleCode(c){
-      this.code=c;
+    handleCode (c) {
+      this.code = c
     },
-    questionquery() {
+    questionquery () {
       console.log("this.id", this.id)
       this.$http.post("http://localhost:8081/question/getQuestion?questionId=" + this.id)
-          .then(res => {
-            this.questionname=res.data.data.name;
-            this.questiondescription=res.data.data.description;
-            if(res.data.data.difficulty=="简单") this.tags[0]={name:'简单',type:'success'};
-            else if(res.data.data.difficulty=="中等") this.tags[0]={name:'中等',type:'warning'};
-            else if(res.data.data.difficulty=="困难") this.tags[0]={name:'困难',type:'danger'};
-            this.tags0=res.data.data.labels.split(",");
-          })
+        .then(res => {
+          this.questionname = res.data.data.name
+          this.questiondescription = res.data.data.description
+          if (res.data.data.difficulty == "简单") this.tags[0] = { name: '简单', type: 'success' }
+          else if (res.data.data.difficulty == "中等") this.tags[0] = { name: '中等', type: 'warning' }
+          else if (res.data.data.difficulty == "困难") this.tags[0] = { name: '困难', type: 'danger' }
+          this.tags0 = res.data.data.labels.split(",")
+          this.myArgs = [res.data.data.returnType, res.data.data.argsType]
+        })
     },
-    samplequery(){
+    samplequery () {
       this.$http.post("http://localhost:8081/sample/listSamples?questionId=" + this.id)
-          .then(res => {
-            this.samples=res.data.data
-          })
+        .then(res => {
+          this.samples = res.data.data
+        })
     }
   },
   mounted() {
