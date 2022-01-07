@@ -26,7 +26,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Sample> listTestSamples(Long questionId) {
-        return sampleRepository.findAllByQuestionIdAndIsTest(questionId,1L);
+        return sampleRepository.findAllByQuestionIdAndIsTest(questionId, 1L);
     }
 
     @Override
@@ -42,9 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Boolean check(String code, Long questionId) {
         List<Sample> samples = listTestSamples(questionId);
-        for(Sample sample : samples) {
+        for (Sample sample : samples) {
             String runResult = executeStringSourceService.execute(code, sample.getInput());
-            if(!runResult.equals(sample.getOutput()))
+            String output = sample.getOutput();
+            if (output.charAt(0) == '"')
+                output = output.substring(1, output.length() - 1);
+            if (!runResult.equals(output))
                 return false;
         }
         return true;
@@ -55,8 +58,8 @@ public class QuestionServiceImpl implements QuestionService {
         String regex = "\n";
         String[] split = input.split(regex);
         List<String> result = new ArrayList<>();
-        for(String s:split) {
-            String runResult = executeStringSourceService.execute(code,s);
+        for (String s : split) {
+            String runResult = executeStringSourceService.execute(code, s);
             result.add(runResult);
         }
         return result;

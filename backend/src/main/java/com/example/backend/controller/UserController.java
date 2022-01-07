@@ -36,9 +36,10 @@ public class UserController {
         String email = registerDto.getEmail();
         String password = MD5Utils.code(registerDto.getPassword());
         String university = registerDto.getUniversity();
+        String age = registerDto.getAge();
         User user = userService.findUserByUsername(username);
         if (user == null) {
-            userService.saveUser(new User(username, password, email, university));
+            userService.saveUser(new User(username, password, email, university, Integer.parseInt(age)));
             return Result.success(null);
         } else
             return Result.fail("The username already exists!");
@@ -59,9 +60,8 @@ public class UserController {
         }
     }
     @PostMapping("accountInfo")
-    public Result accountInfo(@RequestBody Object json) {
-        Map<String, String> userId = (Map<String, String>) json;
-        User user = userService.findUserById(Long.parseLong(userId.get("userId")));
+    public Result accountInfo(@RequestParam Long userId) {
+        User user = userService.findUserById(userId);
         Map<Object, Object> map = userService.getUserQuestions(user);
         return Result.success(map);
     }

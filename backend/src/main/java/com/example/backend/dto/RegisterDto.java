@@ -19,4 +19,6 @@ public class RegisterDto {
 
     @NotBlank(message = "The university can't be blank")
     private String university;
+
+    private String age;
 }

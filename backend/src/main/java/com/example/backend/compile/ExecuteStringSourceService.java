@@ -24,7 +24,7 @@ public class ExecuteStringSourceService {
 
 
     public String execute(String source, String systemIn) {
-        source = handle(source,systemIn);
+        source = handle(source, systemIn);
         DiagnosticCollector<JavaFileObject> compileCollector = new DiagnosticCollector<>(); // 编译结果收集器
 
         // 编译源代码
@@ -70,12 +70,12 @@ public class ExecuteStringSourceService {
     }
 
     public String handle(String source, String input) {
-        input = input.replace("[","{").replace("]","}");
+        input = input.replace("[", "{").replace("]", "}");
         input = input.replace("{\"", "new String[]{\"");
         input = input.replaceAll("(\\{\\d+)", "new int[]{\"");
         int index = source.indexOf('{');
-        source = source.substring(0, index + 1)+"\n    public static void main(String[] args) {\n" +
-                "        System.out.println(run(" + input + "));\n" +
+        source = source.substring(0, index + 1) + "\n    public static void main(String[] args) {\n" +
+                "        System.out.println(new Run().run(" + input + "));\n" +
                 "    }" + source.substring(index + 1);
         return source;
 
