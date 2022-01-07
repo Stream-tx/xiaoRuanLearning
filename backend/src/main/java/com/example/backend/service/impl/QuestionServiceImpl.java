@@ -69,5 +69,8 @@ public class QuestionServiceImpl implements QuestionService {
         return stringBuilder.toString();
     }
 
-
+    @Override
+    public String compile(String code){
+        return executeStringSourceService.execute(code, "nullabc");
+    }
 }

@@ -18,4 +18,6 @@ public interface QuestionService {
 
     String submitTestCase(String code, String input);
 
+    String compile(String code);
+
 }

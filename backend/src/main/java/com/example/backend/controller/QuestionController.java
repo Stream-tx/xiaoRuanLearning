@@ -44,4 +44,10 @@ public class QuestionController {
         Question question = questionService.findQuestion(questionId);
         return Result.success(question);
     }
+
+    @PostMapping("/compile")
+    public Result compile(@RequestBody Map<String, String> data) {
+        String code = data.get("code");
+        return Result.success(questionService.compile(code));
+    }
 }

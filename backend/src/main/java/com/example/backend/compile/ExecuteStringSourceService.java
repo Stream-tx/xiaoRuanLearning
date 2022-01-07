@@ -24,7 +24,8 @@ public class ExecuteStringSourceService {
 
 
     public String execute(String source, String systemIn) {
-        source = handle(source, systemIn);
+        if (!systemIn.equals("nullabc"))
+            source = handle(source, systemIn);
         DiagnosticCollector<JavaFileObject> compileCollector = new DiagnosticCollector<>(); // 编译结果收集器
 
         // 编译源代码
