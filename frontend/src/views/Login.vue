@@ -92,7 +92,8 @@ export default {
               )
               .then(response => {
                 if (response.data.code === 200) {
-                  //localStorage.setItem('token',response.data.data.token);
+                  var s = JSON.stringify(response.data.data);
+                  localStorage.setItem('token',s);
                   this.$alert('登录成功！');
                   this.$router.replace({path: '/hdoj/bank'});
                   console.log('登录成功');

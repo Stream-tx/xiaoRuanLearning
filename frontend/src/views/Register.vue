@@ -108,7 +108,8 @@ export default {
               //.get("http://106.14.25.240:81/user/register/"+this.ruleForm.name+"/"+this.ruleForm.pass)//localStorage.getItem('token'))
               .then(response => {
                 if (response.data.code === 200) {
-                  localStorage.setItem('token',response.data.data.token);
+                  var s = JSON.stringify(response.data.data);
+                  localStorage.setItem('token',s);
                   this.$alert('注册成功！');
                   this.$router.replace({path: '/hdoj/bank'});
                   console.log('注册成功');
