@@ -1,28 +1,36 @@
 <template>
   <div>
-<!--    <div class="background">-->
-<!--      <img :src="imgSrc" class="imgSrc"/>-->
-<!--    </div>-->
-    <div class="login">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="登录" name="first">
-          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="name">
-              <el-input v-model="ruleForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="注册" name="second">
-          <register></register>
-        </el-tab-pane>
-      </el-tabs>
+    <div class="background">
+      <img :src="imgSrc" class="imgSrc"/>
+    </div>
+    <div class="wrap-box">
+      <div style="font-size:80px" font-family="Microsoft YaHei">
+        HDOJ
+      </div>
+      <div style="font-size:25px" >
+        黄渡编程学习小组
+      </div>
+      <div class="login">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="登录" name="first">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+              <el-form-item label="用户名" prop="name">
+                <el-input v-model="ruleForm.name"></el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="pass">
+                <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+          <el-tab-pane label="注册" name="second">
+            <register></register>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +52,7 @@ export default {
       }
     };
     return {
-      //imgSrc: './static/coverage1.jpg',
+      imgSrc: require('@/assets/login.png'),//'./assets/logo.png',
       activeName: 'first',
       ruleForm: {
         name: '',
@@ -108,13 +116,23 @@ export default {
 
 <style scoped>
 body {
-  margin: 0;
+  margin: 40%;
   padding: 0;
+}
+.wrap-box{
+  width: 45%;
+  left: 30%;
+  height: 40%;
+  padding-top: 5%;
+  background-color: rgba(255,255,255,0.6);
+  position: relative;
 }
 .login {
   width: 400px;
-  margin: 0 auto;
+  margin:  auto;
+  text-align: center;
 }
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -133,5 +151,19 @@ body {
   color:#3491FA;
   font-weight:bold;
   font-size:15px
+}
+.background {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  /**宽高100%是为了图片铺满屏幕 */
+  z-index: -1;
+  position: fixed;
+  background-size: 100% 100%;
+}
+.imgSrc{
+  height: 100%;
+  width: 100%;
 }
 </style>
