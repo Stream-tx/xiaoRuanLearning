@@ -41,4 +41,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setCommentTime(LocalDate.now());
         commentRepository.save(comment);
     }
+
+    @Override
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
 }

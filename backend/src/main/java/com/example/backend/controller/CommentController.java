@@ -34,4 +34,10 @@ public class CommentController {
         commentService.addComment(comment);
         return Result.success(null);
     }
+
+    @PostMapping("deleteComment")
+    public Result deleteComment(@RequestParam Long commentId){
+        commentService.deleteComment(commentId);
+        return Result.success(null);
+    }
 }
