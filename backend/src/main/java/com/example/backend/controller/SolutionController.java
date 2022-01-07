@@ -47,4 +47,9 @@ public class SolutionController {
         solutionService.deleteSolution(solutionId);
         return Result.success(null);
     }
+
+    @PostMapping("getSolutionById")
+    public Result getSolutionById(@RequestParam Long solutionId){
+        return Result.success(solutionService.findBySolutionId(solutionId).getUserId());
+    }
 }

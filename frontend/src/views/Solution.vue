@@ -28,8 +28,10 @@
         <el-collapse-item title="评论" name="3">
           <el-card style="background-color: #444444" class="box-card" v-for="item in comments" :key="item.id"
             @click="view(item)">
-            <h5 style="text-align: left;font-size: larger;color:floralwhite">{{item.userName}}</h5>
-            <span style="color:floralwhite;text-align: left">{{item.content}}</span>
+            <h5 style="text-align: left;font-size: larger;color:floralwhite;margin:10px 18px;">{{item.userName}}</h5>
+            <div style="color:floralwhite;text-align: left;margin:0 18px;">
+              <span>{{item.content}}</span>
+            </div>
             <el-row :gutter="20">
               <el-col :span="4">
                 <div class="grid-content" style="color:floralwhite">
@@ -43,14 +45,20 @@
                   时间:{{item.time}}
                 </div>
               </el-col>
+              <el-col :span="8">
+                <el-button v-if="item.userId == this.userId" @click="deleteComment(item.id)">删除
+                </el-button>
+              </el-col>
             </el-row>
           </el-card>
         </el-collapse-item>
       </el-collapse>
-      <div slot="footer" class="dialog-footer">
+      <div slot=" footer" class="dialog-footer">
         <el-button type="primary" @click="uploadComment" style="margin-top: 20px">发布评论</el-button>
-        <el-button type="primary" @click="dialogSolutionVisible = false" style="margin-top: 20px">关闭</el-button>
-        <el-button type="primary" @click="deleteSolution" style="margin-top: 20px">删除</el-button>
+        <el-button type="primary" @click="dialogSolutionVisible = false" style="margin-top: 20px">关闭
+        </el-button>
+        <el-button v-if="this.clickUserId == this.userId" type="primary" @click="deleteSolution"
+          style="margin-top: 20px">删除</el-button>
       </div>
     </el-dialog>
     <div class="solutionHeader">
@@ -122,7 +130,8 @@ export default {
         likes: '0',
         isThumbed: false
       }],
-      userId:'0',
+      userId: '0',
+      clickUserId: '0',
       currentIndex: '0'
     }
   },
@@ -201,6 +210,12 @@ export default {
           break
         }
       }
+      this.$http.post("http://localhost:8081/solution/getSolutionById?solutionId=" + this.solutions[this.currentIndex].id)
+        .then(res => {
+          this.clickUserId = res.data.data
+        }).catch(err => {
+          console.log(err)
+        })
       this.$http.post("http://localhost:8081/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
         .then(res => {
           console.log(res)
@@ -229,7 +244,21 @@ export default {
         })
     },
     deleteSolution () {
-      
+      this.$http.post("http://localhost:8081/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id)
+        .then(res => {
+
+        }).catch(err => {
+          console.log(err)
+        })
+    },
+    deleteComment (commentId) {
+      console.log(commentId)
+      this.$http.post("http://localhost:8081/comment/deleteComment?commentId=" + commentId)
+        .then(res => {
+
+        }).catch(err => {
+          console.log(err)
+        })
     }
   },
   mounted () {
