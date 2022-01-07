@@ -51,7 +51,7 @@ export default {
           let returnT = type[0]
           if (type != null) {
             let t = type[1].split(",")
-            if (args.length == 2)
+            if (t.length == 2)
               args = t[0] + " arg1," + t[1] + " arg2"
             else
               args = t[0] + " arg1"
@@ -61,10 +61,10 @@ export default {
             + "        \n"
             + "    }\n"
             + "}"
-          this.$http.post("http://localhost:8081/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
+          axios.post("http://localhost:8081/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
             .then(res => {
-              tmp = res.data.data.content
-              if (tmp.length() > 10) {
+              let tmp = res.data.data.content
+              if (tmp.length > 10) {
                 content = tmp
               }
             })

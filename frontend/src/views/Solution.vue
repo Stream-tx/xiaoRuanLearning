@@ -25,7 +25,7 @@
           <span style="color:floralwhite;text-align: left" >{{item.content}}</span>
           <el-row :gutter="20">
             <el-col :span="4"><div class="grid-content" style="color:floralwhite">
-              <Star style="height: 15px;width: 15px" v-if="!item.isThumbed" @click="thumb(item)"/>
+              <Star style="height: 15px;width: 15px" v-if="!item.isThumbed" @click="thumbComment(item)"/>
               <StarFilled style="height: 15px;width: 15px" v-if="item.isThumbed"/>
               点赞数:{{item.likes}}
             </div></el-col>
@@ -50,14 +50,14 @@
     </div>
     <el-row :gutter="20">
       <el-col :span="4"><div class="grid-content ">
-        <Star style="height: 15px;width: 15px" v-if="!item.isThumbed" @click="thumb(item)"/>
+        <Star style="height: 15px;width: 15px" v-if="!item.isThumbed" @click="thumbSolution(item)"/>
         <StarFilled style="height: 15px;width: 15px" v-if="item.isThumbed"/>
         点赞数:{{item.likes}}
       </div></el-col>
       <el-col :span="4"><div class="grid-content ">
         语言:{{item.language}}
       </div></el-col>
-      <el-col :span="4"><div class="grid-content ">
+      <el-col :span="8"><div class="grid-content ">
         时间:{{item.time}}
       </div></el-col>
     </el-row>
@@ -83,26 +83,26 @@ export default {
       dialogSolutionVisible:false,
 
       comments:[{
-        userid:'1',
-        userName:'dqf',
-        commentid:'1',
-        solutionid:'1',
-        content:'太牛啦',
-        likes:'5',
-        time:'今天',
+        userId:'1',
+        userName:'--',
+        id:'1',
+        sId:'1',
+        content:'暂无数据',
+        likes:'0',
+        time:'--',
         isThumbed:false
       }],
       solutions:[{
         id:'0',
-        userName:'dqf',
-        content:'不会写',
+        userName:'未知',
+        content:'暂无数据',
         userid:'1',
         qid:'1',
-        time:'昨天',
-        language:'c++',
-        title:'你猜我怎么写',
-        code:'C艹',
-        likes:'6',
+        time:'--',
+        language:'--',
+        title:'暂无数据',
+        code:'--',
+        likes:'0',
         isThumbed:false
       }],
       currentIndex:'0'
@@ -121,6 +121,23 @@ export default {
         }
       })
           .then(({ value }) => {
+            this.$http.post("http://localhost:8081/comment/addComment", {
+              "userId":JSON.parse(window.localStorage.getItem("token")).id,
+              "solutionId": this.solutions[this.currentIndex].id,
+              'commentId': '',
+              'content': value,
+              'likes':0,
+              'commentTime':'',
+            }).then(res => {
+              if(res.data.code==200)
+                alert("上传成功")
+              else
+                alert("由于未知原因，上传失败")
+              this.dialogNewVisible = false
+            }).catch(err => {
+              alert("由于未知原因，上传失败")
+              console.log(err)
+            })
             ElMessage({
               type: 'success',
               message: `上传成功`,
@@ -133,9 +150,29 @@ export default {
             })
           })
     },
-    thumb(row){
+    thumbSolution(row){
       row.isThumbed=true;
       row.likes++;
+      this.$http.post("http://localhost:8081/solution/likesIncrement?solutionId="
+          +row.id)
+          .then(res =>{
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    },
+    thumbComment(row){
+      row.isThumbed=true;
+      row.likes++;
+      this.$http.post("http://localhost:8081/comment/likesIncrement?commentId="
+          +row.id)
+          .then(res =>{
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
     },
     view(row){
       this.dialogSolutionVisible=true;
@@ -145,6 +182,32 @@ export default {
           break;
         }
       }
+      this.$http.post("http://localhost:8081/comment/listComments?solutionId="+this.solutions[this.currentIndex].id)
+          .then(res =>{
+            console.log(res)
+            this.comments.splice(0,1);
+            for(let i=0;i<res.data.data.length;i++){
+              this.comments.push({
+                'id':res.data.data[i].commentId,
+                'userName':'',
+                'content':res.data.data[i].content,
+                'userId':res.data.data[i].userId,
+                'sid':res.data.data[i].solutionId,
+                'time':res.data.data[i].commentTime,
+                'likes':res.data.data[i].likes,
+                'isThumbed':false
+              })
+              this.$http.post("http://localhost:8081/account/getUserInfo?userId="
+                  +this.comments[i].userid)
+                  .then(res =>{
+                    this.comments[i].userName=res.data.data;
+                  }).catch(err => {
+                console.log(err);
+              })
+            }
+          }).catch(err => {
+        console.log(err);
+      })
     }
   },
   mounted() {
@@ -167,7 +230,7 @@ export default {
               'isThumbed':false
             })
             this.$http.post("http://localhost:8081/account/getUserInfo?userId="
-                +this.solutions[i].id)
+                +this.solutions[i].userid)
             .then(res =>{
               this.solutions[i].userName=res.data.data;
             }).catch(err => {

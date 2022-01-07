@@ -51,7 +51,7 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <el-button type="primary" plain v-if="this.current==true" @click="newSolution" size="mini"
+        <el-button type="primary" plain v-if="this.current==true" @click="this.dialogNewVisible = true" size="mini"
           style='position:absolute;right:52%;top:9%;!important;'>上传题解</el-button>
       </el-aside>
       <el-main>
@@ -90,7 +90,12 @@
             <el-button size="middle" @click="dialogVisible=true">执行代码</el-button>
           </div>
         </el-col>
-        <el-col :span="2" :offset="2">
+        <el-col :span="2">
+          <div class="grid-content">
+            <el-button size="middle" @click="saveCode">保存代码</el-button>
+          </div>
+        </el-col>
+        <el-col :span="2">
           <div class="grid-content">
             <el-button size="middle" @click="submit">提交</el-button>
           </div>
@@ -133,23 +138,28 @@ import Submit from "../views/Submit.vue"
 export default {
   data () {
     return {
-      myArgs: {},
-      form: {},
-      current: '',
-      id: '',
-      nowPage: '1',
-      maxPage: '200',
-      tableData: [],
-      code: '',
-      input: '',
-      dialogVisible: false,
-      dialogNewVisible: false,
-      questionname: '',
-      questiondescription: '',
-      tags: [],
-      tags0: [],
-      samples: []
-    }
+      myArgs:'',
+      form:{
+        code:'',
+        content:'',
+        language:'',
+        title:''
+      },
+      current:'',
+      id:'',
+      nowPage:'1',
+      maxPage:'200',
+      tableData:[],
+      code:'',
+      input:'',
+      dialogVisible:false,
+      dialogNewVisible:false,
+      questionname:'',
+      questiondescription:'',
+      tags:[],
+      tags0:[],
+      samples:[]
+    };
   },
   components: {
     Submit,
@@ -196,13 +206,36 @@ export default {
         this.current = false
       console.log(this.current)
     },
+    saveCode(){
+      if (this.code == null){
+        alert("请写点代码再传好吗")
+        return
+      }
+      this.$http.post("http://localhost:8081/code/saveCode", {
+        "userId": JSON.parse(window.localStorage.getItem("token")).id,
+        "codeId": '',
+        'questionId': this.id,
+        "content": this.code,
+        "state": 0,
+        "submitTime":'',
+        "language":''
+      }).then(res => {
+        console.log(res)
+        alert("保存成功")
+      }).catch(err => {
+        console.log(err)
+        alert("保存失败")
+      })
+    },
     submit () {
       console.log({
         "code": this.code,
         'questionId': this.id,
       })
-      if (this.code == null)
+      if (this.code == null){
         alert("请写点代码再传好吗")
+        return
+      }
       this.$http.post("http://localhost:8081/question/check", {
         "code": this.code,
         'questionId': this.id,
@@ -214,12 +247,48 @@ export default {
       })
     },
     newSolution () {
-      this.dialogNewVisible = true
+      if(this.form.title==''){
+        alert("标题不能为空");
+        return;
+      }
+      if(this.form.language==''){
+        alert("语言不能为空");
+        return;
+      }
+      if(this.form.content==''){
+        alert("思路不能为空");
+        return;
+      }
+      if(this.form.code==''){
+        alert("代码不能为空");
+        return;
+      }
+      this.$http.post("http://localhost:8081/solution/addSolution", {
+        "userId":JSON.parse(window.localStorage.getItem("token")).id,
+        "code": this.form.code,
+        'content': this.form.content,
+        'language': this.form.language,
+        'title': this.form.title,
+        'questionId':this.id,
+        'likes':0,
+        'createdTime':'',
+      }).then(res => {
+        if(res.data.code==200)
+          alert("上传成功")
+        else
+          alert("由于未知原因，上传失败")
+        this.dialogNewVisible = false
+      }).catch(err => {
+        alert("由于未知原因，上传失败")
+        console.log(err)
+      })
     },
     runCode () {
       console.log(this.code)
-      if (this.code == null)
+      if (this.code == null){
         alert("请写点代码再传好吗")
+        return
+      }
       this.$http.post("http://localhost:8081/question/submitTestCase", {
         "code": this.code,
         'input': this.input
@@ -259,7 +328,7 @@ export default {
   mounted () {
     this.id = this.$route.params.id
     this.$refs.nowPage.$el.innerHTML = this.id
-    this.$refs.maxPage.$el.innerHTML = 200
+    this.$refs.maxPage.$el.innerHTML = JSON.parse(window.localStorage.getItem("maxId"))
     window.localStorage.setItem("currentQuestionId", this.id)
     this.loaddata()
     this.questionquery()
