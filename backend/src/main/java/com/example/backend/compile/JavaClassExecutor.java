@@ -18,15 +18,12 @@ public class JavaClassExecutor {
     /* 程序中正在运行的客户端代码个数 */
 //    private static volatile AtomicInteger runningCount = new AtomicInteger(0);
 
-    public static String execute(byte[] classByte, String systemIn) {
+    public static String execute(byte[] classByte) {
         // 2. new ClassModifier，并传入需要被修改的字节数组
         ClassModifier cm = new ClassModifier(classByte);
 
         // 3. 调用ClassModifier#modifyUTF8Constant修改
         byte[] modifyBytes = cm.modifyUTF8Constant("java/lang/System","com/example/backend/compile/HackSystem");
-        modifyBytes = cm.modifyUTF8Constant("java/util/Scanner", "com/example/backend/compile/HackScanner");
-        // 设置用户传入的标准输入
-        ((HackInputStream) HackSystem.in).set(systemIn);
 
         // 4. new一个类加载器，把字节数组加载为Class对象
         HotSwapClassLoader classLoader = new HotSwapClassLoader();

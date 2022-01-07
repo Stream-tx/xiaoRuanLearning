@@ -4,10 +4,7 @@ package com.example.backend.controller;
 import com.example.backend.common.Result;
 import com.example.backend.entity.Solution;
 import com.example.backend.service.SolutionService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,8 +19,14 @@ public class SolutionController {
     }
 
     @PostMapping("listSolutions")
-    public Result listSolutions(@RequestParam Long questionId){
+    public Result listSolutions(@RequestBody Long questionId) {
         List<Solution> solutions = solutionService.listSolutions(questionId);
         return Result.success(solutions);
+    }
+
+    @PostMapping("addSolution")
+    public Result addSolution(@RequestBody Solution solution) {
+        solutionService.addSolution(solution);
+        return Result.success(null);
     }
 }

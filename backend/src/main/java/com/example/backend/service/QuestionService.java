@@ -12,4 +12,8 @@ public interface QuestionService {
     Question findQuestion(Long questionId);
 
     List<Question> listQuestions();
+
+    Boolean check(String code,Long questionId);
+
+    List<String> submitTestCase(String code, String input);
 }

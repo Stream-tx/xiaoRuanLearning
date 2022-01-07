@@ -7,7 +7,7 @@
             <el-col :span="12">
               <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
             </el-col>
-            <el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>
+            <!--<el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>-->
           </el-form-item>
           <!-- <el-form-item style="display: inline;"> -->
           <!-- </el-form-item> -->
@@ -35,13 +35,14 @@ export default {
     const isLoading = ref(false)
     const result = ref('')
     let code = {}
+    const { input } = ruleForm
     const submit = async () => {
       isLoading.value = true
       const form = unref(ruleFormsss)
       if (!form) return
       try {
         await form.validate()
-        const { input } = ruleForm
+
         console.log(code)
         var param = {
           "code": code,
@@ -61,6 +62,7 @@ export default {
     }
     const data = (c) => {
       code = c
+      context.emit('code',code);
     }
     const rightWidth = ref('')
     const dragControllerDiv = () => {
