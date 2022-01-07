@@ -20,7 +20,7 @@ public class Code {
     private String content;
     private String result;
     private Long state;
-    @JsonFormat(pattern = "yyyy-M-d")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate submitTime;
     private String language;
 

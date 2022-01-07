@@ -16,9 +16,9 @@ public class Comment {
     private Long commentId;
     private Long userId;
     private Long solutionId;
-    private Long content;
+    private String content;
     private Long likes;
-    @JsonFormat(pattern = "yyyy-M-d")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate commentTime;
 
 

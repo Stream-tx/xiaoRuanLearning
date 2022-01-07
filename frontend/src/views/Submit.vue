@@ -1,18 +1,18 @@
 <template>
-    <div class="box" ref="box">
-      <div class="right">
-        <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
-          <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
-          <el-form-item prop="input">
-            <el-col :span="12">
-              <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
-            </el-col>
-            <!--<el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>-->
-          </el-form-item>
-          <!-- <el-form-item style="display: inline;"> -->
-          <!-- </el-form-item> -->
-        </el-form>
-      </div>
+  <div class="box" ref="box">
+    <div class="right">
+      <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
+        <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
+        <el-form-item prop="input">
+          <el-col :span="12">
+            <el-input v-model="ruleForm.input" :rows="2" type="textarea" placeholder="input examples..."></el-input>
+          </el-col>
+          <!--<el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>-->
+        </el-form-item>
+        <!-- <el-form-item style="display: inline;"> -->
+        <!-- </el-form-item> -->
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -22,25 +22,19 @@ import { reactive, ref, unref } from '@vue/reactivity'
 import axios from 'axios'
 import MonacoEditor from '../components/MonacoEditor'
 import { onMounted } from 'vue'
-import {watch} from "@vue/runtime-core";
+import { watchEffect } from "@vue/runtime-core"
 export default {
   name: "Submit",
   components: {
     MonacoEditor
   },
+  props:['myArgs'],
   setup (props, context) {
     const ruleFormsss = ref(null)
     const ruleForm = reactive({
       input: ''
     })
-    const myArgs=ref('');
-    watch(
-        () => props.myArgs,
-        (val,pervVal)=>{
-          myArgs.value=val;
-          console.log(myArgs.value)
-        }
-    )
+    const myArgs = ref('')
     console.log(myArgs.value)
     const isLoading = ref(false)
     const result = ref('')
@@ -72,7 +66,7 @@ export default {
     }
     const data = (c) => {
       code = c
-      context.emit('code',code);
+      context.emit('code', code)
     }
     const rightWidth = ref('')
     const dragControllerDiv = () => {
@@ -118,6 +112,9 @@ export default {
         }
       }
     }
+    watchEffect(() => {
+	  myArgs.value = props.myArgs
+    })
     onMounted(() => {
       dragControllerDiv()
     })

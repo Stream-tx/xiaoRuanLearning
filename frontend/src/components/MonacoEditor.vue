@@ -6,18 +6,16 @@
 import * as monaco from "monaco-editor"
 import { ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
-import axios from "axios";
+import axios from "axios"
 
 export default {
-  props: {
-    rightWidth: {
-      type: String
-    }
-  },
+  props: [
+    "myArgs"
+  ],
   setup (props, ctx) {
     const data = ref('')
     const container = ref(null)
-    const myArgs=ref('');
+    const myArgs = ref('')
     onMounted(() => {
       var editor = monaco.editor.create(container.value, {
         language: 'java',
@@ -44,18 +42,28 @@ export default {
           .catch(err => {
             console.log(err);
           })*/
-      /*if(myArgs!=null){
-        myArgs=myArgs.split(",")
-        if(myArgs.length==2)
-          myArgs=myArgs[0]+" arg1,"+myArgs[1]+" arg2";
-        else
-          myArgs=myArgs[0]+" arg1";
-      }*/
-      editor.setValue("public class Run {\n"
-        + "    public String run() {\n"
-        + "        \n"
-        + "    }\n"
-        + "}")
+      watch(
+        () => props.myArgs,
+        (val, pervVal) => {
+          myArgs.value = val
+          let type = myArgs.value
+          let args = ''
+          let returnT = type[0]
+          if (type != null) {
+            let t = type[1].split(",")
+            if (args.length == 2)
+              args = t[0] + " arg1," + t[1] + " arg2"
+            else
+              args = t[0] + " arg1"
+          }
+          editor.setValue("public class Run {\n"
+            + "    public " + returnT + " run(" + args + ") {\n"
+            + "        \n"
+            + "    }\n"
+            + "}")
+        }
+      )
+
       editor.onDidChangeModelContent(e => {
         const value = editor.getValue() //使value和其值保持一致
         if (value !== data.value) {
@@ -64,20 +72,6 @@ export default {
           // this.props.getValue && this.props.getValue(value)
         }
       })
-      watch(
-        () => props.rightWidth,
-        (val, prevVal) => {
-          console.log(typeof val)
-          document.getElementById('container').style.width = val
-        }
-      )
-      watch(
-          () => props.myArgs,
-          (val,pervVal)=>{
-            myArgs.value=val;
-            console.log(myArgs.value)
-          }
-      )
     })
 
     return {
