@@ -273,7 +273,8 @@ export default {
   height: 77vh;
 }
 .el-main {
-  height: 100vh;
+  height: 77vh;
   background-color: lightgrey;
 }
+
 </style>
