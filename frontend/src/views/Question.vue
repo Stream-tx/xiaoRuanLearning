@@ -23,7 +23,7 @@
             <el-tag v-for="tag in tags" :key="tag.name" :type="tag.type">
               {{tag.name}}
             </el-tag>
-            <br>
+            <br><br>
             题目标签：
             <el-tag v-for="tag in tags0" :key="tag">
               {{tag}}
@@ -220,8 +220,8 @@ export default {
         this.current = false
       console.log(this.current)
     },
-    saveCode(){
-      if (this.code == null){
+    saveCode () {
+      if (this.code == null) {
         alert("请写点代码再传好吗")
         return
       }
@@ -231,8 +231,8 @@ export default {
         'questionId': this.id,
         "content": this.code,
         "state": 0,
-        "submitTime":'',
-        "language":''
+        "submitTime": '',
+        "language": ''
       }).then(res => {
         console.log(res)
         alert("保存成功")
@@ -246,7 +246,7 @@ export default {
         "code": this.code,
         'questionId': this.id,
       })
-      if (this.code == null){
+      if (this.code == null) {
         alert("请写点代码再传好吗")
         return
       }
@@ -262,33 +262,33 @@ export default {
       })
     },
     newSolution () {
-      if(this.form.title==''){
-        alert("标题不能为空");
-        return;
+      if (this.form.title == '') {
+        alert("标题不能为空")
+        return
       }
-      if(this.form.language==''){
-        alert("语言不能为空");
-        return;
+      if (this.form.language == '') {
+        alert("语言不能为空")
+        return
       }
-      if(this.form.content==''){
-        alert("思路不能为空");
-        return;
+      if (this.form.content == '') {
+        alert("思路不能为空")
+        return
       }
-      if(this.form.code==''){
-        alert("代码不能为空");
-        return;
+      if (this.form.code == '') {
+        alert("代码不能为空")
+        return
       }
       this.$http.post("http://localhost:8081/solution/addSolution", {
-        "userId":JSON.parse(window.localStorage.getItem("token")).id,
+        "userId": JSON.parse(window.localStorage.getItem("token")).id,
         "code": this.form.code,
         'content': this.form.content,
         'language': this.form.language,
         'title': this.form.title,
-        'questionId':this.id,
-        'likes':0,
-        'createdTime':'',
+        'questionId': this.id,
+        'likes': 0,
+        'createdTime': '',
       }).then(res => {
-        if(res.data.code==200)
+        if (res.data.code == 200)
           alert("上传成功")
         else
           alert("由于未知原因，上传失败")
@@ -300,7 +300,7 @@ export default {
     },
     runCode () {
       console.log(this.code)
-      if (this.code == null){
+      if (this.code == null) {
         alert("请写点代码再传好吗")
         return
       }
@@ -359,6 +359,10 @@ export default {
 }
 .el-main {
   height: 77vh;
-  background-color: lightgrey;
+  /* background-color: lightgrey; */
+}
+.el-tag{
+	margin-right: 10px;
+	border-radius: 50%;
 }
 </style>
