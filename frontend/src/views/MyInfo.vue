@@ -53,10 +53,9 @@
     <el-container>
 
       <el-aside >
-        <img src='https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg' width="220" height="220">
+        <img :src="headImgSrc" width="220" height="220">
         <div style="margin-top:-85px;"><h2 >{{name}}</h2></div>
         <hr style="margin-top:-40px;">
-
 
       </el-aside>
 
@@ -151,21 +150,27 @@
           <el-table
               @row-click="openDetails"
               :data="tableData"
-              style="width: 100%; padding-left: 15%;padding-right: 5%;border-radius: 20px;"
+              style="width: 100%; padding-left: 13%;padding-right: 5%;border-radius: 20px;"
               :row-class-name="tableRowClassName"
+              :default-sort ="{prop:'submitTime',order:'ascending'}"
           >
             <el-table-column label="id" align="center" prop="id" v-if="false" />
             <el-table-column
                 prop="result"
                 label="状态"
                 sortable
-                width="150">
+                width="130">
+              <template #default="scope">
+                <span v-if="scope.row.result== 'pass'" style="color: lightgreen;">{{scope.row.result}}</span>
+                <span v-else-if="scope.row.result == 'failed'" style="color: lightcoral;">{{scope.row.result}}</span>
+                <span v-else>{{scope.row.result}}</span>
+              </template>
             </el-table-column>
             <el-table-column
                 prop="name"
                 label="题目"
                 sortable
-                width="360">
+                width="350">
             </el-table-column>
 
             <el-table-column
@@ -173,18 +178,30 @@
                 label="通过率"
                 sortable
                 width="100">
+
             </el-table-column>
             <el-table-column
                 prop="difficulty"
                 label="难度"
                 sortable
                 width="100">
+              <template #default="scope">
+                <span v-if="scope.row.difficulty == '简单'" style="color: lightgreen;">{{scope.row.difficulty}}</span>
+                <span v-else-if="scope.row.difficulty == '中等'" style="color: lightsalmon;">{{scope.row.difficulty}}</span>
+                <span v-else-if="scope.row.difficulty == '困难'" style="color: lightcoral;">{{scope.row.difficulty}}</span>
+                <span v-else>{{scope.row.difficulty}}</span>
+              </template></el-table-column>
+            <el-table-column
+                prop="language"
+                label="编程语言"
+                sortable
+                width="120">
             </el-table-column>
             <el-table-column
                 prop="submitTime"
                 label="提交时间"
                 sortable
-                width="180">
+                width="130">
             </el-table-column>
           </el-table>
         </div>
@@ -213,6 +230,7 @@ export default {
   data () {
 
     return {
+      headImgSrc:'https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg',
       dialogFormVisible: false,
       form: {
         name: '',
@@ -300,6 +318,23 @@ export default {
     }
   },
   methods: {
+    updateHeadImg()
+    {
+      if(this.currentID%4==1)
+      {
+        this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2F2021%2Fedpic%2F0b%2F17%2F04%2F0b1704a9741f4e7ddd07939877dd3590_1.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142234&t=4f1fa0c40c07873cb747d04474178241'
+      }
+      else if(this.currentID%4==2)
+      {
+        this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic%2F92%2F4a%2F72%2F924a726144487f372ac97057dbb01e81.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=289155d2b0f39b19ed108a8b0eb24f8d'
+
+      }else if(this.currentID%4==3)
+      {
+        this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F05%2F20170405213655_uSEiT.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=0f75b074995a35b8c4e818116dd79fa8'
+
+      }
+
+    },
     jumpPage(){
       //alert(this.dialogFormVisible)
     this.dialogFormVisible = true
@@ -386,7 +421,7 @@ export default {
 
           this.tableData[i].name = res.data.data.questionList[i].name
           if(res.data.data.questionList[i].submission==0)
-            this.tableData[i].passingRate = "0%"
+            this.tableData[i].passingRate = "--"
           else
           this.tableData[i].passingRate = res.data.data.questionList[i].pass/res.data.data.questionList[i].submission
         }
@@ -426,6 +461,7 @@ export default {
       this.getCurrentId()
       this.updateTmpInfo()
       this.refreshP()
+      this.updateHeadImg()
 
 
       // axios.post(
