@@ -15,7 +15,6 @@ public final class HackSystem {
     private HackSystem() {
     }
 
-    public final static InputStream in = new HackInputStream();
 
     public final static PrintStream out = new HackPrintStream();
 
@@ -32,15 +31,10 @@ public final class HackSystem {
      * 关闭当前线程的输入流和输出流
      */
     public static void closeBuffer() {
-        ((HackInputStream) in).close();
         out.close();
     }
 
     private static volatile SecurityManager security = null;
-
-    public static void setIn(InputStream in) {
-        throw new SecurityException("Use hazardous method: System.setIn().");
-    }
 
     public static void setOut(PrintStream out) {
         throw new SecurityException("Use hazardous method: System.setOut().");

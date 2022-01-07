@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SampleRepository extends JpaRepository<Sample,Long> {
 
-    List<Sample> findByQuestionIdAndAndIsTest(Long questionId,Long isTest);
+    List<Sample> findAllByQuestionIdAndIsTest(Long questionId,Long isTest);
 }

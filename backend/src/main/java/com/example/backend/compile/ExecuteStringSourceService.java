@@ -48,7 +48,7 @@ public class ExecuteStringSourceService {
         }
 
         // 运行字节码的main方法
-        Callable<String> runTask = () -> JavaClassExecutor.execute(classBytes, systemIn);
+        Callable<String> runTask = () -> JavaClassExecutor.execute(classBytes);
         Future<String> res;
         try {
             res = pool.submit(runTask);
@@ -73,7 +73,9 @@ public class ExecuteStringSourceService {
     }
 
     public String handle(String source, String input) {
+        input = input.replace("[","{").replace("]","}");
         input = input.replace("{\"", "new String[]{\"");
+        input = input.replaceAll("(\\{\\d+)", "new int[]{\"");
         int index = source.indexOf('{');
         source = source.substring(0, index + 1) + "    public static void main(String[] args) {\n" +
                 "        System.out.println(run(" + input + "));\n" +
