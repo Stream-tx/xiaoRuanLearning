@@ -56,4 +56,9 @@ public class SolutionServiceImpl implements SolutionService {
         }
         return counts;
     }
+
+    @Override
+    public void deleteSolution(Long solutionId) {
+        solutionRepository.deleteById(solutionId);
+    }
 }

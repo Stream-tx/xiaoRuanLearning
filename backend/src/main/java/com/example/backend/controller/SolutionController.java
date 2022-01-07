@@ -41,4 +41,15 @@ public class SolutionController {
         solutionService.likesIncrement(solutionId);
         return Result.success(null);
     }
+
+    @PostMapping("deleteSolution")
+    public Result deleteSolution(@RequestParam Long solutionId){
+        solutionService.deleteSolution(solutionId);
+        return Result.success(null);
+    }
+
+    @PostMapping("getSolutionById")
+    public Result getSolutionById(@RequestParam Long solutionId){
+        return Result.success(solutionService.findBySolutionId(solutionId).getUserId());
+    }
 }
