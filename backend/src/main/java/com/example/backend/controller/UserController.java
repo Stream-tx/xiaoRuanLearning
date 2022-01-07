@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import cn.hutool.core.map.MapUtil;
 import com.example.backend.common.Result;
 import com.example.backend.dto.LoginDto;
 import com.example.backend.dto.RegisterDto;
@@ -40,7 +41,7 @@ public class UserController {
         String university = registerDto.getUniversity();
         User user = userService.findUserByUsername(username);
         if (user == null) {
-            userService.saveUser(new User(username, password, email,university));
+            userService.saveUser(new User(username, password, email, university));
             return Result.success(null);
         } else
             return Result.fail("The username already exists!");
@@ -52,22 +53,24 @@ public class UserController {
         if (user == null) {
             return Result.fail("The password is not correct!");
         } else {
-            return Result.success(user);
+            return Result.success(MapUtil.builder()
+                    .put("id", user.getUserId())
+                    .put("username", user.getUsername())
+                    .put("avatar", user.getAvatar())
+                    .put("email", user.getEmail())
+                    .map());
         }
     }
-
     @PostMapping("accountInfo")
-    public Result accountInfo(HttpSession session){
-        User user = (User) session.getAttribute("user");
+    public Result accountInfo(@RequestBody Long userId) {
+        User user = userService.findUserById(userId);
         Map<Object, Object> map = userService.getUserQuestions(user);
         return Result.success(map);
     }
 
     @PostMapping("updateInfo")
-    public Result update(@Validated @RequestBody User user,HttpSession session){
-        User user1 = (User) session.getAttribute("user");
-        userService.updateUser(user1.getUserId(),user);
-        session.setAttribute("user",userService.findUserById(user1.getUserId()));
+    public Result update(@Validated @RequestBody User user) {
+        userService.updateUser(user.getUserId(), user);
         return Result.success(user);
     }
 
