@@ -56,11 +56,19 @@ export default {
             else
               args = t[0] + " arg1"
           }
-          editor.setValue("public class Run {\n"
+          let content = "public class Run {\n"
             + "    public " + returnT + " run(" + args + ") {\n"
             + "        \n"
             + "    }\n"
-            + "}")
+            + "}"
+          this.$http.post("http://localhost:8081/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
+            .then(res => {
+              tmp = res.data.data.content
+              if (tmp.length() > 10) {
+                content = tmp
+              }
+            })
+          editor.setValue(content)
         }
       )
 

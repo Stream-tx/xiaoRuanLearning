@@ -1,11 +1,9 @@
 package com.example.backend.controller;
 
 import com.example.backend.common.Result;
+import com.example.backend.entity.Code;
 import com.example.backend.service.CodeService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("code")
@@ -25,6 +23,14 @@ public class CodeController {
     @PostMapping("getTheLatestCode")
     public Result getTheLatestCode(@RequestParam Long userId, @RequestParam Long questionId){
         return Result.success(codeService.getTheLatestCode(userId,questionId));
+    }
+
+    @PostMapping("saveCode")
+    public Result saveCode(@RequestBody Code code) {
+        Code c = codeService.findCodeById(code.getCodeId());
+        c.setContent(code.getContent());
+        codeService.updateCode(code);
+        return Result.success(null);
     }
 
 }

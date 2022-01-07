@@ -30,8 +30,7 @@
             </el-tag>
             <el-divider></el-divider>
             <div v-for="sample in samples">
-              样例输入：<span
-                style="color:orangered;width:300px; display:inline-block;">{{sample.input}}</span>
+              样例输入：<span style="color:orangered;width:300px; display:inline-block;">{{sample.input}}</span>
               输出：<span style="color:green; display:inline-block;">{{sample.output}}</span>
             </div>
           </el-tab-pane>
@@ -157,37 +156,37 @@ export default {
     Solution,
   },
   methods: {
-    next(){
-      var id=parseInt(this.id)+1;
+    next () {
+      var id = parseInt(this.id) + 1
       //console.log("router","/hdoj/bank/q/"+id)
-      window.location.href="/hdoj/bank/q/"+id;
+      window.location.href = "/hdoj/bank/q/" + id
     },
-    before(){
-      var id=parseInt(this.id)-1;
+    before () {
+      var id = parseInt(this.id) - 1
       //console.log("router","/hdoj/bank/q/"+id)
-      window.location.href="/hdoj/bank/q/"+id;
+      window.location.href = "/hdoj/bank/q/" + id
     },
     random () {
       //这里需要改成题目总数！
-      var id=(parseInt(this.id)+(Math.floor(Math.random() * 30 + 1)))%30;
+      var id = (parseInt(this.id) + (Math.floor(Math.random() * 30 + 1))) % 30
       //console.log("router","/hdoj/bank/q/"+id)
-      window.location.href="/hdoj/bank/q/"+id;
+      window.location.href = "/hdoj/bank/q/" + id
     },
-    loaddata(){
-      var token=JSON.parse(localStorage.token);
-      this.$http.post("http://localhost:8081/code/getCodeByUidAndQid?userId="+token.id+"&questionId="+this.id)
-          .then(response => {
-            console.log("response_new",response.data.data)
-            let tableData1 = [];
-            for(let i in response.data.data){
-              tableData1.push(response.data.data[i]);
-            }
-            this.tableData = tableData1;
-            console.log("table",this.tableData);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+    loaddata () {
+      var token = JSON.parse(localStorage.token)
+      this.$http.post("http://localhost:8081/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id)
+        .then(response => {
+          console.log("response_new", response.data.data)
+          let tableData1 = []
+          for (let i in response.data.data) {
+            tableData1.push(response.data.data[i])
+          }
+          this.tableData = tableData1
+          console.log("table", this.tableData)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     changeTabs (tab, e) {
       console.log(tab.index)
@@ -237,6 +236,7 @@ export default {
       this.code = c
     },
     questionquery () {
+      var token = JSON.parse(localStorage.token)
       console.log("this.id", this.id)
       this.$http.post("http://localhost:8081/question/getQuestion?questionId=" + this.id)
         .then(res => {
@@ -246,7 +246,7 @@ export default {
           else if (res.data.data.difficulty == "中等") this.tags[0] = { name: '中等', type: 'warning' }
           else if (res.data.data.difficulty == "困难") this.tags[0] = { name: '困难', type: 'danger' }
           this.tags0 = res.data.data.labels.split(",")
-          this.myArgs = [res.data.data.returnType, res.data.data.argsType]
+          this.myArgs = [res.data.data.returnType, res.data.data.argsType, token.id, this.id]
         })
     },
     samplequery () {
@@ -256,14 +256,14 @@ export default {
         })
     }
   },
-  mounted() {
-    this.id=this.$route.params.id;
-    this.$refs.nowPage.$el.innerHTML=this.id;
-    this.$refs.maxPage.$el.innerHTML=200;
-    window.localStorage.setItem("currentQuestionId",this.id);
-    this.loaddata();
-    this.questionquery();
-    this.samplequery();
+  mounted () {
+    this.id = this.$route.params.id
+    this.$refs.nowPage.$el.innerHTML = this.id
+    this.$refs.maxPage.$el.innerHTML = 200
+    window.localStorage.setItem("currentQuestionId", this.id)
+    this.loaddata()
+    this.questionquery()
+    this.samplequery()
   }
 }
 </script>
