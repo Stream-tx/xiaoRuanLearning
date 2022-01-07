@@ -138,7 +138,7 @@
               slot="dateCell"
               slot-scope="{date, data}">
             <div class="calendar-day">{{ data.day.split('-').slice(1).join('-') }}</div>
-            <div v-if="data.day.split('-').slice(1)[0] == month" > //判断显示当前页，value是显示当前月份
+            <div v-if="data.day.split('-').slice(1)[0] == month" >
             </div>
           </template>
         </el-calendar>
@@ -497,12 +497,12 @@ export default {
 }
 .el-row {
   margin-bottom: 20px;
-  &:last-child {
-   margin-bottom: 0;
- }
 }
 .el-col {
   border-radius: 4px;
+}
+.el-table__row:hover{
+	cursor: pointer;
 }
 .bg-purple-dark {
   background: #99a9bf;

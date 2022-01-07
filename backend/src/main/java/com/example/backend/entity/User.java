@@ -42,6 +42,7 @@ public class User implements Serializable {
         this.password = password;
         this.email = email;
         this.university = university;
+        this.age = age;
         try {
             String path = Objects.requireNonNull(User.class.getClassLoader().getResource("")).getPath().split("target")[0] + "src/main/resources/photo/avatar.jpg";
             this.avatar = getByte(new File(path));
