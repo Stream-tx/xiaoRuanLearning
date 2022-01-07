@@ -39,4 +39,9 @@ public class SolutionServiceImpl implements SolutionService {
         solution.setCreatedTime(LocalDate.now());
         solutionRepository.save(solution);
     }
+
+    @Override
+    public List<Integer> findSolutionCount() {
+        return solutionRepository.findSolutionCount();
+    }
 }

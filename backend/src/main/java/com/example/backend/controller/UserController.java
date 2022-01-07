@@ -11,10 +11,7 @@ import com.example.backend.service.UserService;
 import com.example.backend.util.MD5Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -62,8 +59,9 @@ public class UserController {
         }
     }
     @PostMapping("accountInfo")
-    public Result accountInfo(@RequestBody Long userId) {
-        User user = userService.findUserById(userId);
+    public Result accountInfo(@RequestBody Object json) {
+        Map<String, String> userId = (Map<String, String>) json;
+        User user = userService.findUserById(Long.parseLong(userId.get("userId")));
         Map<Object, Object> map = userService.getUserQuestions(user);
         return Result.success(map);
     }
@@ -72,6 +70,12 @@ public class UserController {
     public Result update(@Validated @RequestBody User user) {
         userService.updateUser(user.getUserId(), user);
         return Result.success(user);
+    }
+
+    @PostMapping("getUserInfo")
+    public Result getUserInfo(@RequestParam Long userId) {
+        User user = userService.findUserById(userId);
+        return Result.success(user.getUsername());
     }
 
 }

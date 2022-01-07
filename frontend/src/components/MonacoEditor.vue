@@ -33,7 +33,7 @@ export default {
         wordWrap: 'on',
       })
       editor.setValue("public class Run {\n"
-        + "    public static void main(String[] args) {\n"
+        + "    public String run(String s) {\n"
         + "        \n"
         + "    }\n"
         + "}")

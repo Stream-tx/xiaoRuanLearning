@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -35,7 +36,7 @@ public class StringSourceCompiler {
         JavaFileObject sourceJavaFileObject = new TmpJavaFileObject(className, source);
 
         Boolean result = compiler.getTask(null, javaFileManager, compileCollector,
-                null, null, Arrays.asList(sourceJavaFileObject)).call();
+                null, null, Collections.singletonList(sourceJavaFileObject)).call();
 
         JavaFileObject bytesJavaFileObject = fileObjectMap.get(className);
         if (result && bytesJavaFileObject != null) {

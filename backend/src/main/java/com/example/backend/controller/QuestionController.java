@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.common.Result;
 import com.example.backend.entity.Question;
 import com.example.backend.service.QuestionService;
+import com.example.backend.service.SolutionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -37,5 +38,11 @@ public class QuestionController {
     public Result listQuestions(){
         List<Question> questions = questionService.listQuestions();
         return Result.success(questions);
+    }
+
+    @PostMapping("getQuestion")
+    public Result check(@RequestParam Long questionId) {
+        Question question = questionService.findQuestion(questionId);
+        return Result.success(question);
     }
 }
