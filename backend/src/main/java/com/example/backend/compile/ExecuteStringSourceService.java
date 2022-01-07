@@ -1,8 +1,5 @@
 package com.example.backend.compile;
 
-import com.example.backend.entity.Question;
-import com.example.backend.service.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;
@@ -77,7 +74,7 @@ public class ExecuteStringSourceService {
         input = input.replace("{\"", "new String[]{\"");
         input = input.replaceAll("(\\{\\d+)", "new int[]{\"");
         int index = source.indexOf('{');
-        source = source.substring(0, index + 1) + "    public static void main(String[] args) {\n" +
+        source = source.substring(0, index + 1)+"\n    public static void main(String[] args) {\n" +
                 "        System.out.println(run(" + input + "));\n" +
                 "    }" + source.substring(index + 1);
         return source;

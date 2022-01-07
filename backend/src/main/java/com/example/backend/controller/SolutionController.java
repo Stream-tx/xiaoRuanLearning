@@ -29,4 +29,10 @@ public class SolutionController {
         solutionService.addSolution(solution);
         return Result.success(null);
     }
+
+
+    @PostMapping("getSolutionCount")
+    public Result getSolutionCount() {
+        return Result.success(solutionService.findSolutionCount());
+    }
 }

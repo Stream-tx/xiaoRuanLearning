@@ -5,6 +5,8 @@ import com.example.backend.repository.CodeRepository;
 import com.example.backend.service.CodeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CodeServiceImpl implements CodeService {
     private final CodeRepository codeRepository;
@@ -15,6 +17,18 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public Code findCodeById(Long codeId) {
-        return codeRepository.getById(codeId);
+        return codeRepository.findById(codeId).orElse(null);
     }
+
+    @Override
+    public List<Code> getCodeByUserIdAndQuestionId(Long userId, Long questionId) {
+        return codeRepository.findAllByUserIdAndQuestionId(userId,questionId);
+    }
+
+    @Override
+    public Code getTheLatestCode(Long userId, Long questionId) {
+        return codeRepository.findCodeByUserIdAndQuestionIdOrderBySubmitTimeAsc(userId,questionId);
+    }
+
+
 }

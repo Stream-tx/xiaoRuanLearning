@@ -1,6 +1,5 @@
 package com.example.backend.service.impl;
 
-import com.example.backend.common.Result;
 import com.example.backend.compile.ExecuteStringSourceService;
 import com.example.backend.entity.Question;
 import com.example.backend.entity.Sample;
@@ -17,11 +16,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final SampleRepository sampleRepository;
-    private ExecuteStringSourceService execute;
+    private final ExecuteStringSourceService executeStringSourceService;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, SampleRepository sampleRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, SampleRepository sampleRepository, ExecuteStringSourceService executeStringSourceService) {
         this.questionRepository = questionRepository;
         this.sampleRepository = sampleRepository;
+        this.executeStringSourceService = executeStringSourceService;
     }
 
     @Override
@@ -36,14 +36,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> listQuestions() {
-        return questionRepository.findAll();
+        return questionRepository.listQuestion();
     }
 
     @Override
     public Boolean check(String code, Long questionId) {
         List<Sample> samples = listTestSamples(questionId);
         for(Sample sample : samples) {
-            String runResult = execute.execute(code, sample.getInput());
+            String runResult = executeStringSourceService.execute(code, sample.getInput());
             if(!runResult.equals(sample.getOutput()))
                 return false;
         }
@@ -56,9 +56,11 @@ public class QuestionServiceImpl implements QuestionService {
         String[] split = input.split(regex);
         List<String> result = new ArrayList<>();
         for(String s:split) {
-            String runResult = execute.execute(code,s);
+            String runResult = executeStringSourceService.execute(code,s);
             result.add(runResult);
         }
         return result;
     }
+
+
 }
