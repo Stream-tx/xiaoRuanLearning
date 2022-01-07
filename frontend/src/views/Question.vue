@@ -35,7 +35,8 @@
             </el-tag>
             <el-divider></el-divider>
             <div v-for="sample in samples">
-              {{sample.input}}{{sample.output}}
+              样例输入：<span style="color:orangered;width:300px; display:inline-block; text-align:center;">{{sample.input}}</span>
+              输出：<span style="color:green; display:inline-block; text-align:center;">{{sample.output}}</span>
             </div>
           </el-tab-pane>
           <el-tab-pane label="题解">
@@ -242,11 +243,9 @@ export default {
           })
     },
     samplequery(){
-      console.log("this.id", this.id)
       this.$http.post("http://localhost:8081/sample/listSamples?questionId=" + this.id)
           .then(res => {
-            console.log("res.data", res.data.data);
-
+            this.samples=res.data.data
           })
     }
   },
