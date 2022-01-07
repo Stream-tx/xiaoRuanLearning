@@ -11,4 +11,6 @@ public interface CodeService {
     List<Code> getCodeByUserIdAndQuestionId(Long userId, Long questionId);
 
     Code getTheLatestCode(Long userId, Long questionId);
+
+    void updateCode(Code code);
 }

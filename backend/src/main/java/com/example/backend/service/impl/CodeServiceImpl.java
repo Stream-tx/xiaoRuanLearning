@@ -30,5 +30,10 @@ public class CodeServiceImpl implements CodeService {
         return codeRepository.findCodeByUserIdAndQuestionIdOrderBySubmitTimeAsc(userId,questionId);
     }
 
+    @Override
+    public void updateCode(Code code) {
+        codeRepository.save(code);
+    }
+
 
 }
