@@ -133,12 +133,10 @@
           <div class="personalInfoTitle">
             个人介绍
           </div>
-          <div class="personalInfoContent" >
+          <div class="personalInfoContent" style="white-space: pre-line" >
             {{this.content}}
           </div>
         </el-col>
-
-
 
 
       </div>
@@ -146,7 +144,7 @@
 
         <div class="question" style="margin-top:140px;">
           <hr style="margin-top:-15px;">
-          <h2 style="text-align:left;margin-top:20px;">题解记录</h2>
+          <h2 style="text-align:left;margin-top:20px;">提交记录</h2>
           <el-table
               @row-click="openDetails"
               :data="tableData"
@@ -417,6 +415,7 @@ export default {
 
         for(var i = 0;i<res.data.data.questionList.length;i++)
         {
+          this.tableData[i].questionId = res.data.data.questionList[i].questionId
           this.tableData[i].difficulty = res.data.data.questionList[i].difficulty
 
           this.tableData[i].name = res.data.data.questionList[i].name
@@ -429,6 +428,10 @@ export default {
 
       })
 
+    },
+    openDetails(row){
+      window.localStorage.setItem("questionId",row.questionId);
+      this.$router.push("/hdoj/bank/q/"+row.questionId);
     },
     getCurrentId(){
       var userInfo  = JSON.parse(localStorage.getItem('token'));

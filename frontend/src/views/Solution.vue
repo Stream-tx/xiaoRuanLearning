@@ -14,10 +14,10 @@
     </el-row>
     <el-collapse>
       <el-collapse-item title="思路" name="1">
-        <div style="text-align: left">{{solutions[currentIndex].content}}</div>
+        <div style="text-align: left;white-space:pre-line">{{solutions[currentIndex].content}}</div>
       </el-collapse-item>
       <el-collapse-item title="代码" name="2">
-        <div style="text-align: left">{{solutions[currentIndex].code}}</div>
+        <div style="text-align: left;white-space:pre-line">{{solutions[currentIndex].code}}</div>
       </el-collapse-item>
       <el-collapse-item title="评论" name="3">
         <el-card style="background-color: #444444" class="box-card" v-for="item in comments" :key="item.id" @click="view(item)">
