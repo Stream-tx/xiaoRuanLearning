@@ -4,10 +4,7 @@ import com.example.backend.common.Result;
 import com.example.backend.entity.Question;
 import com.example.backend.entity.Sample;
 import com.example.backend.service.SampleService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class SampleController {
     }
 
     @PostMapping("listSamples")
-    public Result listSamples(@RequestBody Long questionId){
+    public Result listSamples(@RequestParam Long questionId){
         List<Sample> samples = sampleService.listSamples(questionId);
         return Result.success(samples);
     }
