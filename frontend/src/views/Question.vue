@@ -16,9 +16,9 @@
       <el-aside width="50%" >
         <el-tabs type="border-card" style="height: 100%" @tab-click="changeTabs">
           <el-tab-pane label="题目描述">
-            题目名字
+            {{this.questionname}}
             <el-divider></el-divider>
-            题目内容
+            {{this.questiondescription}}
           </el-tab-pane>
           <el-tab-pane label="题解">
             <Solution/>
@@ -140,6 +140,8 @@ export default {
       input:'',
       dialogVisible:false,
       dialogNewVisible:false,
+      questionname:'',
+      questiondescription:''
     };
   },
   components:{
@@ -151,24 +153,28 @@ export default {
       //这里需要改成题目总数！
       this.$router.push("/hdoj/bank/q/"+(Math.floor(Math.random() * 3 + 1)).toString());
     },
-    // loaddata(){
-    //   this.$axios
-    //       .get("")
-    //       .then(response => {
-    //         let tableData1 = [];
-    //         /**
-    //          * 这里需要将拿到的对象转为数组，进行赋值，这样才不会类型错误
-    //          */
-    //         for(let i in response.data.data.XXX){
-    //           tableData1.push(response.data.data.XXX[i]);
-    //         }
-    //         this.tableData = tableData1;
-    //         //console.log(response);
-    //       })
-    //       .catch(error => {
-    //         console.log(error);
-    //       });
-    // },
+    loaddata(){
+      this.$http.post("http://localhost:8081/account/accountinfo",{
+        params:{
+          "code": this.code,
+          'questionId': this.id,
+        }
+      })
+          .then(response => {
+            let tableData1 = [];
+            /**
+             * 这里需要将拿到的对象转为数组，进行赋值，这样才不会类型错误
+             */
+            for(let i in response.data.data.XXX){
+              tableData1.push(response.data.data.XXX[i]);
+            }
+            this.tableData = tableData1;
+            //console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
     changeTabs(tab,e){
       console.log(tab.index);
       if(tab.index==1)
@@ -216,6 +222,14 @@ export default {
     },
     handleCode(c){
       this.code=c;
+    },
+    questionquery(){
+      console.log("this.id",this.id)
+      this.$http.post("http://localhost:8081/question/getQuestion?questionId="+this.id)
+          .then(res =>{
+          console.log("res.data",res.data);
+          alert(res.data.data);
+      })
     }
   },
   mounted() {
@@ -223,6 +237,7 @@ export default {
     this.$refs.nowPage.$el.innerHTML=this.id;
     this.$refs.maxPage.$el.innerHTML=200;
     // this.loaddata();
+    this.questionquery();
   }
 }
 </script>
