@@ -12,9 +12,31 @@
       <el-aside width="50%">
         <el-tabs type="border-card" style="height: 100%" @tab-click="changeTabs">
           <el-tab-pane label="题目描述">
-            {{this.questionname}}
+            <div style="font-size:40px">
+              {{this.id}}
+              {{this.questionname}}
+            </div>
             <el-divider></el-divider>
             {{this.questiondescription}}
+            <el-divider></el-divider>
+            题目难度：
+            <el-tag
+                v-for="tag in tags"
+                :key="tag.name"
+                :type="tag.type">
+             {{tag.name}}
+            </el-tag>
+            <br>
+            题目标签：
+            <el-tag
+                v-for="tag in tags0"
+                :key="tag">
+              {{tag}}
+            </el-tag>
+            <el-divider></el-divider>
+            <div v-for="sample in samples">
+              {{sample.input}}{{sample.output}}
+            </div>
           </el-tab-pane>
           <el-tab-pane label="题解">
             <Solution />
@@ -124,7 +146,10 @@ export default {
       dialogVisible:false,
       dialogNewVisible:false,
       questionname:'',
-      questiondescription:''
+      questiondescription:'',
+      tags:[],
+      tags0:[],
+      samples:[]
     };
   },
   components: {
@@ -206,11 +231,22 @@ export default {
       this.code=c;
     },
     questionquery() {
-      console.log("this.id", this.id)
       this.$http.post("http://localhost:8081/question/getQuestion?questionId=" + this.id)
           .then(res => {
-            console.log("res.data", res.data);
-            alert(res.data.data);
+            this.questionname=res.data.data.name;
+            this.questiondescription=res.data.data.description;
+            if(res.data.data.difficulty=="简单") this.tags[0]={name:'简单',type:'success'};
+            else if(res.data.data.difficulty=="中等") this.tags[0]={name:'中等',type:'warning'};
+            else if(res.data.data.difficulty=="困难") this.tags[0]={name:'困难',type:'danger'};
+            this.tags0=res.data.data.labels.split(",");
+          })
+    },
+    samplequery(){
+      console.log("this.id", this.id)
+      this.$http.post("http://localhost:8081/sample/listSamples?questionId=" + this.id)
+          .then(res => {
+            console.log("res.data", res.data.data);
+
           })
     }
   },
@@ -220,6 +256,7 @@ export default {
     this.$refs.maxPage.$el.innerHTML = 200
     // this.loaddata();
     this.questionquery();
+    this.samplequery();
   }
 }
 </script>
