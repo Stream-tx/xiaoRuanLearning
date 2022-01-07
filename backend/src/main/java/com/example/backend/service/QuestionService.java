@@ -16,7 +16,7 @@ public interface QuestionService {
 
     Result check(String code, Long questionId);
 
-    String submitTestCase(String code, String input);
+    String submitTestCase(String code, String input, Long questionId);
 
     String compile(String code);
 

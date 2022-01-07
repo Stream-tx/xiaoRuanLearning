@@ -22,7 +22,8 @@ public class QuestionController {
     public Result submitTestCase(@RequestBody Map<String, String> data) {
         String input = data.get("input");
         String code = data.get("code");
-        String result = questionService.submitTestCase(code, input);
+        String questionId = data.get("questionId");
+        String result = questionService.submitTestCase(code, input,Long.parseLong(questionId));
         return Result.success(result);
     }
 

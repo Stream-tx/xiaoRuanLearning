@@ -63,9 +63,11 @@ export default {
             + "}"
           axios.post("http://localhost:8081/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
             .then(res => {
-              let tmp = res.data.data.content
-              if (tmp.length > 10) {
-                content = tmp
+              if (res != null) {
+                let tmp = res.data.data.content
+                if (tmp.length > 10) {
+                  content = tmp
+                }
               }
             })
           editor.setValue(content)

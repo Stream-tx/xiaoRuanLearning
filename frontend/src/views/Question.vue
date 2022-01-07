@@ -38,17 +38,35 @@
             <Solution />
           </el-tab-pane>
           <el-tab-pane label="提交记录">
-            <div class="status">
-              <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
-                <el-table-column label="id" align="center" prop="id" v-if="false" />
-                <el-table-column prop="result" label="提交结果" width="100">
-                </el-table-column>
-                <el-table-column prop="language" label="语言" width="100">
-                </el-table-column>
-                <el-table-column prop="submitTime" label="提交时间" sortable width="150">
-                </el-table-column>
-              </el-table>
-            </div>
+            <el-card style="">
+              <el-card-content v-if="this.result">
+                <!-- 运行成功 -->
+                <div v-if="this.result.code == 200">
+                  执行结果： <span>通过</span><br>
+                  执行用时： <span>{{this.result.data.time}}</span><br>
+                  通过测试用例： <span>{{this.result.data.allCases}}</span> / <span>{{this.result.data.allCases}}</span><br>
+                </div>
+                <!-- 运行失败 -->
+                <div v-else>
+                  执行结果： <span>未通过</span><br>
+                  执行用时： <span>{{this.result.data.time}}</span><br>
+                  通过测试用例： <span>{{this.result.data.testCases}}</span> / <span>{{this.result.data.allCases}}</span><br>
+                  未通过用例： <span>{{this.result.data.input}}</span><br>
+                  错误信息： <span>{{this.result.data.errorMessage}}</span><br>
+                </div>
+              </el-card-content>
+              <el-card-content class="status">
+                <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
+                  <el-table-column label="id" align="center" prop="id" v-if="false" />
+                  <el-table-column prop="result" label="提交结果" width="100">
+                  </el-table-column>
+                  <el-table-column prop="language" label="语言" width="100">
+                  </el-table-column>
+                  <el-table-column prop="submitTime" label="提交时间" sortable width="150">
+                  </el-table-column>
+                </el-table>
+              </el-card-content>
+            </el-card>
           </el-tab-pane>
         </el-tabs>
         <el-button type="primary" plain v-if="this.current==true" @click="this.dialogNewVisible = true" size="mini"
@@ -72,7 +90,7 @@
           </div>
         </el-col>
         <el-col :span="2">
-          <div class="grid-content ">
+          <div class="grid-content">
             <el-button-group>
               <el-button type="text" ref="nowPage"></el-button>
               <el-button type="text">/</el-button>
@@ -138,28 +156,24 @@ import Submit from "../views/Submit.vue"
 export default {
   data () {
     return {
-      myArgs:'',
-      form:{
-        code:'',
-        content:'',
-        language:'',
-        title:''
-      },
-      current:'',
-      id:'',
-      nowPage:'1',
-      maxPage:'200',
-      tableData:[],
-      code:'',
-      input:'',
-      dialogVisible:false,
-      dialogNewVisible:false,
-      questionname:'',
-      questiondescription:'',
-      tags:[],
-      tags0:[],
-      samples:[]
-    };
+      myArgs: {},
+      form: {},
+      current: '',
+      id: '',
+      nowPage: '1',
+      maxPage: '200',
+      tableData: [],
+      code: '',
+      input: '',
+      dialogVisible: false,
+      dialogNewVisible: false,
+      questionname: '',
+      questiondescription: '',
+      tags: [],
+      tags0: [],
+      samples: [],
+      result: {}
+    }
   },
   components: {
     Submit,
@@ -241,7 +255,8 @@ export default {
         'questionId': this.id,
       }).then(res => {
         console.log(res)
-        alert(res.data.data.result)
+        document.getElementById("tab-2").click()
+        this.result = res.data
       }).catch(err => {
         console.log(err)
       })
@@ -291,7 +306,8 @@ export default {
       }
       this.$http.post("http://localhost:8081/question/submitTestCase", {
         "code": this.code,
-        'input': this.input
+        'input': this.input,
+        'questionId': this.id
       }).then(res => {
         console.log(res)
         alert(res.data.data.result)
@@ -339,11 +355,10 @@ export default {
 
 <style>
 .el-aside {
-  height: 77vh;
+  height: auto;
 }
 .el-main {
   height: 77vh;
   background-color: lightgrey;
 }
-
 </style>
