@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,8 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public Result login(@Validated @RequestBody LoginDto loginDto, HttpSession session) {
+    public Result login(@Validated @RequestBody LoginDto loginDto) {
         User user = userService.checkUser(loginDto.getUsername(), loginDto.getPassword());
-        session.setAttribute("user",user);
         if (user == null) {
             return Result.fail("The password is not correct!");
         } else {
@@ -59,8 +59,6 @@ public class UserController {
     @PostMapping("accountInfo")
     public Result accountInfo(HttpSession session){
         User user = (User) session.getAttribute("user");
-        if(user == null)
-            return Result.fail("The user doesn't exist!");
         Map<Object, Object> map = userService.getUserQuestions(user);
         return Result.success(map);
     }
@@ -68,11 +66,9 @@ public class UserController {
     @PostMapping("updateInfo")
     public Result update(@Validated @RequestBody User user,HttpSession session){
         User user1 = (User) session.getAttribute("user");
-        if(user1 == null)
-            return Result.fail("The user doesn't exist!");
         userService.updateUser(user1.getUserId(),user);
         session.setAttribute("user",userService.findUserById(user1.getUserId()));
-        return Result.success(null);
+        return Result.success(user);
     }
 
 }
