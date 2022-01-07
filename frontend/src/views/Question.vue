@@ -205,15 +205,13 @@ export default {
     handleCode(c){
       this.code=c;
     },
-    questionquery(){
-      console.log("this.id",this.id)
-      this.$http.post("http://localhost:8081/question/getQuestion?questionId="+this.id)
-          .then(res =>{
-          console.log("res.data",res.data);
-          alert(res.data.data);
-      })
-    handleCode (c) {
-      this.code = c
+    questionquery() {
+      console.log("this.id", this.id)
+      this.$http.post("http://localhost:8081/question/getQuestion?questionId=" + this.id)
+          .then(res => {
+            console.log("res.data", res.data);
+            alert(res.data.data);
+          })
     }
   },
   mounted () {
