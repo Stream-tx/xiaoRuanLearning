@@ -35,4 +35,10 @@ public class SolutionController {
     public Result getSolutionCount() {
         return Result.success(solutionService.findSolutionCount());
     }
+
+    @PostMapping("likesIncrement")
+    public Result likesIncrement(Long solutionId) {
+        solutionService.likesIncrement(solutionId);
+        return Result.success(null);
+    }
 }
