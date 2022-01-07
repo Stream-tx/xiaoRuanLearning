@@ -15,4 +15,6 @@ public interface SolutionService {
     void addSolution(Solution solution);
 
     List<Integer> findSolutionCount();
+
+    void deleteSolution(Long solutionId);
 }

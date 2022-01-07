@@ -13,4 +13,6 @@ public interface CommentService {
     void likesIncrement(Long commentId);
 
     void addComment(Comment comment);
+
+    void deleteComment(Long commentId);
 }
