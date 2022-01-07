@@ -10,7 +10,7 @@
             placeholder="请输入内容进行搜索"
         ></el-autocomplete>
       </el-col>
-      <el-button @click="searchFile" style="height:40px; background-color: #b3c0d1;margin-left:150px; margin-top:10px; width:100px;">资料搜索</el-button>
+      <el-button @click="searchFile" style="height:40px; background-color: #b3c0d1;margin-left:220px; margin-top:10px; width:100px;">资料搜索</el-button>
     </el-row>
     </el-header>
 
@@ -29,7 +29,7 @@
           style="width: 100%; padding-left: 20%;padding-right: 5%;border-radius: 20px;"
           :row-class-name="tableRowClassName"
       >
-        <el-table-column label="id" align="center" prop="id" v-if="false" />
+        <el-table-column label="referenceId" align="center" prop="id" v-if="false" />
         <el-table-column
             prop="name"
             label="资料名"
@@ -50,7 +50,7 @@
             sortable
             width="160">
           <template #default="scope">
-            <div @click="searchFile(scope.$index)">点击下载</div>
+            <div @click="downloadFile(scope.$index)">点击下载</div>
           </template>
         </el-table-column>
 
@@ -66,26 +66,26 @@ import axios from "axios";
 export default {
   data() {
     return {
-      contentData:' ',
+      contentData:'',
       tableData:[{
-        id:'1',
-        name:'计算机系统结构',
-        introduction:'Computer Science',
+        referenceId:'1',
+        name:'数据挖掘十大算法',
+        introduction:'数据挖掘十大算法',
         download:'点击下载',
-        link:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
       },{
-        id:'1',
+        referenceId:'1',
         name:'SOA与微服务架构',
         introduction:'',
         download:'点击下载',
-        link:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
 
       },{
-        id:'1',
-        name:'容错与安全计算',
+        referenceId:'1',
+        name:'数据库原理与应用',
         introduction:'',
         download:'点击下载',
-        link:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
+        url:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgservice.suning.cn%2Fuimg1%2Fb2c%2Fimage%2FkVbS2xUghxr1pRttX-d8MA.jpg_800w_800h_4e&refer=http%3A%2F%2Fimgservice.suning.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644046631&t=3509164239738935c80386b7eb7d665d'
 
       }],
       imgs:[{
@@ -115,9 +115,26 @@ export default {
     };
   },
   methods: {
-    searchFile(i){
+
+
+
+searchFile()
+    {
+      axios.post(
+          "http://localhost:8081/reference/searchReference?searchKey="+this.contentData
+      ).then(res => {
+        this.tableData.splice(0,this.tableData.length)
+        console.log(res)
+        for(var i = 0;i<res.data.data.length;i++)
+        {
+          this.tableData.push(res.data.data[i])
+        }
+
+      })
+    },
+    downloadFile(i){
       alert(i)
-      this.linkTo(this.tableData[i].link,this.tableData[i].name)
+      this.linkTo(this.tableData[i].url,this.tableData[i].name)
       // var param = this.contentData
       // axios.post(
       //     "http://localhost:8081/submit", param

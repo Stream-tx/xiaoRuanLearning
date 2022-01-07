@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("updateInfo")
-    public Result update(@Validated @RequestBody User user) {
+    public Result update(@RequestBody User user) {
         userService.updateUser(user.getUserId(), user);
         return Result.success(user);
     }

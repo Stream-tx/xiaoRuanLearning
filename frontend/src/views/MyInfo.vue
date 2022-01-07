@@ -38,7 +38,8 @@
 
           <div class="course-title" >个人介绍：<el-input
               class="mb-4"
-              :autosize="{ minRows: 3}"
+              type="textarea"
+              :autosize="{ minRows: 5}"
               v-model="this.contentAlter"
               placeholder="请输入修改后的内容"
               outline
@@ -64,7 +65,7 @@
         <el-row style="height:40px">
           <el-col :span="20" ><h2 >个人资料</h2></el-col>
           <el-col :span="1">
-            <el-button  @click="jumpPage"  style="width:180px;height:40px; border-radius:10px;"><router-link to="/hdoj/alterInfo">编辑个人资料</router-link></el-button>
+            <el-button  @click="jumpPage"  style="width:130px;height:40px; border-radius:10px;">编辑个人资料</el-button>
           </el-col>
         </el-row>
 
@@ -155,7 +156,7 @@
           >
             <el-table-column label="id" align="center" prop="id" v-if="false" />
             <el-table-column
-                prop="state"
+                prop="result"
                 label="状态"
                 sortable
                 width="150">
@@ -180,7 +181,7 @@
                 width="100">
             </el-table-column>
             <el-table-column
-                prop="submissionTime"
+                prop="submitTime"
                 label="提交时间"
                 sortable
                 width="180">
@@ -228,6 +229,8 @@ export default {
       show: true,
       showAvatar: false,
 
+      currentID:'',
+
       nameAlter: 'Jackie',
       ageAlter: '21',
       areaAlter: 'SHANGHAI HUANGDU',
@@ -270,27 +273,27 @@ export default {
       input: '' ,
       tableData:[{
         id:'1',
-        state:'未完成',
+        result:'未完成',
         name:'大整数加法',
-        submissionTime:'2022.01.07',
+        submitTime:'2022.01.07',
         passingRate:'50%',
         difficulty:'简单',
       },{
         id:'1',
-        state:'未完成',
+        result:'未完成',
         name:'大整数加法',
         solution:'1',
         passingRate:'50%',
         difficulty:'中等',
-        submissionTime:'2022.01.07',
+        submitTime:'2022.01.07',
       },{
         id:'1',
-        state:'未完成',
+        result:'未完成',
         name:'大整数加法',
         solution:'1',
         passingRate:'50%',
         difficulty:'困难',
-        submissionTime:'2022.01.07',
+        submitTime:'2022.01.07',
       }],
 
 
@@ -308,8 +311,8 @@ export default {
       this.show = false
     },
     submit() {
-      this.updateTmpInfo()
       var param = {
+        "userId": this.currentID,
         "username": this.nameAlter,
         "age": this.ageAlter,
         "school": this.schoolAlter,
@@ -318,12 +321,17 @@ export default {
       }
       //alert("!")
       // 确认弹窗回调
-      // axios.post(
-      //     "http://localhost:8081/account/updateInfo", param
-      // ).then(res => {
-      //
-      //
-      // })
+      axios.post(
+          "http://localhost:8081/account/updateInfo", param
+      ).then(res => {
+
+      })
+      let _this = this
+      setTimeout(function()  {
+
+        _this.refreshP()
+
+      }, 600);
 
       this.dialogFormVisible = false
     },
@@ -335,12 +343,9 @@ export default {
       this.emailAlter = this.email
       this.schoolAlter = this.school
 
-    }
     },
-
-    mounted () {
-    this.updateTmpInfo()
-
+    firstUploadPersonalInfo()
+    {
       // let userLogin
       // this.id = userLogin.userId
       // this.name = userLogin.username
@@ -349,6 +354,80 @@ export default {
       // this.content = userLogin.profile
       // this.email = userLogin.email
       // this.school = userLogin.university
+
+
+    },
+    refreshP()
+    {
+      this.getCurrentId()
+      axios.post(
+          "http://localhost:8081/account/accountInfo?userId="+this.currentID
+      ).then(res => {
+        console.log(res)
+        this.id = res.data.data.user.userId
+        this.name = res.data.data.user.username
+        this.age = res.data.data.user.age
+        this.area = res.data.data.user.area
+        this.content = res.data.data.user.profile
+        this.email = res.data.data.user.email
+        this.school = res.data.data.user.university
+
+        this.updateTmpInfo()
+
+        this.tableData.splice(0,this.tableData.length)
+        for(var i = 0;i<res.data.data.submissionCode.length;i++)
+        {
+          this.tableData.push(res.data.data.submissionCode[i])
+        }
+
+        for(var i = 0;i<res.data.data.questionList.length;i++)
+        {
+          this.tableData[i].difficulty = res.data.data.questionList[i].difficulty
+
+          this.tableData[i].name = res.data.data.questionList[i].name
+          if(res.data.data.questionList[i].submission==0)
+            this.tableData[i].passingRate = "0%"
+          else
+          this.tableData[i].passingRate = res.data.data.questionList[i].pass/res.data.data.questionList[i].submission
+        }
+        this.$forceUpdate()
+
+      })
+
+    },
+    getCurrentId(){
+      var userInfo  = JSON.parse(localStorage.getItem('token'));
+      console.log(userInfo)
+      this.currentID = userInfo.id
+    },
+    // refreshUserInfo(){
+    //   axios.post(
+    //       "http://localhost:8081/account/accountInfo"
+    //   ).then(res => {
+    //     this.tableData.splice(0,this.tableData.length)
+    //     console.log(res)
+    //     // for(var i = 0;i<res.data.submissionCode.length();i++)
+    //     // {
+    //     //   this.tableData.push()
+    //     //   res.data.submissionCode
+    //     //
+    //     // }
+    //
+    //     for(var i = 0;i<res.data.questionNames.length;i++)
+    //     {
+    //       this.tableData[i].name = res.data.questionNames[i]
+    //     }
+    //     this.$forceUpdate()
+    //   })
+    // }
+    },
+
+    mounted () {
+      this.getCurrentId()
+      this.updateTmpInfo()
+      this.refreshP()
+
+
       // axios.post(
       //     "http://localhost:8081/account/accountInfo"
       // ).then(res => {

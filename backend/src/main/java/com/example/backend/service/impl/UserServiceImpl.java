@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long id, User user) {
         User u = userRepository.findById(id).orElse(null);
         assert u != null;
-        user.setPassword(MD5Utils.code(user.getPassword()));
         BeanUtils.copyProperties(user, u, MyBeanUtils.getNullPropertyNames(user));
         userRepository.save(u);
     }
