@@ -1,90 +1,170 @@
 <template>
   <div class="home">
-    <div class="search">
-    <el-row :gutter="20" style="padding-left: 30%;padding-right: 30%;padding-top: 30px">
-      <el-col :span="5"><div class="grid-content bg-purple">
-          <el-select v-model="difficulty" placeholder="难度" @change="dChange()">
-            <el-option
-                v-for="item in difficultyOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-      </div></el-col>
-      <el-col :span="5"><div class="grid-content bg-purple">
-          <el-select v-model="state" placeholder="状态" @change="sChange()">
-            <el-option
-                v-for="item in stateOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-      </div></el-col>
-      <el-col :span="12"><div class="grid-content bg-purple">
-        <el-input
-            placeholder="请输入内容"
-            clearable>
-        </el-input>
-      </div></el-col>
-      <el-col :span="2"><div>
-        <el-button @click="search()">
-          <el-icon style="vertical-align: middle;">
-            <Search />
-          </el-icon>
-        </el-button>
-      </div></el-col>
-    </el-row>
-    <el-tag
-        v-for="tag in tags"
-        :key="tag.name"
-        closable
-        :type="tag.type"
-        @close="handleClose(tag)">
-      {{tag.name}}
-    </el-tag>
-    </div>
-    <div class="question" >
-        <el-table
-            @row-click="openDetails"
-            :data="tableData"
-            style="width: 100%; padding-left: 25%;padding-right: 25%;"
-            :row-class-name="tableRowClassName"
-        >
-          <el-table-column label="id" align="center" prop="id" v-if="false" />
-          <el-table-column
-              prop="state"
-              label="状态"
-              sortable
-              width="150">
-          </el-table-column>
-          <el-table-column
-              prop="name"
-              label="题目"
-              sortable
-              width="300">
-          </el-table-column>
-          <el-table-column
-              prop="solution"
-              label="题解"
-              sortable
-              width="100">
-          </el-table-column>
-          <el-table-column
-              prop="passingRate"
-              label="通过率"
-              sortable
-              width="100">
-          </el-table-column>
-          <el-table-column
-              prop="difficulty"
-              label="难度"
-              sortable
-              width="150">
-          </el-table-column>
-        </el-table>
-    </div>
+    <el-container>
+       <el-aside style="padding-right: 10px" width="60%">
+        <div class="image">
+          <el-image
+              style="padding-left: 25% ;padding-top: 5%"
+              :src="require('@/assets/hdoj.png')"
+              :fit="fill"></el-image>
+        </div>
+        <div class="questions">
+          <el-row :gutter="20" style="padding-left: 25%;padding-top: 30px">
+            <el-col :span="4"><div class="grid-content bg-purple">
+                <el-select v-model="difficulty" placeholder="难度" @change="dChange()">
+                  <el-option
+                      v-for="item in difficultyOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+            </div></el-col>
+            <el-col :span="4"><div class="grid-content bg-purple">
+                <el-select v-model="state" placeholder="状态" @change="sChange()">
+                  <el-option
+                      v-for="item in stateOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+            </div></el-col>
+            <el-col :span="4"><div class="grid-content bg-purple">
+              <el-select v-model="qTag" placeholder="标签" @change="tChange()">
+                  <el-option
+                      v-for="item in qTagOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+            </div></el-col>
+            <el-col :span="12"><div class="grid-content bg-purple">
+              <el-input
+                  v-model="input"
+                  placeholder="请输入内容"
+                  clearable>
+                <template #prefix>
+                  <el-icon class="el-input__icon"><search /></el-icon>
+                </template>
+              </el-input>
+            </div></el-col>
+          </el-row>
+          <el-tag
+              v-for="tag in tags"
+              :key="tag.text"
+              closable
+              :type="tag.type"
+              @close="handleClose(tag)">
+            {{tag.text}}
+          </el-tag>
+        </div>
+        <div class="question" >
+            <el-table
+                @row-click="openDetails"
+                :data="tables.slice((this.currentPage - 1) * this.pageSize,this.currentPage * this.pageSize)"
+                style="width: 100%;padding-left: 25%"
+                :row-class-name="tableRowClassName"
+                max-height="500px">
+              <el-table-column label="id" align="center" prop="id" v-if="false" />
+              <el-table-column label="labels" align="center" prop="labels" v-if="false"/>
+              <el-table-column
+                  prop="state"
+                  label="状态"
+                  width="100%">
+              </el-table-column>
+              <el-table-column
+                  prop="name"
+                  label="题目"
+                  sortable
+                  width="300%">
+              </el-table-column>
+              <el-table-column
+                  prop="solution"
+                  label="题解"
+                  sortable
+                  width="100%">
+              </el-table-column>
+              <el-table-column
+                  prop="passingRate"
+                  label="通过率"
+                  sortable
+                  width="100%">
+              </el-table-column>
+              <el-table-column
+                  prop="difficulty"
+                  label="难度"
+                  sortable
+                  :sort-method="sortByDifficulty"
+                  width="150%">
+                <template #default="scope">
+                  <span v-if="scope.row.difficulty == '简单'" style="color: lightgreen;">{{scope.row.difficulty}}</span>
+                  <span v-else-if="scope.row.difficulty == '中等'" style="color: lightsalmon;">{{scope.row.difficulty}}</span>
+                  <span v-else-if="scope.row.difficulty == '困难'" style="color: lightcoral;">{{scope.row.difficulty}}</span>
+                  <span v-else>{{scope.row.difficulty}}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :default-page-size="3"
+              :current-page="currentPage"
+              :page-size="pageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="tables.length"
+              style="padding-left: 25%"
+              >
+          </el-pagination>
+
+          </div>
+      </el-aside>
+      <el-main style="padding-right: 15%">
+        <el-calendar style="font-size: small" ref="calendar">
+          <template #header="{ date }">
+            <span>{{ date }}</span>
+            <el-button-group>
+              <el-button size="small" @click="select('prev-month')"
+              >上一月</el-button
+              >
+              <el-button size="small" @click="select('today')">本月</el-button>
+              <el-button size="small" @click="select('next-month')"
+              >下一月</el-button
+              >
+            </el-button-group>
+          </template>
+          <template
+              slot="dateCell"
+              slot-scope="{date, data}">
+            <div class="calendar-day">{{ data.day.split('-').slice(1).join('-') }}</div>
+            <div v-if="data.day.split('-').slice(1)[0] == month" > //判断显示当前页，value是显示当前月份
+            </div>
+          </template>
+        </el-calendar>
+        <el-divider></el-divider>
+        <div class="image">
+          <el-image
+              :src="require('@/assets/toMaterial.png')"
+              :fit="fill"
+              @click="toMaterial(0)"></el-image>
+        </div>
+        <el-card class="box-card" align="left">
+          <div slot="header" class="clearfix" align="left">
+            <span>其他编程学习平台:</span>
+          </div>
+          <div>
+            <el-button type="text"  @click="goWeb('https://leetcode-cn.com/')" style="padding-top: 30px">力扣</el-button>
+          </div>
+          <div>
+            <el-button type="text"  @click="goWeb('http://www.hubwiz.com/')">汇智网</el-button>
+          </div>
+          <div>
+            <el-button type="text"  @click="goWeb('https://www.codingame.com/')">CodinGame</el-button>
+          </div>
+        </el-card>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -96,10 +176,8 @@ export default {
   },
   data() {
     return {
-      tags: [
-        { name: '标签一', type: '' },
-        { name: '标签二', type: 'info' },
-      ],
+      tags: [],
+      month:'',
       difficultyOptions: [{
         value: '困难',
         label: '困难'
@@ -125,29 +203,161 @@ export default {
       input: '' ,
       tableData:[{
         id:'1',
-        state:'未完成',
-        name:'大整数加法',
-        solution:'1',
+        state:'未尝试(--`)',
+        name:'大整数加法(迪，人)',
+        solution:'7',
         passingRate:'50%',
         difficulty:'简单',
+        labels:[{
+            value:"迪杰斯特拉"
+          }, {
+            value:"人工智能"
+          }]
       },{
         id:'1',
-        state:'未完成',
-        name:'大整数加法',
-        solution:'1',
+        state:'在做了ing',
+        name:'大整数加法(迪，最)',
+        solution:'7',
         passingRate:'50%',
         difficulty:'中等',
+        labels:[{
+          value:"迪杰斯特拉"
+        }, {
+          value:"最短路径"
+        }]
       },{
         id:'1',
-        state:'未完成',
-        name:'大整数加法',
+        state:'在做了ing',
+        name:'大整数加法(迪)',
         solution:'1',
         passingRate:'50%',
         difficulty:'困难',
-      }],
+        labels:[{
+          value:"迪杰斯特拉"
+        }]
+      },{
+        id:'9',
+        state:'已解答√',
+        name:'两数之和(数，概)',
+        solution:'1',
+        passingRate:'60%',
+        difficulty:'中等',
+        labels:[{
+          value:"数学分析"
+        }, {
+          value:"概率统计"
+        }]
+      },],
+      qTag:'',
+      qTagOptions:[
+        { value: '迪杰斯特拉', label: '迪杰斯特拉' },
+        { value: '人工智能', label: '人工智能' },
+        { value: '最短路径', label: '最短路径' },
+        { value: '概率统计', label: '概率统计' },
+        { value: '数学分析', label: '数学分析' },
+        { value: '随便写个', label: '随便写个' },
+      ],
+      pageSize: 10, //每页多少条
+      currentPage: 1, // 当前页
     };
   },
+  computed:{
+    tables(){
+      const search=this.input;
+      if(search||this.tags.length>0){
+        let table=(this.tableData.filter(dataNews => {
+          return Object.keys(dataNews).some(key => {
+            return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+          })
+        }))
+        console.log(table);
+        for(let i=0;i<table.length;i++){
+          if(!this.filterTag(table[i])){
+            table.splice(i,1);
+            i--;
+          }
+        }
+        return table;
+      }
+      return this.tableData;
+    }
+  },
+
   methods: {
+    handleSizeChange(val){
+      console.log(`${val} items per page`)
+      this.pageSize=val;
+    },
+    handleCurrentChange(val){
+      console.log(`current page: ${val}`)
+      this.currentPage=val;
+    },
+    sortByDifficulty(obj1,obj2){
+      let val1;
+      let val2;
+      switch (obj1.difficulty){
+        case "困难":
+          val1=3;
+          break;
+        case "中等":
+          val1=2;
+          break;
+        case "简单":
+          val1=1;
+          break;
+      }
+      switch (obj2.difficulty){
+        case "困难":
+          val2=3;
+          break;
+        case "中等":
+          val2=2;
+          break;
+        case "简单":
+          val2=1;
+          break;
+      }
+      return val1-val2;
+    },
+    goWeb(url){
+      window.location.href=url;
+    },
+    toMaterial(val){
+      if(val==0)
+        this.$router.replace("/hdoj/material");
+    },
+    select(val){
+      this.$refs.calendar.selectDate(val);
+    },
+    filterTag(row) {
+      if(this.tags.length==0)
+        return true;
+      else{
+        for(let i=0;i<this.tags.length;i++){
+          switch(this.tags[i].value){
+            case '状态':
+              if(row.state!=this.tags[i].text&&row.state!="")
+                return false;
+              break;
+            case '难度':
+              if(row.difficulty!=this.tags[i].text)
+                return false;
+              break;
+            case '标签':
+              let t=0;
+              for(let j=0;j<row.labels.length;j++) {
+                if (row.labels[j].value == this.tags[i].text){
+                  t++;
+                }
+              }
+              if(t==0)
+                return false;
+              break;
+          }
+        }
+      }
+      return true;
+    },
     openDetails(row){
       this.$router.push("/hdoj/bank/q/"+row.id);
     },
@@ -156,80 +366,69 @@ export default {
     },
     dChange(){
       for(let i=0;i<this.tags.length;i++){//先删除之前的标签
-        for(let j=0;j<this.difficultyOptions.length;j++){
-          if(this.difficultyOptions[j].value==this.tags[i].name){
-            this.tags.splice(i,1);
-            break;
-          }
+        if(this.tags[i].value=="难度"){
+          this.tags.splice(i,1);
+          break;
         }
       }
       switch (this.difficulty){
         case "简单":
-          this.tags.push({name: '简单', type: 'success'});
+          this.tags.push({text: '简单', value:'难度', type: 'success'});
           break;
         case "中等":
-          this.tags.push({name: '中等', type: 'warning'});
+          this.tags.push({text: '中等', value:'难度', type: 'warning'});
           break;
         case "困难":
-          this.tags.push({name: '困难', type: 'danger' });
+          this.tags.push({text: '困难', value:'难度', type: 'danger' });
           break;
       }
       this.difficulty=null;
     },
     sChange(){
       for(let i=0;i<this.tags.length;i++){//先删除之前的标签
-        for(let j=0;j<this.stateOptions.length;j++){
-          if(this.stateOptions[j].value==this.tags[i].name){
-            this.tags.splice(i,1);
-            break;
-          }
+        if(this.tags[i].value=="状态"){
+          this.tags.splice(i,1);
+          break;
         }
       }
       switch (this.state){
         case "未尝试(--`)":
-          this.tags.push({name: '未尝试(--`)', type: 'info'});
+          this.tags.push({text: '未尝试(--`)',value:'状态', type: 'info'});
           break;
         case "在做了ing":
-          this.tags.push({name: '在做了ing', type: 'info'});
+          this.tags.push({text: '在做了ing',value:'状态', type: 'info'});
           break;
         case "已解答√":
-          this.tags.push({name: '已解答√', type: 'info' });
+          this.tags.push({text: '已解答√',value:'状态', type: 'info'});
           break;
       }
       this.state=null;
     },
-    search(){
-
-    },
-    formatter(row, column) {
-      return row.name;
+    tChange(){
+      this.tags.push({text: this.qTag, value:'标签', type: 'info'});
+      this.qTag=null;
     },
     tableRowClassName({row, rowIndex}) {
-      if (row.difficulty == "简单") {
-        return 'easy-row';
-      } else if (row.difficulty == "中等") {
-        return 'middle-row';
-      } else if (row.difficulty == "困难")
-      return 'difficult-row';
+      if (rowIndex%2 == 0)
+        return 'success-row';
       else
-        return '';
+        return 'warning-row';
     },
   }
 }
 </script>
 
 <style>
-
-.el-table .difficult-row {
-  background: rgba(238, 107, 107, 0.99);
+.el-table tbody tr:hover>td {
+  background-color:lightblue!important
+}
+.home /deep/  .el-calendar-table .el-calendar-day{
+  width: 43px;
+  height: 40px;
 }
 
-.el-table .middle-row {
-  background: rgba(232, 173, 151, 0.96);
-}
-
-.el-table .easy-row {
-  background: rgba(229, 255, 229, 0.95);
+.el-table .success-row {
+  background: white;
 }
 .el-row {
   margin-bottom: 20px;
@@ -257,4 +456,12 @@ export default {
   padding: 10px 0;
   background-color: #f9fafc;
 }
+.img-wrapper {
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);}
+.img-wrapper img {  height: 400px;  -webkit-transition: 0.3s linear;  transition: 0.3s linear;}
+.img-wrapper img:hover {  transform: scale(1.1);}
+.img-wrapper {  display: inline-block;  box-sizing: border-box;  border: 3px solid #000;}
 </style>
