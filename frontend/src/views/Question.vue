@@ -77,7 +77,7 @@
         </el-col>
         <el-col :span="2" :offset="1">
           <div class="grid-content">
-            <el-button size="middle" icon="el-icon-arrow-left">上一页</el-button>
+            <el-button size="middle" icon="el-icon-arrow-left" @click="before()">上一页</el-button>
           </div>
         </el-col>
         <el-col :span="2">
@@ -91,7 +91,7 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content">
-            <el-button size="middle">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+            <el-button size="middle" @click="next()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
           </div>
         </el-col>
         <el-col :span="2" :offset="2">
@@ -176,17 +176,22 @@ export default {
     Solution,
   },
   methods: {
+    next(){
+      //this.id=this.id+1;
+      var id=this.id+1;
+      console.log("router","/hdoj/bank/q/"+id)
+      this.$router.push("/hdoj/bank/q/"+id);
+    },
+    before(){
+      if(this.id>0) this.$router.push("/hdoj/bank/q/"+this.id-1);
+    },
     random () {
       //这里需要改成题目总数！
       this.$router.push("/hdoj/bank/q/" + (Math.floor(Math.random() * 3 + 1)).toString())
     },
     loaddata(){
-      this.$http.post("http://localhost:8081/account/accountinfo",{
-        params:{
-          "code": this.code,
-          'questionId': this.id,
-        }
-      })
+      var token=JSON.parse(localStorage.token);
+      this.$http.post("http://localhost:8081/code/getCodeByUidAndQid?userId="+token.id+"&questionId="+this.id)
           .then(response => {
             let tableData1 = [];
             /**
