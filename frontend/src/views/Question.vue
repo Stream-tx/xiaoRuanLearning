@@ -48,13 +48,9 @@
                 <el-table-column label="id" align="center" prop="id" v-if="false" />
                 <el-table-column prop="result" label="提交结果" width="100">
                 </el-table-column>
-                <el-table-column prop="runtime" label="执行用时" sortable width="100">
+                <el-table-column prop="language" label="语言" width="100">
                 </el-table-column>
-                <el-table-column prop="memory" label="内存消耗" sortable width="100">
-                </el-table-column>
-                <el-table-column prop="language" label="语言" width="50">
-                </el-table-column>
-                <el-table-column prop="time" label="提交时间" sortable width="150">
+                <el-table-column prop="submitTime" label="提交时间" sortable width="150">
                 </el-table-column>
               </el-table>
             </div>
@@ -177,31 +173,32 @@ export default {
   },
   methods: {
     next(){
-      //this.id=this.id+1;
-      var id=this.id+1;
-      console.log("router","/hdoj/bank/q/"+id)
-      this.$router.push("/hdoj/bank/q/"+id);
+      var id=parseInt(this.id)+1;
+      //console.log("router","/hdoj/bank/q/"+id)
+      window.location.href="/hdoj/bank/q/"+id;
     },
     before(){
-      if(this.id>0) this.$router.push("/hdoj/bank/q/"+this.id-1);
+      var id=parseInt(this.id)-1;
+      //console.log("router","/hdoj/bank/q/"+id)
+      window.location.href="/hdoj/bank/q/"+id;
     },
     random () {
       //这里需要改成题目总数！
-      this.$router.push("/hdoj/bank/q/" + (Math.floor(Math.random() * 3 + 1)).toString())
+      var id=(parseInt(this.id)+(Math.floor(Math.random() * 30 + 1)))%30;
+      //console.log("router","/hdoj/bank/q/"+id)
+      window.location.href="/hdoj/bank/q/"+id;
     },
     loaddata(){
       var token=JSON.parse(localStorage.token);
       this.$http.post("http://localhost:8081/code/getCodeByUidAndQid?userId="+token.id+"&questionId="+this.id)
           .then(response => {
+            console.log("response_new",response.data.data)
             let tableData1 = [];
-            /**
-             * 这里需要将拿到的对象转为数组，进行赋值，这样才不会类型错误
-             */
-            for(let i in response.data.data.XXX){
-              tableData1.push(response.data.data.XXX[i]);
+            for(let i in response.data.data){
+              tableData1.push(response.data.data[i]);
             }
             this.tableData = tableData1;
-            //console.log(response);
+            console.log("table",this.tableData);
           })
           .catch(error => {
             console.log(error);
@@ -278,7 +275,7 @@ export default {
     this.$refs.nowPage.$el.innerHTML=this.id;
     this.$refs.maxPage.$el.innerHTML=200;
     window.localStorage.setItem("currentQuestionId",this.id);
-    // this.loaddata();
+    this.loaddata();
     this.questionquery();
     this.samplequery();
   }

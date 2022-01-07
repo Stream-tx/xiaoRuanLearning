@@ -148,7 +148,6 @@ export default {
     }
   },
   mounted() {
-    alert("asdas")
     this.$http.post("http://localhost:8081/solution/listSolutions?questionId="+window.localStorage.getItem("currentQuestionId"))
         .then(res =>{
           console.log(res)
