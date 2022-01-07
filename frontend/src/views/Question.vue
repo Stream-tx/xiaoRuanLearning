@@ -39,7 +39,7 @@
           </el-tab-pane>
           <el-tab-pane label="提交记录">
             <el-card style="">
-              <el-card-content v-if="this.result">
+              <el-card-content v-if="this.result!=''">
                 <!-- 运行成功 -->
                 <div v-if="this.result.code == 200">
                   执行结果： <span>通过</span><br>
@@ -172,7 +172,7 @@ export default {
       tags: [],
       tags0: [],
       samples: [],
-      result: {}
+      result: ''
     }
   },
   components: {

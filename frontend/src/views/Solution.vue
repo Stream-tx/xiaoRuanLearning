@@ -29,7 +29,7 @@
               <StarFilled style="height: 15px;width: 15px" v-if="item.isThumbed"/>
               点赞数:{{item.likes}}
             </div></el-col>
-            <el-col :span="4"><div class="grid-content" style="color:floralwhite">
+            <el-col :span="8"><div class="grid-content" style="color:floralwhite">
               时间:{{item.time}}
             </div></el-col>
           </el-row>
@@ -57,7 +57,7 @@
       <el-col :span="4"><div class="grid-content ">
         语言:{{item.language}}
       </div></el-col>
-      <el-col :span="8"><div class="grid-content ">
+      <el-col :span="16"><div class="grid-content ">
         时间:{{item.time}}
       </div></el-col>
     </el-row>
@@ -198,7 +198,7 @@ export default {
                 'isThumbed':false
               })
               this.$http.post("http://localhost:8081/account/getUserInfo?userId="
-                  +this.comments[i].userid)
+                  +this.comments[i].userId)
                   .then(res =>{
                     this.comments[i].userName=res.data.data;
                   }).catch(err => {
