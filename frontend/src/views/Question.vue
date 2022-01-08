@@ -43,7 +43,7 @@
                 <!-- 运行成功 -->
                 <div v-if="this.result.code == 200">
                   执行结果： <span>通过</span><br>
-                  执行用时： <span>{{this.result.data.time}}</span><br>
+                  执行用时： <span>{{this.result.data.time}}</span>ms<br>
                   通过测试用例： <span>{{this.result.data.allCases}}</span> / <span>{{this.result.data.allCases}}</span><br>
                 </div>
                 <!-- 运行失败 -->
@@ -58,7 +58,7 @@
               <el-card-content class="status">
                 <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
                   <el-table-column label="id" align="center" prop="id" v-if="false" />
-                  <el-table-column prop="isPass" label="提交结果" width="100">
+                  <el-table-column prop="state" label="提交结果" width="100">
                   </el-table-column>
                   <el-table-column prop="language" label="语言" width="100">
                   </el-table-column>
