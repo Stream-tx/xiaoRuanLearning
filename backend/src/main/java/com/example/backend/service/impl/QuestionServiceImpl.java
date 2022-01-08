@@ -8,6 +8,7 @@ import com.example.backend.entity.Sample;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.SampleRepository;
 import com.example.backend.service.QuestionService;
+import com.example.backend.service.SolutionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +18,13 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final SampleRepository sampleRepository;
+    private final SolutionService solutionService;
     private final ExecuteStringSourceService executeStringSourceService;
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, SampleRepository sampleRepository, ExecuteStringSourceService executeStringSourceService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, SampleRepository sampleRepository, SolutionService solutionService, ExecuteStringSourceService executeStringSourceService) {
         this.questionRepository = questionRepository;
         this.sampleRepository = sampleRepository;
+        this.solutionService = solutionService;
         this.executeStringSourceService = executeStringSourceService;
     }
 
@@ -53,6 +56,7 @@ public class QuestionServiceImpl implements QuestionService {
                 output = output.substring(1, output.length() - 1);
             if (!runResult.equals(output)) {
                 long endTime = System.currentTimeMillis();
+
                 return Result.fail(400, "compiler error!", MapUtil.builder()
                         .put("input", sample.getInput())
                         .put("errorMessage", runResult)

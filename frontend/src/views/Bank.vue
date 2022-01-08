@@ -445,7 +445,7 @@ export default {
                   this.tableData[i].state="已解答√";
               }
             }).catch(err => {
-              console.log(err);
+              
             })
           }
           this.$http.post("http://localhost:8081/solution/getSolutionCount")

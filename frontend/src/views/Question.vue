@@ -58,7 +58,7 @@
               <el-card-content class="status">
                 <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
                   <el-table-column label="id" align="center" prop="id" v-if="false" />
-                  <el-table-column prop="result" label="提交结果" width="100">
+                  <el-table-column prop="isPass" label="提交结果" width="100">
                   </el-table-column>
                   <el-table-column prop="language" label="语言" width="100">
                   </el-table-column>
@@ -172,7 +172,8 @@ export default {
       tags: [],
       tags0: [],
       samples: [],
-      result: ''
+      result: '',
+      isPass: '通过'
     }
   },
   components: {
@@ -254,9 +255,14 @@ export default {
         "code": this.code,
         'questionId': this.id,
       }).then(res => {
+        console.log("aaaaaaa")
         console.log(res)
         document.getElementById("tab-2").click()
         this.result = res.data
+        if (this.result.code == 200)
+          this.isPass = '通过'
+        else
+          this.isPass = '未通过'
       }).catch(err => {
         console.log(err)
       })
@@ -357,8 +363,8 @@ export default {
   height: 77vh;
   /* background-color: lightgrey; */
 }
-.el-tag{
-	margin-right: 10px;
-	border-radius: 50%;
+.el-tag {
+  margin-right: 10px;
+  border-radius: 50%;
 }
 </style>

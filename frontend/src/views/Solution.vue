@@ -57,7 +57,7 @@
         <el-button type="primary" @click="uploadComment" style="margin-top: 20px">发布评论</el-button>
         <el-button type="primary" @click="dialogSolutionVisible = false" style="margin-top: 20px">关闭
         </el-button>
-        <el-button v-if="this.clickUserId == this.userId" type="primary" @click="deleteSolution"
+        <el-button v-if="this.clickUserId == this.userId" type="danger" @click="deleteSolution"
           style="margin-top: 20px">删除</el-button>
       </div>
     </el-dialog>
