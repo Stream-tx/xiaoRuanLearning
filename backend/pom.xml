@@ -61,15 +61,6 @@
             <artifactId>hutool-all</artifactId>
             <version>5.7.16</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-<!--            version要一致-->
-            <version>1.8</version>
-            <scope>system</scope>
-<!--            <systemPath>/Users/wangling/Library/Java/JavaVirtualMachines/liberica-1.8.0_312/lib/tools.jar</systemPath>-->
-            <systemPath>E:/JDK/lib/tools.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <build>

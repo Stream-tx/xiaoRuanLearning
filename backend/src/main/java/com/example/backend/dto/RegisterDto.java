@@ -4,6 +4,10 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+/*
+对注册输入数据的限制
+ */
+
 
 @Data
 public class RegisterDto {

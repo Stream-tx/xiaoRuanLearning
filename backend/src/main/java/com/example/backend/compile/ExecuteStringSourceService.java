@@ -1,6 +1,6 @@
 package com.example.backend.compile;
 
-import com.example.backend.entity.Question;
+import com.example.backend.codingCommit.entity.Question;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;

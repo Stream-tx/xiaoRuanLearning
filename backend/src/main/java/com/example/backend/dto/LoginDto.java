@@ -3,6 +3,10 @@ package com.example.backend.dto;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
+/*
+对登录输入数据的限制
+ */
+
 @Data
 public class LoginDto {
 

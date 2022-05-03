@@ -4,6 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Software-Engineering-Course-Design-main.iml" filepath="$PROJECT_DIR$/.idea/Software-Engineering-Course-Design-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/codingCommit/codingCommit.iml" filepath="$PROJECT_DIR$/codingCommit/codingCommit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onlineTool/onlineTool.iml" filepath="$PROJECT_DIR$/onlineTool/onlineTool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/personalManage/personalManage.iml" filepath="$PROJECT_DIR$/personalManage/personalManage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/solutionCommit/solutionCommit.iml" filepath="$PROJECT_DIR$/solutionCommit/solutionCommit.iml" />
     </modules>
   </component>
 </project>

@@ -8,15 +8,27 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="backend" />
+        <module name="onlineTool" />
+        <module name="codingCommit" />
+        <module name="solutionCommit" />
+        <module name="personalManage" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="backend" target="1.8" />
+      <module name="codingCommit" target="1.8" />
+      <module name="onlineTool" target="1.8" />
+      <module name="personalManage" target="1.8" />
+      <module name="solutionCommit" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-parameters" />
+      <module name="codingCommit" options="-parameters" />
+      <module name="onlineTool" options="-parameters" />
+      <module name="personalManage" options="-parameters" />
+      <module name="solutionCommit" options="-parameters" />
     </option>
   </component>
 </project>

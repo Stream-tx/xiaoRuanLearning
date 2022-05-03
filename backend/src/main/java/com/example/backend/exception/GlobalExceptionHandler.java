@@ -1,6 +1,6 @@
 package com.example.backend.exception;
 
-import com.example.backend.common.Result;
+import com.example.backend.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
