@@ -1,0 +1,42 @@
+spring:
+    application:
+      name: Gateway
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                  enabled: true
+                  lower-case-service-id: true
+            routes:
+            - id: accountservice
+              uri: lb://accountservice
+              predicates:
+                - Path=/api/account/**
+              filters: StripPrefix=1 #忽略第一层
+            - id: ojservice
+              uri: lb://ojservice
+              predicates:
+              - Path=/api/oj/**
+              filters: StripPrefix=1 #忽略第一层
+            - id: communityservice
+              uri: lb://communityservice
+              predicates:
+              - Path=/api/community/**
+              filters: StripPrefix=1 #忽略第一层
+            - id: onlinetoolsservice
+              uri: lb://onlinetoolsservice
+              predicates:
+                - Path=/api/onlinetools/**
+              filters: StripPrefix=1 #忽略第一层
+
+server:
+  port: 8082
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
+  instance:
+    hostname: localhost
+
