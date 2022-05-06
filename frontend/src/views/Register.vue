@@ -96,7 +96,7 @@ export default {
             "age":this.ruleForm.age
           }
           axios.post(
-              "http://localhost:8082/account/user/register/", param
+              "http://localhost:8082/api/account/user/register/", param
           )
               //.get("http://106.14.25.240:81/user/register/"+this.ruleForm.name+"/"+this.ruleForm.pass)//localStorage.getItem('token'))
               .then(response => {

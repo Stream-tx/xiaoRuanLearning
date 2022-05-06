@@ -88,7 +88,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           axios.post(
-              "http://localhost:8082/account/user/login/", param
+              "http://localhost:8082/api/account/user/login/", param
               )
               .then(response => {
                 if (response.data.code === 200) {

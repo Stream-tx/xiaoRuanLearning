@@ -51,7 +51,7 @@ export default {
         //}
         //console.log(param)
         axios.post(
-          "http://localhost:8082/oj/question/compile", { "code": code }
+          "http://localhost:8082/api/oj/question/compile", { "code": code }
         ).then(res => {
           console.log(res)
           alert(res.data.data)

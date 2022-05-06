@@ -241,14 +241,23 @@ export default {
   },
   methods: {
     updateHeadImg () {
-      if (this.currentID % 4 == 1) {
+      if (this.currentID % 7 == 1) {
         this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2F2021%2Fedpic%2F0b%2F17%2F04%2F0b1704a9741f4e7ddd07939877dd3590_1.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142234&t=4f1fa0c40c07873cb747d04474178241'
       }
-      else if (this.currentID % 4 == 2) {
+      else if (this.currentID % 7 == 2) {
         this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic%2F92%2F4a%2F72%2F924a726144487f372ac97057dbb01e81.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=289155d2b0f39b19ed108a8b0eb24f8d'
-      } else if (this.currentID % 4 == 3) {
+      } else if (this.currentID % 7 == 3) {
         this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F05%2F20170405213655_uSEiT.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=0f75b074995a35b8c4e818116dd79fa8'
+      }else if(this.currentID % 7 == 4){
+        this.headImgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi-1.lanrentuku.com%2F2020%2F11%2F5%2Fdef6ed04-6d34-402e-99c8-366266f627dd.png%3FimageView2%2F2%2Fw%2F500&refer=http%3A%2F%2Fi-1.lanrentuku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654488342&t=1d16040e17cf13f9d1af6d1be128cbb8'
+      }else if(this.currentID % 7 == 5){
+        this.headImgSrc = 'https://img1.baidu.com/it/u=2839692202,2605797378&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=498'
+      }else if(this.currentID % 7 == 6){
+        this.headImgSrc = 'https://img2.baidu.com/it/u=331441483,3335069502&fm=253&fmt=auto&app=138&f=PNG?w=500&h=497'
+      }else if(this.currentID % 7 == 0){
+        this.headImgSrc = 'https://img2.baidu.com/it/u=84120346,2663335055&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400'
       }
+
     },
     jumpPage () {
       //alert(this.dialogFormVisible)
@@ -267,12 +276,12 @@ export default {
         "age": this.ageAlter,
         "school": this.schoolAlter,
         "email": this.emailAlter,
-        "content": this.contentAlter
+        "profile": this.contentAlter
       }
       //alert("!")
       // 确认弹窗回调
       axios.post(
-        "http://localhost:8082/account/user/updateInfo", param
+        "http://localhost:8082/api/account/user/updateInfo", param
       ).then(res => {
       })
       let _this = this
@@ -301,7 +310,7 @@ export default {
     refreshP () {
       this.getCurrentId()
       axios.post(
-        "http://localhost:8082/account/user/accountInfo?userId=" + this.currentID
+        "http://localhost:8082/api/account/user/accountInfo?userId=" + this.currentID
       ).then(res => {
         console.log(res)
         this.id = res.data.data.user.userId
@@ -323,7 +332,8 @@ export default {
           if (res.data.data.questionList[i].submission == 0)
             this.tableData[i].passingRate = "--"
           else
-            this.tableData[i].passingRate = res.data.data.questionList[i].pass / res.data.data.questionList[i].submission
+            this.tableData[i].passingRate =Math.trunc(res.data.data.questionList[i].pass /res.data.data.questionList[i].submission*100)+"%";// res.data.data.questionList[i].pass / res.data.data.questionList[i].submission
+
         }
         this.$forceUpdate()
       })

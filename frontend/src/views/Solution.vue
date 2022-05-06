@@ -27,9 +27,9 @@
         </el-collapse-item>
         <el-collapse-item title="评论" name="3">
           <el-card style="background-color: #444444" class="box-card" v-for="item in comments" :key="item.id"
-            @click="view(item)">
+            >
             <h5 style="text-align: left;font-size: larger;color:floralwhite;margin:10px 18px;">{{item.userName}}</h5>
-            <div style="color:floralwhite;text-align: left;margin:0 18px;">
+            <div style="color:floralwhite;font-size: larger;text-align: left;margin-left:18px;margin-bottom:10px;">
               <span>{{item.content}}</span>
             </div>
             <el-row :gutter="20">
@@ -40,13 +40,13 @@
                   点赞数:{{item.likes}}
                 </div>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="17">
                 <div class="grid-content" style="color:floralwhite">
                   时间:{{item.time}}
                 </div>
               </el-col>
-              <el-col :span="8">
-                <el-button v-if="item.userId == this.userId" @click="deleteComment(item.id)">删除
+              <el-col :span="3">
+                <el-button  type="info" size="small" v-if="item.userId == this.userId" @click="deleteComment(item.id)">删除
                 </el-button>
               </el-col>
             </el-row>
@@ -64,10 +64,27 @@
     <div class="solutionHeader">
 
     </div>
-    <el-card style="background-color: lightcyan" class="box-card" v-for="item in solutions" :key="item.id"
-      @click="view(item)">
+    <el-button type="primary" plain size="mini" @click="this.dialogNewVisible = true"
+               style='position:absolute;right:15px;z-index: 2000 !important;top:2px;'>上传题解</el-button>
+    <el-card style="margin-top:20px;background-color: #f6f5f5" class="box-card" v-for="item in solutions" :key="item.id"
+             @click="view(item)">
       <div slot="header" class="clearfix">
-        <h5 style="font-size: larger;text-align: left">[{{item.userName}}]:{{item.title}}</h5>
+        <el-row :gutter="20" style="margin-top: 7px;margin-bottom: 15px;">
+          <el-col :span="1">
+            <img :src="headImgSrc" width="28" height="28"  style="border-radius:50%;margin-right:1px">
+          </el-col>
+          <el-col :span="8">
+            <p style="margin:1px;font-size: larger;text-align: left">{{item.userName}}</p>
+          </el-col>
+          <el-col :span="7">
+            <p style="margin:1px;font-size: larger;font-weight:bold;text-align: left">{{item.title}}</p>
+          </el-col>
+
+        </el-row>
+
+
+<!--        <img :src="headImgSrc" width="30" height="30" style="border-radius:50%;margin-top:5px;margin-left:5px">-->
+<!--        <h5 style="margin:6px;font-size: larger;text-align: left">[{{item.userName}}]:{{item.title}}</h5>-->
       </div>
       <el-row :gutter="20">
         <el-col :span="4">
@@ -77,12 +94,12 @@
             点赞数:{{item.likes}}
           </div>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="8">
           <div class="grid-content ">
             语言:{{item.language}}
           </div>
         </el-col>
-        <el-col :span="16">
+        <el-col :span="12">
           <div class="grid-content ">
             时间:{{item.time}}
           </div>
@@ -90,6 +107,33 @@
       </el-row>
     </el-card>
   </div>
+
+  <el-dialog title="上传题解" v-model="dialogNewVisible">
+    <el-card style="width:650px;margin:auto;">
+      <el-card-content style="text-align: left">
+        <div>标题：
+          <el-input v-model="this.form.title" placeholder="请输入标题" maxlength="10" show-word-limit type="text" />
+        </div>
+        <div>语言：</div>
+        <div>
+          <el-select v-model="form.language" placeholder="请选择您使用的编程语言">
+            <el-option label="Java" value="Java"></el-option>
+            <el-option label="C++/C" value="C++/C"></el-option>
+          </el-select>
+        </div>
+        <div>思路：
+          <el-input v-model="this.form.content" placeholder="请输入题解的思路" autosize type="textarea" />
+        </div>
+        <div>代码：
+          <el-input v-model="this.form.code" placeholder="请输入题解代码" autosize type="textarea" />
+        </div>
+      </el-card-content>
+    </el-card>
+    <div slot="footer" class="dialog-footer" style="padding-top: 40px">
+      <el-button @click="dialogNewVisible = false">取 消</el-button>
+      <el-button type="primary" @click="newSolution()">确 定 上 传</el-button>
+    </div>
+  </el-dialog>
 
 </template>
 
@@ -103,9 +147,14 @@ export default {
     ElMessageBox,
     ElMessage
   },
-  data () {
+  data() {
     return {
+      headImgSrc: 'https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg',
+
       dialogSolutionVisible: false,
+      dialogNewVisible: false,
+
+      form: {},
 
       comments: [{
         userId: '1',
@@ -119,13 +168,13 @@ export default {
       }],
       solutions: [{
         id: '0',
-        userName: '未知',
+        userName: '--',
         content: '暂无数据',
         userid: '1',
         qid: '1',
         time: '--',
         language: '--',
-        title: '暂无数据',
+        title: '暂无题解',
         code: '--',
         likes: '0',
         isThumbed: false
@@ -136,7 +185,46 @@ export default {
     }
   },
   methods: {
-    uploadComment () {
+    newSolution () {
+      if (this.form.title == '') {
+        alert("标题不能为空")
+        return
+      }
+      if (this.form.language == '') {
+        alert("语言不能为空")
+        return
+      }
+      if (this.form.content == '') {
+        alert("思路不能为空")
+        return
+      }
+      if (this.form.code == '') {
+        alert("代码不能为空")
+        return
+      }
+      this.$http.post("http://localhost:8082/api/oj/solution/addSolution", {
+        "userId": JSON.parse(window.localStorage.getItem("token")).id,
+        "code": this.form.code,
+        'content': this.form.content,
+        'language': this.form.language,
+        'title': this.form.title,
+        'questionId':  window.localStorage.getItem("currentQuestionId"),
+        'likes': 0,
+        'createdTime': '',
+      }).then(res => {
+        if (res.data.code == 200)
+          alert("上传成功")
+        else
+          alert("由于未知原因，上传失败")
+        this.dialogNewVisible = false
+
+        this.reFresh()
+      }).catch(err => {
+        alert("由于未知原因，上传失败")
+        console.log(err)
+      })
+    },
+    uploadComment() {
       ElMessageBox.prompt('请输入评论内容', 'Comment', {
         confirmButtonText: '上传',
         cancelButtonText: '取消',
@@ -147,61 +235,91 @@ export default {
           }
         }
       })
-        .then(({ value }) => {
-          this.$http.post("http://localhost:8082/community/comment/addComment", {
-            "userId": JSON.parse(window.localStorage.getItem("token")).id,
-            "solutionId": this.solutions[this.currentIndex].id,
-            'commentId': '',
-            'content': value,
-            'likes': 0,
-            'commentTime': '',
-          }).then(res => {
-            if (res.data.code == 200)
-              alert("上传成功")
-            else
+          .then(({value}) => {
+            this.$http.post("http://localhost:8082/api/community/comment/addComment", {
+              "userId": JSON.parse(window.localStorage.getItem("token")).id,
+              "solutionId": this.solutions[this.currentIndex].id,
+              'commentId': '',
+              'content': value,
+              'likes': 0,
+              'commentTime': '',
+            }).then(res => {
+              if (res.data.code == 200)
+                alert("上传成功")
+              else
+                alert("由于未知原因，上传失败")
+              this.dialogNewVisible = false
+
+              this.reFreshComment()
+            }).catch(err => {
               alert("由于未知原因，上传失败")
-            this.dialogNewVisible = false
-          }).catch(err => {
-            alert("由于未知原因，上传失败")
+              console.log(err)
+            })
+            ElMessage({
+              type: 'success',
+              message: `上传成功`,
+            })
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '取消操作',
+            })
+          })
+    },
+    thumbSolution(row) {
+      row.isThumbed = true
+      row.likes++
+      this.$http.post("http://localhost:8082/api/oj/solution/likesIncrement?solutionId="
+          + row.id)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
             console.log(err)
           })
-          ElMessage({
-            type: 'success',
-            message: `上传成功`,
-          })
-        })
-        .catch(() => {
-          ElMessage({
-            type: 'info',
-            message: '取消操作',
-          })
-        })
     },
-    thumbSolution (row) {
+    thumbComment(row) {
       row.isThumbed = true
       row.likes++
-      this.$http.post("http://localhost:8082/oj/solution/likesIncrement?solutionId="
-        + row.id)
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.$http.post("http://localhost:8082/api/community/comment/likesIncrement?commentId="
+          + row.id)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
     },
-    thumbComment (row) {
-      row.isThumbed = true
-      row.likes++
-      this.$http.post("http://localhost:8082/community/comment/likesIncrement?commentId="
-        + row.id)
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    reFreshComment(){
+      this.$http.post("http://localhost:8082/api/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
+          .then(res => {
+            console.log(res)
+            this.comments.splice(0, 1)
+            for (let i = 0; i < res.data.data.length; i++) {
+              this.comments.push({
+                'id': res.data.data[i].commentId,
+                'userName': '',
+                'content': res.data.data[i].content,
+                'userId': res.data.data[i].userId,
+                'sid': res.data.data[i].solutionId,
+                'time': res.data.data[i].commentTime,
+                'likes': res.data.data[i].likes,
+                'isThumbed': false
+              })
+              this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
+                  + this.comments[i].userId)
+                  .then(res => {
+                    this.comments[i].userName = res.data.data
+                  }).catch(err => {
+                console.log(err)
+              })
+            }
+          }).catch(err => {
+        console.log(err)
+      })
     },
-    view (row) {
+    view(row) {
       this.userId = JSON.parse(window.localStorage.getItem("token")).id
       this.dialogSolutionVisible = true
       for (let i = 0; i < this.solutions.length; i++) {
@@ -210,87 +328,124 @@ export default {
           break
         }
       }
-      this.$http.post("http://localhost:8082/oj/solution/getSolutionById?solutionId=" + this.solutions[this.currentIndex].id)
-        .then(res => {
-          this.clickUserId = res.data.data
-        }).catch(err => {
-          console.log(err)
-        })
-      this.$http.post("http://localhost:8082/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
+      this.$http.post("http://localhost:8082/api/oj/solution/getSolutionById?solutionId=" + this.solutions[this.currentIndex].id)
+          .then(res => {
+            this.clickUserId = res.data.data
+          }).catch(err => {
+        console.log(err)
+      })
+      this.reFreshComment()
+      // this.$http.post("http://localhost:8082/api/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
+      //     .then(res => {
+      //       console.log(res)
+      //       this.comments.splice(0, 1)
+      //       for (let i = 0; i < res.data.data.length; i++) {
+      //         this.comments.push({
+      //           'id': res.data.data[i].commentId,
+      //           'userName': '',
+      //           'content': res.data.data[i].content,
+      //           'userId': res.data.data[i].userId,
+      //           'sid': res.data.data[i].solutionId,
+      //           'time': res.data.data[i].commentTime,
+      //           'likes': res.data.data[i].likes,
+      //           'isThumbed': false
+      //         })
+      //         this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
+      //             + this.comments[i].userId)
+      //             .then(res => {
+      //               this.comments[i].userName = res.data.data
+      //             }).catch(err => {
+      //           console.log(err)
+      //         })
+      //       }
+      //     }).catch(err => {
+      //   console.log(err)
+      // })
+    },
+    deleteSolution() {
+      this.$http.post("http://localhost:8082/api/oj/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id)
+          .then(res => {
+            this.reFresh()
+
+          }).catch(err => {
+        console.log(err)
+      })
+    },
+    deleteComment(commentId) {
+      console.log(commentId)
+      this.$http.post("http://localhost:8082/api/community/comment/deleteComment?commentId=" + commentId)
+          .then(res => {
+            this.reFreshComment()
+
+          }).catch(err => {
+        console.log(err)
+      })
+    },
+
+  reFresh() {
+    this.$http.post("http://localhost:8082/api/oj/solution/listSolutions?questionId=" + window.localStorage.getItem("currentQuestionId"))
         .then(res => {
           console.log(res)
-          this.comments.splice(0, 1)
+          this.solutions.splice(0, this.solutions.length)
           for (let i = 0; i < res.data.data.length; i++) {
-            this.comments.push({
-              'id': res.data.data[i].commentId,
+            this.solutions.push({
+              'id': res.data.data[i].solutionId,
               'userName': '',
               'content': res.data.data[i].content,
-              'userId': res.data.data[i].userId,
-              'sid': res.data.data[i].solutionId,
-              'time': res.data.data[i].commentTime,
+              'userid': res.data.data[i].userId,
+              'qid': res.data.data[i].questionId,
+              'time': res.data.data[i].createdTime,
+              'language': res.data.data[i].language,
+              'title': res.data.data[i].title,
+              'code': res.data.data[i].code,
               'likes': res.data.data[i].likes,
               'isThumbed': false
             })
-            this.$http.post("http://localhost:8082/account/user/getUserInfo?userId="
-              + this.comments[i].userId)
-              .then(res => {
-                this.comments[i].userName = res.data.data
-              }).catch(err => {
-                console.log(err)
-              })
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    deleteSolution () {
-      this.$http.post("http://localhost:8082/oj/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id)
-        .then(res => {
-
-        }).catch(err => {
-          console.log(err)
-        })
-    },
-    deleteComment (commentId) {
-      console.log(commentId)
-      this.$http.post("http://localhost:8082/community/comment/deleteComment?commentId=" + commentId)
-        .then(res => {
-
-        }).catch(err => {
-          console.log(err)
-        })
-    }
-  },
-  mounted () {
-    this.$http.post("http://localhost:8082/oj/solution/listSolutions?questionId=" + window.localStorage.getItem("currentQuestionId"))
-      .then(res => {
-        console.log(res)
-        this.solutions.splice(0, this.solutions.length)
-        for (let i = 0; i < res.data.data.length; i++) {
-          this.solutions.push({
-            'id': res.data.data[i].solutionId,
-            'userName': '',
-            'content': res.data.data[i].content,
-            'userid': res.data.data[i].userId,
-            'qid': res.data.data[i].questionId,
-            'time': res.data.data[i].createdTime,
-            'language': res.data.data[i].language,
-            'title': res.data.data[i].title,
-            'code': res.data.data[i].code,
-            'likes': res.data.data[i].likes,
-            'isThumbed': false
-          })
-          this.$http.post("http://localhost:8082/account/user/getUserInfo?userId="
-            + this.solutions[i].userid)
-            .then(res => {
-              this.solutions[i].userName = res.data.data
-            }).catch(err => {
+            this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
+                + this.solutions[i].userid)
+                .then(res => {
+                  this.solutions[i].userName = res.data.data
+                }).catch(err => {
               console.log(err)
             })
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+          }
+        }).catch(err => {
+      console.log(err)
+    })
+
+  },
+},
+  mounted () {
+    this.reFresh()
+    // this.$http.post("http://localhost:8082/api/oj/solution/listSolutions?questionId=" + window.localStorage.getItem("currentQuestionId"))
+    //   .then(res => {
+    //     console.log(res)
+    //     this.solutions.splice(0, this.solutions.length)
+    //     for (let i = 0; i < res.data.data.length; i++) {
+    //       this.solutions.push({
+    //         'id': res.data.data[i].solutionId,
+    //         'userName': '',
+    //         'content': res.data.data[i].content,
+    //         'userid': res.data.data[i].userId,
+    //         'qid': res.data.data[i].questionId,
+    //         'time': res.data.data[i].createdTime,
+    //         'language': res.data.data[i].language,
+    //         'title': res.data.data[i].title,
+    //         'code': res.data.data[i].code,
+    //         'likes': res.data.data[i].likes,
+    //         'isThumbed': false
+    //       })
+    //       this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
+    //         + this.solutions[i].userid)
+    //         .then(res => {
+    //           this.solutions[i].userName = res.data.data
+    //         }).catch(err => {
+    //           console.log(err)
+    //         })
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
   }
 }
 </script>

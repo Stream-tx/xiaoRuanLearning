@@ -12,7 +12,7 @@
       <el-aside width="50%">
         <el-tabs type="border-card" style="height: 100%" @tab-click="changeTabs">
           <el-tab-pane label="题目描述" style="text-align: left;">
-            <div style="font-size:40px">
+            <div style="font-size:40px;font-weight:bold;">
               {{this.id}}
               {{this.questionname}}
             </div>
@@ -56,21 +56,21 @@
                 </div>
               </el-card-content>
               <el-card-content class="status">
-                <el-table :data="tableData" style="width: 100%;left: 15%;" :row-class-name="tableRowClassName">
+                <el-table :data="tableData" style="width: 100%;left: 7%;" :row-class-name="tableRowClassName">
                   <el-table-column label="id" align="center" prop="id" v-if="false" />
-                  <el-table-column prop="state" label="提交结果" width="100">
+                  <el-table-column prop="state" label="提交结果" width="220">
                   </el-table-column>
-                  <el-table-column prop="language" label="语言" width="100">
+                  <el-table-column prop="language" label="语言" width="220">
                   </el-table-column>
-                  <el-table-column prop="submitTime" label="提交时间" sortable width="150">
+                  <el-table-column prop="submitTime" label="提交时间" sortable width="220">
                   </el-table-column>
                 </el-table>
               </el-card-content>
             </el-card>
           </el-tab-pane>
         </el-tabs>
-        <el-button type="primary" plain v-if="this.current==true" @click="this.dialogNewVisible = true" size="mini"
-          style='position:absolute;right:52%;top:9%;!important;'>上传题解</el-button>
+<!--        <el-button type="primary" plain v-if="this.current==true" @click="this.dialogNewVisible = true" size="mini"-->
+<!--          style='position:absolute;right:52%;top:65px;!important;'>上传题解</el-button>-->
       </el-aside>
       <el-main>
         <Submit :myArgs="this.myArgs" @code="handleCode" />
@@ -183,12 +183,13 @@ export default {
   methods: {
     next () {
       var id = parseInt(this.id) + 1
-      //console.log("router","/hdoj/bank/q/"+id)
+      window.localStorage.setItem("currentQuestionId", id.toString());
       window.location.href = "/hdoj/bank/q/" + id
     },
     before () {
       var id = parseInt(this.id) - 1
       //console.log("router","/hdoj/bank/q/"+id)
+      window.localStorage.setItem("currentQuestionId",  id.toString())
       window.location.href = "/hdoj/bank/q/" + id
     },
     random () {
@@ -199,7 +200,7 @@ export default {
     },
     loaddata () {
       var token = JSON.parse(localStorage.token)
-      this.$http.post("http://localhost:8082/oj/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id)
         .then(response => {
           console.log("response_new", response.data.data)
           let tableData1 = []
@@ -226,7 +227,7 @@ export default {
         alert("请写点代码再传好吗")
         return
       }
-      this.$http.post("http://localhost:8082/oj/code/saveCode", {
+      this.$http.post("http://localhost:8082/api/oj/code/saveCode", {
         "userId": JSON.parse(window.localStorage.getItem("token")).id,
         "codeId": '',
         'questionId': this.id,
@@ -251,7 +252,7 @@ export default {
         alert("请写点代码再传好吗")
         return
       }
-      this.$http.post("http://localhost:8082/oj/question/check", {
+      this.$http.post("http://localhost:8082/api/oj/question/check", {
         "code": this.code,
         'questionId': this.id,
       }).then(res => {
@@ -284,7 +285,7 @@ export default {
         alert("代码不能为空")
         return
       }
-      this.$http.post("http://localhost:8082/oj/solution/addSolution", {
+      this.$http.post("http://localhost:8082/api/oj/solution/addSolution", {
         "userId": JSON.parse(window.localStorage.getItem("token")).id,
         "code": this.form.code,
         'content': this.form.content,
@@ -306,7 +307,7 @@ export default {
     },
     runCode () {
       console.log(this.code)
-      this.$http.post("http://localhost:8082/oj/question/submitTestCase", {
+      this.$http.post("http://localhost:8082/api/oj/question/submitTestCase", {
         "code": this.code,
         'input': this.input,
         'questionId': this.id
@@ -325,7 +326,7 @@ export default {
     questionquery () {
       var token = JSON.parse(localStorage.token)
       console.log("this.id", this.id)
-      this.$http.post("http://localhost:8082/oj/question/getQuestion?questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/question/getQuestion?questionId=" + this.id)
         .then(res => {
           this.questionname = res.data.data.name
           this.questiondescription = res.data.data.description
@@ -337,7 +338,7 @@ export default {
         })
     },
     samplequery () {
-      this.$http.post("http://localhost:8082/oj/sample/listSamples?questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/sample/listSamples?questionId=" + this.id)
         .then(res => {
           this.samples = res.data.data
         })
@@ -347,7 +348,7 @@ export default {
     this.id = this.$route.params.id
     this.$refs.nowPage.$el.innerHTML = this.id
     this.$refs.maxPage.$el.innerHTML = JSON.parse(window.localStorage.getItem("maxId"))
-    window.localStorage.setItem("currentQuestionId", this.id)
+    //window.localStorage.setItem("currentQuestionId", this.id)
     this.loaddata()
     this.questionquery()
     this.samplequery()

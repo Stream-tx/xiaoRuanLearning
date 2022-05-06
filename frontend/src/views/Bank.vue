@@ -357,6 +357,7 @@ export default {
     },
     openDetails(row){
       window.localStorage.setItem("questionId",row.id);
+      window.localStorage.setItem("currentQuestionId", row.id);
       this.$router.push("/hdoj/bank/q/"+row.id);
     },
     handleClose(tag) {
@@ -414,7 +415,7 @@ export default {
     },
   },
   mounted() {
-    this.$http.post("http://localhost:8082/oj/question/listQuestions")
+    this.$http.post("http://localhost:8082/api/oj/question/listQuestions")
         .then(res =>{
           this.tableData.splice(0,this.tableData.length);
           const pass=[];
@@ -434,7 +435,7 @@ export default {
                 'difficulty':res.data.data[i].difficulty,
                 'labels':res.data.data[i].labels.split(',')
             })
-            this.$http.post("http://localhost:8082/oj/code/getTheLatestCode?" +
+            this.$http.post("http://localhost:8082/api/oj/code/getTheLatestCode?" +
                 "userId="+JSON.parse(window.localStorage.getItem("token")).id
                 + "&questionId=" +this.tableData[i].id)
             .then(res =>{
@@ -448,7 +449,7 @@ export default {
               
             })
           }
-          this.$http.post("http://localhost:8082/oj/solution/getSolutionCount")
+          this.$http.post("http://localhost:8082/api/oj/solution/getSolutionCount")
               .then(res =>{
                 for(let i=0;i<res.data.data.length;i++){
                   this.tableData[i].solution=res.data.data[i];
