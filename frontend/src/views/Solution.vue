@@ -71,7 +71,7 @@
       <div slot="header" class="clearfix">
         <el-row :gutter="20" style="margin-top: 7px;margin-bottom: 15px;">
           <el-col :span="1">
-            <img :src="headImgSrc" width="28" height="28"  style="border-radius:50%;margin-right:1px">
+            <img :src="item.headImgSrc" width="28" height="28"  style="border-radius:50%;margin-right:1px">
           </el-col>
           <el-col :span="8">
             <p style="margin:1px;font-size: larger;text-align: left">{{item.userName}}</p>
@@ -149,7 +149,7 @@ export default {
   },
   data() {
     return {
-      headImgSrc: 'https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg',
+      //headImgSrc: 'https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg',
 
       dialogSolutionVisible: false,
       dialogNewVisible: false,
@@ -177,7 +177,8 @@ export default {
         title: '暂无题解',
         code: '--',
         likes: '0',
-        isThumbed: false
+        isThumbed: false,
+        headImgSrc: ''
       }],
       userId: '0',
       clickUserId: '0',
@@ -185,6 +186,26 @@ export default {
     }
   },
   methods: {
+    updateHeadImg (currentID) {
+      let avatar = ''
+      if (currentID % 7 == 1) {
+        avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2F2021%2Fedpic%2F0b%2F17%2F04%2F0b1704a9741f4e7ddd07939877dd3590_1.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142234&t=4f1fa0c40c07873cb747d04474178241'
+      }
+      else if ( currentID % 7 == 2) {
+        avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic%2F92%2F4a%2F72%2F924a726144487f372ac97057dbb01e81.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=289155d2b0f39b19ed108a8b0eb24f8d'
+      } else if ( currentID % 7 == 3) {
+        avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201704%2F05%2F20170405213655_uSEiT.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644142269&t=0f75b074995a35b8c4e818116dd79fa8'
+      }else if( currentID % 7 == 4){
+        avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi-1.lanrentuku.com%2F2020%2F11%2F5%2Fdef6ed04-6d34-402e-99c8-366266f627dd.png%3FimageView2%2F2%2Fw%2F500&refer=http%3A%2F%2Fi-1.lanrentuku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1654488342&t=1d16040e17cf13f9d1af6d1be128cbb8'
+      }else if( currentID % 7 == 5){
+        avatar = 'https://img1.baidu.com/it/u=2839692202,2605797378&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=498'
+      }else if( currentID % 7 == 6){
+        avatar = 'https://img2.baidu.com/it/u=331441483,3335069502&fm=253&fmt=auto&app=138&f=PNG?w=500&h=497'
+      }else if( currentID % 7 == 0){
+        avatar= 'https://img2.baidu.com/it/u=84120346,2663335055&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400'
+      }
+      return avatar
+    },
     newSolution () {
       if (this.form.title == '') {
         alert("标题不能为空")
@@ -388,6 +409,7 @@ export default {
           console.log(res)
           this.solutions.splice(0, this.solutions.length)
           for (let i = 0; i < res.data.data.length; i++) {
+
             this.solutions.push({
               'id': res.data.data[i].solutionId,
               'userName': '',
@@ -399,7 +421,8 @@ export default {
               'title': res.data.data[i].title,
               'code': res.data.data[i].code,
               'likes': res.data.data[i].likes,
-              'isThumbed': false
+              'isThumbed': false,
+              'headImgSrc': this.updateHeadImg(res.data.data[i].userId)
             })
             this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
                 + this.solutions[i].userid)

@@ -202,12 +202,46 @@ export default {
       var token = JSON.parse(localStorage.token)
       this.$http.post("http://localhost:8082/api/oj/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id)
         .then(response => {
-          console.log("response_new", response.data.data)
-          let tableData1 = []
+
+          ////
+          console.log(this.tableData)
+          this.tableData.splice(0, this.tableData.length)
+          console.log(this.tableData)
           for (let i in response.data.data) {
-            tableData1.push(response.data.data[i])
+            this.tableData.push(response.data.data[i])
+            console.log(i)
           }
-          this.tableData = tableData1
+          console.log(this.tableData)
+
+          //
+          // console.log("response_new", response.data.data)
+          // let tableData1 = []
+          // for (let i in response.data.data) {
+          //   tableData1.push(response.data.data[i])
+          // }
+          // this.tableData = []
+          // this.tableData = tableData1
+
+              // this.tableData.splice(0, this.tableData.length)
+              // for (let i = 0; i < response.data.data.length; i++) {
+              //   this.tableData.push({
+              //     'id': res.data.data[i].commentId,
+              //     'userName': '',
+              //     'content': res.data.data[i].content,
+              //     'userId': res.data.data[i].userId,
+              //     'sid': res.data.data[i].solutionId,
+              //     'time': res.data.data[i].commentTime,
+              //     'likes': res.data.data[i].likes,
+              //     'isThumbed': false
+              //   })
+              //
+
+
+
+
+
+
+
           console.log("table", this.tableData)
         })
         .catch(error => {
@@ -260,10 +294,51 @@ export default {
         console.log(res)
         document.getElementById("tab-2").click()
         this.result = res.data
-        if (this.result.code == 200)
-          this.isPass = '通过'
-        else
-          this.isPass = '未通过'
+        if (this.result.code == 200){
+          this.$http.post("http://localhost:8082/api/oj/code/saveCode", {
+            "userId": JSON.parse(window.localStorage.getItem("token")).id,
+            "codeId": '',
+            'questionId': this.id,
+            "content": this.code,
+            "state": 1,
+            "submitTime": '',
+            "language": ''
+          })
+          setTimeout(()=>{
+            this.isPass = '通过'
+            console.log('fadssda')
+            this.loaddata()
+          },1200)
+
+
+
+
+
+
+        }
+
+        else{
+          this.$http.post("http://localhost:8082/api/oj/code/saveCode", {
+            "userId": JSON.parse(window.localStorage.getItem("token")).id,
+            "codeId": '',
+            'questionId': this.id,
+            "content": this.code,
+            "state": 0,
+            "submitTime": '',
+            "language": ''
+          })
+
+
+          setTimeout(()=>{
+            this.isPass = '未通过'
+            console.log('fa')
+            this.loaddata()
+          },1200)
+
+
+
+        }
+
       }).catch(err => {
         console.log(err)
       })

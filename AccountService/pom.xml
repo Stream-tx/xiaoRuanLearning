@@ -52,6 +52,7 @@
             <version>1.8</version>
             <scope>system</scope>
             <systemPath>/Users/jackie/Library/Java/JavaVirtualMachines/azul-1.8.0_302/Contents/Home/lib/tools.jar</systemPath>
+<!--            <systemPath>E:/JDK/lib/tools.jar</systemPath>-->
             <!--            <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>-->
         </dependency>
 

@@ -53,7 +53,7 @@ export default {
             + "        \n"
             + "    }\n"
             + "}"
-          axios.post("http://localhost:8082/oj/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
+          axios.post("http://localhost:8082/api/oj/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
             .then(res => {
               if (res.data.data.content != '') {
                 content.value = res.data.data.content
@@ -86,7 +86,7 @@ export default {
 <style>
 .container {
   width: 800px;
-  height: 600px;
+  height: 900px;
   text-align: left;
 }
 </style>

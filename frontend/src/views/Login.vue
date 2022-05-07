@@ -5,10 +5,10 @@
     </div>
     <div class="wrap-box">
       <div style="font-size:80px" font-family="Microsoft YaHei">
-        HDOJ
+        miniSoft
       </div>
       <div style="font-size:25px" >
-        黄渡编程学习小组
+        小软编程学习平台
       </div>
       <div class="login">
         <el-tabs v-model="activeName" @tab-click="handleClick">

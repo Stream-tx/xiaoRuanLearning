@@ -5,7 +5,7 @@
         <div class="image">
           <el-image
               style="padding-left: 25% ;padding-top: 5%"
-              :src="require('@/assets/hdoj.png')"
+              :src="require('@/assets/miniSoft.png')"
               :fit="fill"></el-image>
         </div>
         <div class="questions">
@@ -120,7 +120,7 @@
 
           </div>
       </el-aside>
-      <el-main style="padding-right: 15%">
+      <el-main style="padding-right: 15%; height:100%">
         <el-calendar style="font-size: small" ref="calendar">
           <template #header="{ date }">
             <span>{{ date }}</span>

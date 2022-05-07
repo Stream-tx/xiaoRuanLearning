@@ -2,12 +2,13 @@ package com.example.accountservice.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-@Proxy(lazy = false)
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "code")
 @Data
@@ -20,8 +21,7 @@ public class Code {
     private Long questionId;
     private String content;
     private Long state;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate submitTime;
+    //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp submitTime;
     private String language;
-
 }

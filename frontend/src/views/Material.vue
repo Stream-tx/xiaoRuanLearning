@@ -140,7 +140,7 @@ searchFile()
       })
     },
     downloadFile(i){
-      alert(i)
+      //alert(i)
       this.linkTo(this.tableData[i].url,this.tableData[i].name)
       // var param = this.contentData
       // axios.post(

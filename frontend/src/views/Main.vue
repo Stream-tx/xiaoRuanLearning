@@ -8,7 +8,7 @@
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b">
-      <el-menu-item style="padding-left:15% " index="1">HDOJ</el-menu-item>
+      <el-menu-item style="padding-left:15% " index="1">miniSoft</el-menu-item>
       <el-menu-item index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
       <el-menu-item index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
       <el-menu-item index="4"><router-link to="/hdoj/online">在线编译</router-link></el-menu-item>

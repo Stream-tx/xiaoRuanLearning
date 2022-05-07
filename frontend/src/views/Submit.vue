@@ -2,9 +2,9 @@
   <div class="box" ref="box">
     <div class="right">
       <el-form ref="ruleFormsss" :model="ruleForm" label-width="120px" class="demo-ruleForm">
-        <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" />
+        <MonacoEditor :myArgs="myArgs" @data="data" :rightWidth="rightWidth" style="" />
         <el-form-item prop="input">
-          <el-button type="primary" @click="submit" :loading="isLoading">Submit</el-button>
+          <el-button type="primary" style="top:500px !important" @click="submit" :loading="isLoading">Submit</el-button>
         </el-form-item>
         <!-- <el-form-item style="display: inline;"> -->
         <!-- </el-form-item> -->
