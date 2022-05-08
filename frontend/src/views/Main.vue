@@ -12,7 +12,8 @@
       <el-menu-item index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
       <el-menu-item index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
       <el-menu-item index="4"><router-link to="/hdoj/online">在线编译</router-link></el-menu-item>
-      <el-menu-item index="5" style='position: absolute;right:15%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
+      <el-menu-item index="5"><router-link to="/hdoj/webIDE">webIDE</router-link></el-menu-item>
+      <el-menu-item index="6" style='position: absolute;right:15%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
     </el-menu>
 
     <!--    <el-button style="width:130px;height:40px; border-radius:10px;">编辑个⼈资料</el-button>-->
@@ -330,9 +331,12 @@ export default {
 .inline-input>>>.el-input__inner {
   background-color: transparent !important;
 
-
   border-radius: 15px 15px 15px 15px !important;
   border: 0;
+}
+
+.home{
+  height:100%;
 }
 .drag-area {
   position: fixed;

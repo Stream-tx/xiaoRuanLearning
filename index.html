@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03 - Basic Scene</title>
+</head>
+
+<body>
+    <canvas class="webgl"></canvas>
+    <script src='https://s1.pstatp.com/cdn/expire-1-M/three.js/103/three.min.js'></script>
+    <script>
+        // Canvas
+        var canvas = document.querySelector('canvas.webgl')
+
+        // Sizes
+        var sizes = {
+            width: 800,
+            height: 600
+        }
+
+        // Scene
+        var scene = new THREE.Scene()
+        console.log(scene)
+
+        // Object
+        var cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+        var cubeMaterial = new THREE.MeshBasicMaterial({
+            color: '#ff0000'
+        })
+        var cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial)
+        scene.add(cubeMesh)
+
+        // Camera
+        var camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
+        camera.position.z = 3
+        scene.add(camera)
+
+        // Renderer
+        var renderer = new THREE.WebGLRenderer({
+            canvas: canvas
+        })
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.render(scene, camera)
+
+
+        var time = Date.now()
+            //clock.tick
+        var clock = new THREE.Clock()
+        var tick = () => {
+            const elapsedTime = clock.getElapsedTime()
+            const currentTime = Date.now()
+            const deltaTime = currentTime - time
+            cubeMesh.material.color.setRGB(0.7 + 0.3 * Math.sin(deltaTime * 0.002), 0.7 + 0.3 * Math.cos(deltaTime * 0.0009), 0.7 + 0.3 * Math.sin(deltaTime * 0.0019))
+
+            // Render
+            // const currentTime = Date.now()
+            // const deltaTime = currentTime - time
+            // time = currentTime
+            // console.log(deltaTime)
+            //   update objects
+            camera.position.y = Math.sin(elapsedTime)
+            camera.position.x = Math.cos(elapsedTime)
+
+            // camera.lookAt(mesh.position)
+            renderer.render(scene, camera)
+
+            // Call tick again on the next frame
+            window.requestAnimationFrame(tick)
+        }
+
+        tick()
+    </script>
+</body>
+
+</html>

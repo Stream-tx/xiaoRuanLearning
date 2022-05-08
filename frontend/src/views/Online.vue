@@ -1,5 +1,5 @@
 <template>
-  <el-card style="background-color: #99a9bf">
+  <el-card style="height:calc(100% - 61px);background-color: #99a9bf">
     <Submit style="padding-left: 20%"/>
   </el-card>
 </template>

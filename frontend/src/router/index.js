@@ -47,6 +47,10 @@ const routes = [
         path: '/hdoj/alterInfo',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/alterMyInfo.vue'),
+      },{
+        path: '/hdoj/webIDE',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/WebIDE.vue'),
       }
     ]
   }
