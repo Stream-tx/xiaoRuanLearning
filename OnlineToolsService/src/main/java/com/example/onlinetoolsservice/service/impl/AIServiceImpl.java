@@ -1,5 +1,6 @@
 package com.example.onlinetoolsservice.service.impl;
 
+import cn.hutool.core.map.MapUtil;
 import com.example.onlinetoolsservice.common.Result;
 import com.example.onlinetoolsservice.entity.*;
 import com.example.onlinetoolsservice.repository.*;
@@ -51,17 +52,7 @@ public class AIServiceImpl implements AIService {
         chat.setRobot(false);
         chatRepository.save(chat);
 
-        if(chat.getContent().equals("推荐题目")) {
-            long id=chat.getUserId();
-            User user=userRepository.findByUserId(id);
-            return Result.success(recommendquestion(user));
-        }
-        else if(chat.getContent().equals("跟我相似的人在做什么题目")){
-            long id=chat.getUserId();
-            User user=userRepository.findByUserId(id);
-            String name=user.getUsername();
-            return Result.success(recommendquestion2(name));
-        }
+
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(CHAT_URL + qChat, String.class);
         String responseEntityBody=responseEntity.getBody();
         ObjectMapper objectMapper =new ObjectMapper();
@@ -72,15 +63,38 @@ public class AIServiceImpl implements AIService {
         }catch (JsonProcessingException e){
             //映射出错
             e.printStackTrace();
-//            log.info("string转换实体异常");
+            log.info("string转换实体异常");
         }
-//        log.info(response.getChat_response());
+        log.info(response.getChat_response());
         chat.setChatTime(LocalDate.now());
         chat.setContent(response.getChat_response());
         chat.setUserId(userId);
         chat.setRobot(true);
         chatRepository.save(chat);
-        return Result.success(response.getChat_response());
+        if(response.getChat_response().equals("这是您的每日一题")) {
+            long id=chat.getUserId();
+            User user=userRepository.findByUserId(id);
+//            return Result.success(recommendquestion(user));
+            return Result.success(MapUtil.builder()
+                    .put("response", response.getChat_response())
+                    .put("question", recommendquestion(user))
+                    .map());
+        }
+        else if(response.getChat_response().equals("他们在做这些题")){
+            long id=chat.getUserId();
+            User user=userRepository.findByUserId(id);
+            String name=user.getUsername();
+//            return Result.success(recommendquestion2(name));
+            return Result.success(MapUtil.builder()
+                    .put("response", response.getChat_response())
+                    .put("question", recommendquestion2(name))
+                    .map());
+        }
+
+        return Result.success( MapUtil.builder()
+                .put("response", response.getChat_response())
+                .map());
+//        return Result.success(response.getChat_response());
     }
 
 
