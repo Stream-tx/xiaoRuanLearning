@@ -39,16 +39,4 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:8080/eureka/
   instance:
     hostname: localhost
-redis:
-  database: 0
-  host: 139.196.35.175
-  port: 6379
-  password:
-  timeout: 1000
-  jedis:
-    pool:
-      max-active: 8
-      max-wait: -1
-      max-idle: 8
-      min-idle: 0
 
