@@ -19,29 +19,9 @@ public class AIController {
         this.aIService = aIService;
     }
 
-    @PostMapping("questionRecommendation")
-    public Result questionRecommendation(@RequestParam Long userId) {
-        return Result.success(aIService.questionRecommendation(userId));
-    }
-
     @PostMapping("addChatRecords")
-    public Result addChatRecords(@RequestBody Chat chat) {
-        return Result.success(aIService.addChatRecords(chat));
-    }
-
-    @PostMapping("deleteChatRecords")
-    public Result deleteChatRecords(@RequestParam Long chatId) {
-        return Result.success(aIService.deleteChatRecords(chatId));
-    }
-
-    @PostMapping("findChatRecords")
-    public Result findChatRecords(@RequestParam String content) {
-        return Result.success(aIService.findChatRecords(content));
-    }
-
-    @PostMapping("listChatRecords")
-    public Result listChatRecords(@RequestParam Long userId) {
-        return Result.success(aIService.listChatRecordsByUserId(userId));
+    public Result acquireResponse(@RequestParam String qChat,Long userId) {
+        return aIService.acquireResponse(qChat,userId);
     }
 
     @PostMapping("recommend")

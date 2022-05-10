@@ -2,57 +2,88 @@ package com.example.onlinetoolsservice.service.impl;
 
 import com.example.onlinetoolsservice.common.Result;
 import com.example.onlinetoolsservice.entity.*;
-import com.example.onlinetoolsservice.repository.CodeRepository;
-import com.example.onlinetoolsservice.repository.QuestionRepository;
-import com.example.onlinetoolsservice.repository.ReferenceRepository;
-import com.example.onlinetoolsservice.repository.UserRepository;
+import com.example.onlinetoolsservice.repository.*;
 import com.example.onlinetoolsservice.service.AIService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.client.RestTemplate;
+import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
+@Slf4j
 public class AIServiceImpl implements AIService {
 
+
+    private static final String CHAT_URL="http://127.0.0.1:8888/chatterbot?chat=";
+    private final ChatRepository chatRepository;
     private final CodeRepository codeRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
-    public AIServiceImpl(CodeRepository codeRepository,QuestionRepository questionRepository,UserRepository userRepository) {
+    public AIServiceImpl(CodeRepository codeRepository,QuestionRepository questionRepository,UserRepository userRepository,ChatRepository chatRepository) {
         this.codeRepository = codeRepository;
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
     }
 
 
-    @Override
-    public Result questionRecommendation(@RequestParam Long userId){
-        return Result.success(null);
-    }
-
-    @Override
-    public Result addChatRecords(@RequestBody Chat chat) {
-        return Result.success(null);
-    }
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
-    public Result deleteChatRecords(@RequestParam Long chatId) {
-        return Result.success(null);
+    public Result acquireResponse(@RequestParam String qChat,Long userId) {
+        Chat chat=new Chat();
+        chat.setChatTime(LocalDate.now());
+        chat.setContent(qChat);
+        chat.setUserId(userId);
+        chat.setRobot(false);
+        chatRepository.save(chat);
+
+        if(chat.getContent().equals("推荐题目")) {
+            long id=chat.getUserId();
+            User user=userRepository.findByUserId(id);
+            return Result.success(recommendquestion(user));
+        }
+        else if(chat.getContent().equals("跟我相似的人在做什么题目")){
+            long id=chat.getUserId();
+            User user=userRepository.findByUserId(id);
+            String name=user.getUsername();
+            return Result.success(recommendquestion2(name));
+        }
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(CHAT_URL + qChat, String.class);
+        String responseEntityBody=responseEntity.getBody();
+        ObjectMapper objectMapper =new ObjectMapper();
+        Response response=null;
+        try{
+            //将String类映射到Location类中解析出数据
+            response=objectMapper.readValue(responseEntityBody,Response.class);
+        }catch (JsonProcessingException e){
+            //映射出错
+            e.printStackTrace();
+//            log.info("string转换实体异常");
+        }
+//        log.info(response.getChat_response());
+        chat.setChatTime(LocalDate.now());
+        chat.setContent(response.getChat_response());
+        chat.setUserId(userId);
+        chat.setRobot(true);
+        chatRepository.save(chat);
+        return Result.success(response.getChat_response());
     }
 
-    @Override
-    public Result findChatRecords(@RequestParam String content){
-        return Result.success(null);
-    }
 
-    @Override
-    public Result listChatRecordsByUserId(@RequestParam Long userId){
-        return Result.success(null);
-    }
 
     @Override
     public QuestionEntity recommendquestion(User user)
@@ -338,5 +369,7 @@ public class AIServiceImpl implements AIService {
         if (denominator==0) return 0.0;
         return numerator/denominator;
     }
+
+
 
 }

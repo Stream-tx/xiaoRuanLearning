@@ -11,23 +11,15 @@ import java.util.List;
 
 public interface AIService {
 
-    public Result questionRecommendation(@RequestParam Long userId);
 
 
-    public Result addChatRecords(@RequestBody Chat chat) ;
-
-
-    public Result deleteChatRecords(@RequestParam Long chatId) ;
-
-
-    public Result findChatRecords(@RequestParam String content) ;
-
-
-    public Result listChatRecordsByUserId(@RequestParam Long userId) ;
 
 //    根据自己的错题推荐
     public QuestionEntity recommendquestion(User user) ;
 //    根据跟自己做题相似的人推荐
     public List<QuestionEntity> recommendquestion2(String username) ;
     User findUserById(Long id);
+
+    //获取python的chatterbot回应，拿到回复语句
+    public Result acquireResponse(@RequestParam String qChat,Long userId);
 }
