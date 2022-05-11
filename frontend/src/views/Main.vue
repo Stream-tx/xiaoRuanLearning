@@ -8,12 +8,13 @@
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b">
-      <el-menu-item style="padding-left:15% " index="1">miniSoft</el-menu-item>
-      <el-menu-item index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
-      <el-menu-item index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
-      <el-menu-item index="4"><router-link to="/hdoj/online">在线编译</router-link></el-menu-item>
-      <el-menu-item index="5"><router-link to="/hdoj/webIDE">webIDE</router-link></el-menu-item>
-      <el-menu-item index="6" style='position: absolute;right:15%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
+      <el-menu-item style="font-size: x-large;padding-left:5% " index="1">miniSoft</el-menu-item>
+      <el-menu-item style="font-size: medium;padding-left:1% " index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="4"><router-link to="/hdoj/online">在线编译</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="5"><router-link to="/hdoj/webIDE">webIDE</router-link></el-menu-item>
+      <el-menu-item index="6" style='font-size: medium; position: absolute;right:5%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
+      <el-menu-item index="7" style='position: absolute;right:2%'><img :src="logOutImgSrc" style="height:24px;width:24px" /></el-menu-item>
     </el-menu>
 
     <!--    <el-button style="width:130px;height:40px; border-radius:10px;">编辑个⼈资料</el-button>-->
@@ -68,6 +69,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      logOutImgSrc: require('@/assets/logOut.png'),
       recommendId:'',
       replyMessage:'',
       sendMessages:'',
