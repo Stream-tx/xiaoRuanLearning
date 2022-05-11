@@ -155,6 +155,9 @@ public class AIServiceImpl implements AIService {
         System.out.println(res);
         List<QuestionEntity> questions=questionRepository.listQuestion();
         questions.removeAll(questionList);
+        if(questions.size()==0){
+            return null;
+        }
         for(QuestionEntity qus:questions){
             if(res!=null) {
                 System.out.println(qus.getQuestionId());
@@ -167,7 +170,7 @@ public class AIServiceImpl implements AIService {
                 return qus;
             }
         }
-        return null;
+        return questions.get(1);
     }
 
     public User findUserById(Long id) {
