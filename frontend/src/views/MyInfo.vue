@@ -339,6 +339,7 @@ export default {
       })
     },
     openDetails (row) {
+      window.localStorage.setItem("currentQuestionId", row.questionId)
       window.localStorage.setItem("questionId", row.questionId)
       this.$router.push("/hdoj/bank/q/" + row.questionId)
     },

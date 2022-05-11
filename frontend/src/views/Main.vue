@@ -42,8 +42,8 @@
 
           <div  style="right:20px!important;color:#6C6C6CFF;text-align:left; height:fit-content;word-wrap:break-word !important; width:350px !important;word-break:normal !important; font-size: 22px !important;">
             <p style="margin: 15px;">{{this.sendMessages}}</p>
-            <p ref="AIReply" style="line-height:28px;transition: opacity 0.5s ease-in-out 0.1s;height:fit-content;opacity:0;margin: 15px;background-image: linear-gradient(to right, midnightblue, cornflowerblue);-webkit-background-clip: text;color: transparent;font-size: 22px;width:350px !important;">
-              {{ this.replyMessage }}</p>
+            <p ref="AIReply" @click="jumpToRecommand" style="line-height:28px;transition: opacity 0.5s ease-in-out 0.1s;height:fit-content;opacity:0;margin: 15px;margin-bottom: 5px;background-image: linear-gradient(to right, midnightblue, cornflowerblue);-webkit-background-clip: text;color: transparent;font-size: 22px;width:350px !important;">
+              {{this.replyMessage }}</p>
             <!--              Something went wrong. Please try again.-->
 
 
@@ -64,9 +64,11 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
+      recommendId:'',
       replyMessage:'',
       sendMessages:'',
       activeIndex: '2',
@@ -76,6 +78,19 @@ export default {
     };
   },
   methods: {
+    jumpToRecommand(){
+      if(this.recommandId==-1)
+      {
+
+      }else{
+        window.localStorage.setItem("currentQuestionId", this.recommandId)
+        window.localStorage.setItem("questionId", this.recommandId)
+        this.$router.push("/hdoj/bank/q/" +this.recommandId)
+
+      }
+
+
+    },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     }
@@ -97,11 +112,38 @@ export default {
         this.sendMessages = this.contentData
         //this.sendMessages+='>'
 
+        this.replyMessage = ''
         this.contentData =''
-        console.log(this.contentData)
+        console.log(this.sendMessages)
+        ////
+        axios.post(
+            'http://localhost:8904/onlinetools/ai/addChatRecords?qChat='+this.sendMessages+'&&userId=2'
+            //"http://localhost:8082/api/onlinetools/reference/searchReference?searchKey="+this.contentData
+        ).then(res => {
+          console.log(res)
+          console.log(res.data)
+
+          this.replyMessage = res.data.data.name
+          if(res.data.data.questionId==null)
+          {
+            this.recommendId = -1
+
+          }else{
+            this.recommendId = res.data.data.questionId
+
+          }
+
+
+
+        })
         setTimeout(()=>{
-          this.replyMessage = 'Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.'
+          //this.replyMessage = 'Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.'
           AIChatBox.style.maxHeight = '1200px'
+        },1900)
+
+
+        setTimeout(()=>{
+          //this.replyMessage = 'Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.'
           AIReply.style.opacity = '1'
         },2000)
 
@@ -127,6 +169,7 @@ export default {
       }else{
         AIInPut.style.opacity = "0";
         AIChatBox.style.opacity = "0";
+
       }
     },
 
