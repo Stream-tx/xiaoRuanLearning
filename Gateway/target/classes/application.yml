@@ -12,22 +12,63 @@ spring:
               uri: lb://accountservice
               predicates:
                 - Path=/api/account/**
-              filters: StripPrefix=1 #忽略第一层
+              filters:
+                - StripPrefix=1 #忽略第一层
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 5 # 令牌桶每秒填充速率
+                    redis-rate-limiter.burstCapacity: 20 # 令牌桶总容量
+                    redis-rate-limiter.requestedTokens: 1 # 一个请求需要消费的令牌数
+                    key-resolver: "#{@uriKeyResolver}"
             - id: ojservice
               uri: lb://ojservice
               predicates:
               - Path=/api/oj/**
-              filters: StripPrefix=1 #忽略第一层
+              filters:
+                - StripPrefix=1 #忽略第一层
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 5 # 令牌桶每秒填充速率
+                    redis-rate-limiter.burstCapacity: 20 # 令牌桶总容量
+                    redis-rate-limiter.requestedTokens: 1 # 一个请求需要消费的令牌数
+                    key-resolver: "#{@uriKeyResolver}"
+
             - id: communityservice
               uri: lb://communityservice
               predicates:
               - Path=/api/community/**
-              filters: StripPrefix=1 #忽略第一层
+              filters:
+                - StripPrefix=1 #忽略第一层
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 5 # 令牌桶每秒填充速率
+                    redis-rate-limiter.burstCapacity: 20 # 令牌桶总容量
+                    redis-rate-limiter.requestedTokens: 1 # 一个请求需要消费的令牌数
+                    key-resolver: "#{@uriKeyResolver}"
             - id: onlinetoolsservice
               uri: lb://onlinetoolsservice
               predicates:
                 - Path=/api/onlinetools/**
-              filters: StripPrefix=1 #忽略第一层
+              filters:
+                - StripPrefix=1 #忽略第一层
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 5 # 令牌桶每秒填充速率
+                    redis-rate-limiter.burstCapacity: 20 # 令牌桶总容量
+                    redis-rate-limiter.requestedTokens: 1 # 一个请求需要消费的令牌数
+                    key-resolver: "#{@uriKeyResolver}"
+    redis:
+      database: 0
+      host: 139.196.35.175
+      port: 6379
+      password: xiaoruan
+      timeout: 5000
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
 
 server:
   port: 8082
@@ -39,16 +80,39 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:8080/eureka/
   instance:
     hostname: localhost
-redis:
-  database: 0
-  host: 139.196.35.175
-  port: 6379
-  password:
-  timeout: 1000
-  jedis:
-    pool:
-      max-active: 8
-      max-wait: -1
-      max-idle: 8
-      min-idle: 0
 
+
+
+
+#=======================resilience4j断路器系统默认配置=======================
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failureRateThreshold: 50 #失败率，错误率达到或高于该值则进入open状态
+        slowCallDurationThreshold: 60s  #慢调用阀值，请求执行的时间大于该值时会标记为慢调用
+        slowCallRateThreshold: 100  #慢调用熔断阀值，当慢调用率达到或高于该值时，进入open状态
+        slidingWindowSize: 60  #时间窗口，用于计算失败率
+        slidingWindowType: TIME_BASED  #状态收集器类型COUNT_BASED:根据数量计算(slidingWindowSize为次数) TIME_BASED:根据时间计算(slidingWindowSize为秒数)
+        minimumNumberOfCalls: 10  #计算错误率的最小请求数，不足最小调用次数不会触发任何变化
+        automaticTransitionFromOpenToHalfOpenEnabled: true  #是否自动进入halfOpen状态，默认false-一定时间后进入halfopen，ture-需要通过接口执行。
+        permittedNumberOfCallsInHalfOpenState: 2  #进入halfOpen状态时，可以被调用次数，计算这些请求的失败率，低于设置的失败率，则断路器变为close状态，否则断路器变为open状态
+        waitDurationInOpenState: 30s  #断路器从OPEN状态变成HALF_OPEN状态需要的等待时间，即熔断多久后开始尝试访问被熔断的服务。
+        recordExceptions[0]: java.lang.Exception  #被计为失败的异常集合，默认情况下所有异常都为失败。
+        ignoreExceptions[0]: java.lang.IllegalStateException  #不会被计为失败的异常集合，优先级高于recordExceptions。
+
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: satoken
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false

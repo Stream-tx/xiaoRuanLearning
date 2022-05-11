@@ -128,7 +128,9 @@ export default {
 searchFile()
     {
       axios.post(
-          "http://localhost:8082/api/onlinetools/reference/searchReference?searchKey="+this.contentData
+          "http://localhost:8082/api/onlinetools/reference/searchReference?searchKey="+this.contentData,{
+            headers:{"satoken":localStorage.getItem("satoken")}
+          }
       ).then(res => {
         this.tableData.splice(0,this.tableData.length)
         console.log(res)

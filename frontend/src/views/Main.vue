@@ -9,12 +9,12 @@
         text-color="#fff"
         active-text-color="#ffd04b">
       <el-menu-item style="font-size: x-large;padding-left:5% " index="1">miniSoft</el-menu-item>
-      <el-menu-item style="font-size: medium;padding-left:1% " index="2"><router-link to="/hdoj/bank">题库</router-link></el-menu-item>
-      <el-menu-item style="font-size: medium;" index="3"><router-link to="/hdoj/material">资料</router-link></el-menu-item>
-      <el-menu-item style="font-size: medium;" index="4"><router-link to="/hdoj/online">在线编译</router-link></el-menu-item>
-      <el-menu-item style="font-size: medium;" index="5"><router-link to="/hdoj/webIDE">webIDE</router-link></el-menu-item>
-      <el-menu-item index="6" style='font-size: medium; position: absolute;right:5%'><router-link to="/hdoj/myInfo">个人信息</router-link></el-menu-item>
-      <el-menu-item index="7" style='position: absolute;right:2%'><img :src="logOutImgSrc" style="height:24px;width:24px" /></el-menu-item>
+      <el-menu-item style="font-size: medium;padding-left:1% " index="2"><router-link to="/miniSoft/bank">题库</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="3"><router-link to="/miniSoft/material">资料</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="4"><router-link to="/miniSoft/online">在线编译</router-link></el-menu-item>
+      <el-menu-item style="font-size: medium;" index="5"><router-link to="/miniSoft/webIDE">webIDE</router-link></el-menu-item>
+      <el-menu-item index="6" style='font-size: medium; position: absolute;right:5%'><router-link to="/miniSoft/myInfo">个人信息</router-link></el-menu-item>
+      <el-menu-item index="7" style='position: absolute;right:2%' @click="logout()"><img :src="logOutImgSrc" style="height:24px;width:24px" /></el-menu-item>
     </el-menu>
 
     <!--    <el-button style="width:130px;height:40px; border-radius:10px;">编辑个⼈资料</el-button>-->
@@ -80,6 +80,23 @@ export default {
     };
   },
   methods: {
+    logout(){
+      this.$http.get('http://localhost:8082/api/account/user/logout',{
+        headers:{
+          "satoken":window.localStorage.getItem("satoken")
+        }
+      })
+          .then(res => {
+            this.$message('退出成功');
+            console.log(res);
+            this.timer=setTimeout(() => {  //创建并执行定时器
+              window.location.href="/";
+            },1000);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    },
     jumpToRecommand(){
       if(this.recommandId==-1)
       {
@@ -87,7 +104,7 @@ export default {
       }else{
         window.localStorage.setItem("currentQuestionId", this.recommandId)
         window.localStorage.setItem("questionId", this.recommandId)
-        this.$router.push("/hdoj/bank/q/" +this.recommandId)
+        this.$router.push("/miniSoft/bank/q/" +this.recommandId)
 
       }
 

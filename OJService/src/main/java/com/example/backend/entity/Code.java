@@ -1,12 +1,9 @@
 package com.example.backend.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.sql.Timestamp;
 
 @Entity
@@ -22,6 +19,7 @@ public class Code {
     private String content;
     private Long state;
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-private Timestamp submitTime;
+    private Timestamp submitTime;
     private String language;
+
 }

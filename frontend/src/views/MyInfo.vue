@@ -263,7 +263,7 @@ export default {
       //alert(this.dialogFormVisible)
       this.dialogFormVisible = true
       // alert(this.dialogFormVisible)
-      //window.location.href="/hdoj/alterInfo";
+      //window.location.href="/miniSoft/alterInfo";
     },
     hideModal () {
       // 取消弹窗回调
@@ -281,7 +281,9 @@ export default {
       //alert("!")
       // 确认弹窗回调
       axios.post(
-        "http://localhost:8082/api/account/user/updateInfo", param
+        "http://localhost:8082/api/account/user/updateInfo", param,{
+            headers:{"satoken":localStorage.getItem("satoken")}
+          }
       ).then(res => {
       })
       let _this = this
@@ -310,7 +312,8 @@ export default {
     refreshP () {
       this.getCurrentId()
       axios.post(
-        "http://localhost:8082/api/account/user/accountInfo?userId=" + this.currentID
+        "http://localhost:8082/api/account/user/accountInfo?userId=" + this.currentID,{
+        headers:{"satoken":localStorage.getItem("satoken")}}
       ).then(res => {
         console.log(res)
         this.id = res.data.data.user.userId
@@ -341,7 +344,7 @@ export default {
     openDetails (row) {
       window.localStorage.setItem("currentQuestionId", row.questionId)
       window.localStorage.setItem("questionId", row.questionId)
-      this.$router.push("/hdoj/bank/q/" + row.questionId)
+      this.$router.push("/miniSoft/bank/q/" + row.questionId)
     },
     getCurrentId () {
       var userInfo = JSON.parse(localStorage.getItem('token'))

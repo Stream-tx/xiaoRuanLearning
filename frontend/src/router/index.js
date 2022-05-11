@@ -9,46 +9,46 @@ const routes = [
     component: () => import('../views/Login.vue'),
   },
   {
-    path: '/hdoj',
-    name: 'hdoj',
-    redirect: '/hdoj/bank',
+    path: '/miniSoft',
+    name: 'miniSoft',
+    redirect: '/miniSoft/bank',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Main.vue'),
     children: [{
-        path: '/hdoj/bank',
+        path: '/miniSoft/bank',
         name:'Bank',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/Bank.vue'),
       },
       {
-        path: '/hdoj/bank/q/:id',
+        path: '/miniSoft/bank/q/:id',
         name:'Question',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/Question.vue'),
       },
       {
-        path: '/hdoj/material',
+        path: '/miniSoft/material',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/Material.vue'),
       },
       {
-        path: '/hdoj/online',
+        path: '/miniSoft/online',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/Online.vue'),
       },
       {
-        path: '/hdoj/myInfo',
+        path: '/miniSoft/myInfo',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/MyInfo.vue'),
       },
       {
-        path: '/hdoj/alterInfo',
+        path: '/miniSoft/alterInfo',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/alterMyInfo.vue'),
       },{
-        path: '/hdoj/webIDE',
+        path: '/miniSoft/webIDE',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/WebIDE.vue'),
       }

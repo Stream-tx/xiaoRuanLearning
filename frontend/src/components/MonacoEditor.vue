@@ -53,7 +53,9 @@ export default {
             + "        \n"
             + "    }\n"
             + "}"
-          axios.post("http://localhost:8082/api/oj/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3])
+          axios.post("http://localhost:8082/api/oj/code/getTheLatestCode?userId=" + type[2] + "&questionId=" + type[3],{
+            headers:{"satoken":localStorage.getItem("satoken")}
+          })
             .then(res => {
               if (res.data.data.content != '') {
                 content.value = res.data.data.content

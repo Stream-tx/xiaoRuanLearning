@@ -1,5 +1,6 @@
 package com.example.accountservice.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.map.MapUtil;
 import com.example.accountservice.common.Result;
 import com.example.accountservice.dto.LoginDto;
@@ -33,10 +34,19 @@ public class UserController {
         String age = registerDto.getAge();
         User user = userService.findUserByUsername(username);
         if (user == null) {
+            StpUtil.login(registerDto.getUsername(),true);
             userService.saveUser(new User(username, password, email, university, Integer.parseInt(age)));
-            return Result.success(null);
+            return Result.success(MapUtil.builder()
+                    .put("satoken",StpUtil.getTokenValue())
+                    .map());
         } else
             return Result.fail("The username already exists!");
+    }
+
+    @RequestMapping("/logout")
+    public Result logout() {
+        StpUtil.logout();
+        return Result.success(null);
     }
 
     @PostMapping("login")
@@ -45,11 +55,13 @@ public class UserController {
         if (user == null) {
             return Result.fail("The password is not correct!");
         } else {
+            StpUtil.login(loginDto.getUsername(),true);
             return Result.success(MapUtil.builder()
                     .put("id", user.getUserId())
                     .put("username", user.getUsername())
                     .put("avatar", user.getAvatar())
                     .put("email", user.getEmail())
+                    .put("satoken",StpUtil.getTokenValue())
                     .map());
         }
     }

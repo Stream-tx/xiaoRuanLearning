@@ -88,14 +88,21 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           axios.post(
-              "http://localhost:8082/api/account/user/login/", param
-              )
+              "http://localhost:8082/api/account/user/login",{
+                "username": param.username,
+                "password": param.password
+              },{
+                headers:{"satoken":localStorage.getItem("satoken")}
+              })
               .then(response => {
+                console.log(response)
                 if (response.data.code === 200) {
+                  console.log(response.data.data.satoken)
+                  window.localStorage.setItem("satoken",response.data.data.satoken);
                   var s = JSON.stringify(response.data.data);
                   localStorage.setItem('token',s);
                   this.$alert('登录成功！');
-                  this.$router.replace({path: '/hdoj/bank'});
+                  this.$router.replace({path: '/miniSoft/bank'});
                   console.log('登录成功');
                 }
                 else {

@@ -96,7 +96,9 @@ export default {
             "age":this.ruleForm.age
           }
           axios.post(
-              "http://localhost:8082/api/account/user/register/", param
+              "http://localhost:8082/api/account/user/register/", param,{
+            headers:{"satoken":localStorage.getItem("satoken")}
+          }
           )
               //.get("http://106.14.25.240:81/user/register/"+this.ruleForm.name+"/"+this.ruleForm.pass)//localStorage.getItem('token'))
               .then(response => {
@@ -104,7 +106,8 @@ export default {
                   var s = JSON.stringify(response.data.data);
                   localStorage.setItem('token',s);
                   this.$alert('注册成功！');
-                  this.$router.replace({path: '/hdoj/bank'});
+                  window.localStorage.setItem("satoken",response.data.data.satoken);
+                  this.$router.replace({path: '/miniSoft/bank'});
                   console.log('注册成功');
                 }
                 else {

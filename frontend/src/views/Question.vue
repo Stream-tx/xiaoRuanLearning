@@ -184,23 +184,25 @@ export default {
     next () {
       var id = parseInt(this.id) + 1
       window.localStorage.setItem("currentQuestionId", id.toString());
-      window.location.href = "/hdoj/bank/q/" + id
+      window.location.href = "/miniSoft/bank/q/" + id
     },
     before () {
       var id = parseInt(this.id) - 1
-      //console.log("router","/hdoj/bank/q/"+id)
+      //console.log("router","/miniSoft/bank/q/"+id)
       window.localStorage.setItem("currentQuestionId",  id.toString())
-      window.location.href = "/hdoj/bank/q/" + id
+      window.location.href = "/miniSoft/bank/q/" + id
     },
     random () {
       //这里需要改成题目总数！
       var id = (parseInt(this.id) + (Math.floor(Math.random() * 30 + 1))) % 30
-      //console.log("router","/hdoj/bank/q/"+id)
-      window.location.href = "/hdoj/bank/q/" + id
+      //console.log("router","/miniSoft/bank/q/"+id)
+      window.location.href = "/miniSoft/bank/q/" + id
     },
     loaddata () {
       var token = JSON.parse(localStorage.token)
-      this.$http.post("http://localhost:8082/api/oj/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/code/getCodeByUidAndQid?userId=" + token.id + "&questionId=" + this.id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
         .then(response => {
 
           ////
@@ -269,6 +271,8 @@ export default {
         "state": 0,
         "submitTime": '',
         "language": ''
+      },{
+        headers:{"satoken":localStorage.getItem("satoken")}
       }).then(res => {
         console.log(res)
         alert("保存成功")
@@ -289,6 +293,8 @@ export default {
       this.$http.post("http://localhost:8082/api/oj/question/check", {
         "code": this.code,
         'questionId': this.id,
+      },{
+        headers:{"satoken":localStorage.getItem("satoken")}
       }).then(res => {
         console.log("aaaaaaa")
         console.log(res)
@@ -303,6 +309,8 @@ export default {
             "state": 1,
             "submitTime": '',
             "language": ''
+          },{
+            headers:{"satoken":localStorage.getItem("satoken")}
           })
           setTimeout(()=>{
             this.isPass = '通过'
@@ -326,6 +334,8 @@ export default {
             "state": 0,
             "submitTime": '',
             "language": ''
+          },{
+            headers:{"satoken":localStorage.getItem("satoken")}
           })
 
 
@@ -369,6 +379,8 @@ export default {
         'questionId': this.id,
         'likes': 0,
         'createdTime': '',
+      },{
+        headers:{"satoken":localStorage.getItem("satoken")}
       }).then(res => {
         if (res.data.code == 200)
           alert("上传成功")
@@ -386,6 +398,8 @@ export default {
         "code": this.code,
         'input': this.input,
         'questionId': this.id
+      },{
+        headers:{"satoken":localStorage.getItem("satoken")}
       }).then(res => {
         console.log(res.data.data)
         alert(res.data.data)
@@ -401,7 +415,9 @@ export default {
     questionquery () {
       var token = JSON.parse(localStorage.token)
       console.log("this.id", this.id)
-      this.$http.post("http://localhost:8082/api/oj/question/getQuestion?questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/question/getQuestion?questionId=" + this.id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
         .then(res => {
           this.questionname = res.data.data.name
           this.questiondescription = res.data.data.description
@@ -413,7 +429,9 @@ export default {
         })
     },
     samplequery () {
-      this.$http.post("http://localhost:8082/api/oj/sample/listSamples?questionId=" + this.id)
+      this.$http.post("http://localhost:8082/api/oj/sample/listSamples?questionId=" + this.id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
         .then(res => {
           this.samples = res.data.data
         })

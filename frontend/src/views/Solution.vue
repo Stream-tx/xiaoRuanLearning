@@ -232,6 +232,8 @@ export default {
         'questionId':  window.localStorage.getItem("currentQuestionId"),
         'likes': 0,
         'createdTime': '',
+      },{
+        headers:{"satoken":localStorage.getItem("satoken")}
       }).then(res => {
         if (res.data.code == 200)
           alert("上传成功")
@@ -264,22 +266,26 @@ export default {
               'content': value,
               'likes': 0,
               'commentTime': '',
+            },{
+              headers:{"satoken":localStorage.getItem("satoken")}
             }).then(res => {
               if (res.data.code == 200)
-                alert("上传成功")
+                ElMessage({
+                  type: 'success',
+                  message: `上传成功`,
+                })
               else
-                alert("由于未知原因，上传失败")
+                ElMessage({
+                  type: 'fail',
+                  message: `内容包含敏感词，上传失败`,
+                })
               this.dialogNewVisible = false
-
               this.reFreshComment()
             }).catch(err => {
               alert("由于未知原因，上传失败")
               console.log(err)
             })
-            ElMessage({
-              type: 'success',
-              message: `上传成功`,
-            })
+
           })
           .catch(() => {
             ElMessage({
@@ -292,7 +298,9 @@ export default {
       row.isThumbed = true
       row.likes++
       this.$http.post("http://localhost:8082/api/oj/solution/likesIncrement?solutionId="
-          + row.id)
+          + row.id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             console.log(res)
           })
@@ -304,7 +312,9 @@ export default {
       row.isThumbed = true
       row.likes++
       this.$http.post("http://localhost:8082/api/community/comment/likesIncrement?commentId="
-          + row.id)
+          + row.id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             console.log(res)
           })
@@ -313,10 +323,12 @@ export default {
           })
     },
     reFreshComment(){
-      this.$http.post("http://localhost:8082/api/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
+      this.$http.post("http://localhost:8082/api/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             console.log(res)
-            this.comments.splice(0, 1)
+            this.comments.splice(0, this.comments.length)
             for (let i = 0; i < res.data.data.length; i++) {
               this.comments.push({
                 'id': res.data.data[i].commentId,
@@ -329,7 +341,9 @@ export default {
                 'isThumbed': false
               })
               this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
-                  + this.comments[i].userId)
+                  + this.comments[i].userId,{
+                headers:{"satoken":localStorage.getItem("satoken")}
+              })
                   .then(res => {
                     this.comments[i].userName = res.data.data
                   }).catch(err => {
@@ -349,7 +363,9 @@ export default {
           break
         }
       }
-      this.$http.post("http://localhost:8082/api/oj/solution/getSolutionById?solutionId=" + this.solutions[this.currentIndex].id)
+      this.$http.post("http://localhost:8082/api/oj/solution/getSolutionById?solutionId=" + this.solutions[this.currentIndex].id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             this.clickUserId = res.data.data
           }).catch(err => {
@@ -384,7 +400,9 @@ export default {
       // })
     },
     deleteSolution() {
-      this.$http.post("http://localhost:8082/api/oj/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id)
+      this.$http.post("http://localhost:8082/api/oj/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             this.reFresh()
 
@@ -394,7 +412,9 @@ export default {
     },
     deleteComment(commentId) {
       console.log(commentId)
-      this.$http.post("http://localhost:8082/api/community/comment/deleteComment?commentId=" + commentId)
+      this.$http.post("http://localhost:8082/api/community/comment/deleteComment?commentId=" + commentId,{
+        headers:{"satoken":localStorage.getItem("satoken")}
+      })
           .then(res => {
             this.reFreshComment()
 
@@ -404,7 +424,9 @@ export default {
     },
 
   reFresh() {
-    this.$http.post("http://localhost:8082/api/oj/solution/listSolutions?questionId=" + window.localStorage.getItem("currentQuestionId"))
+    this.$http.post("http://localhost:8082/api/oj/solution/listSolutions?questionId=" + window.localStorage.getItem("currentQuestionId"),{
+      headers:{"satoken":localStorage.getItem("satoken")}
+    })
         .then(res => {
           console.log(res)
           this.solutions.splice(0, this.solutions.length)
@@ -425,7 +447,9 @@ export default {
               'headImgSrc': this.updateHeadImg(res.data.data[i].userId)
             })
             this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
-                + this.solutions[i].userid)
+                + this.solutions[i].userid,{
+              headers:{"satoken":localStorage.getItem("satoken")}
+            })
                 .then(res => {
                   this.solutions[i].userName = res.data.data
                 }).catch(err => {

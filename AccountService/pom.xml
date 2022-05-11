@@ -24,6 +24,16 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.28.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis-jackson</artifactId>
+            <version>1.28.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
@@ -45,6 +55,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
@@ -60,8 +74,8 @@
             <!--            version要一致-->
             <version>1.8</version>
             <scope>system</scope>
-            <systemPath>/Users/jackie/Library/Java/JavaVirtualMachines/azul-1.8.0_302/Contents/Home/lib/tools.jar</systemPath>
-<!--            <systemPath>E:/JDK/lib/tools.jar</systemPath>-->
+            <!--             <systemPath>/Users/jackie/Library/Java/JavaVirtualMachines/azul-1.8.0_302/Contents/Home/lib/tools.jar</systemPath>-->
+            <systemPath>E:/JDK/lib/tools.jar</systemPath>
             <!--            <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>-->
         </dependency>
 

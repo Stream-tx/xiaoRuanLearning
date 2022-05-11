@@ -33,8 +33,10 @@ public class CommentController {
 
     @PostMapping("addComment")
     public Result addSolution(@RequestBody Comment comment) {
-        commentService.addComment(comment);
-        return Result.success(null);
+        if(commentService.addComment(comment))
+            return Result.success(null);
+        else
+            return Result.fail(400, "Sensitive words exist",null);
     }
 
     @PostMapping("deleteComment")

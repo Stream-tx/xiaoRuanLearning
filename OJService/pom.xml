@@ -36,6 +36,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
             <version>3.1.2</version>
         </dependency>
@@ -80,9 +85,9 @@
 <!--            version要一致-->
             <version>1.8</version>
             <scope>system</scope>
-<!--            <systemPath>E:/JDK/lib/tools.jar</systemPath>-->
-            <systemPath>/Users/jackie/Library/Java/JavaVirtualMachines/azul-1.8.0_302/Contents/Home/lib/tools.jar</systemPath>
-<!--            <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>-->
+            <systemPath>E:/JDK/lib/tools.jar</systemPath>
+            <!--            <systemPath>/Users/jackie/Library/Java/JavaVirtualMachines/azul-1.8.0_302/Contents/Home/lib/tools.jar</systemPath>-->
+            <!--            <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>-->
         </dependency>
     </dependencies>
 

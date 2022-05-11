@@ -321,7 +321,7 @@ export default {
     },
     toMaterial(val){
       if(val==0)
-        this.$router.replace("/hdoj/material");
+        this.$router.replace("/miniSoft/material");
     },
     select(val){
       this.$refs.calendar.selectDate(val);
@@ -359,7 +359,7 @@ export default {
 
       window.localStorage.setItem("questionId",row.id);
       window.localStorage.setItem("currentQuestionId", row.id);
-      this.$router.push("/hdoj/bank/q/"+row.id);
+      this.$router.push("/miniSoft/bank/q/"+row.id);
     },
     handleClose(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);
@@ -416,7 +416,9 @@ export default {
     },
   },
   mounted() {
-    this.$http.post("http://localhost:8082/api/oj/question/listQuestions")
+    this.$http.post("http://localhost:8082/api/oj/question/listQuestions",{
+      headers:{"satoken":localStorage.getItem("satoken")}
+    })
         .then(res =>{
           this.tableData.splice(0,this.tableData.length);
           const pass=[];
@@ -438,7 +440,9 @@ export default {
             })
             this.$http.post("http://localhost:8082/api/oj/code/getTheLatestCode?" +
                 "userId="+JSON.parse(window.localStorage.getItem("token")).id
-                + "&questionId=" +this.tableData[i].id)
+                + "&questionId=" +this.tableData[i].id,{
+              headers:{"satoken":localStorage.getItem("satoken")}
+            })
             .then(res =>{
               if(res.data.data!=null){
                 if(res.data.data.state==0)
@@ -450,7 +454,9 @@ export default {
               
             })
           }
-          this.$http.post("http://localhost:8082/api/oj/solution/getSolutionCount")
+          this.$http.post("http://localhost:8082/api/oj/solution/getSolutionCount",{
+            headers:{"satoken":localStorage.getItem("satoken")}
+          })
               .then(res =>{
                 for(let i=0;i<res.data.data.length;i++){
                   this.tableData[i].solution=res.data.data[i];
