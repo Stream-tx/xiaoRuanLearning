@@ -16,7 +16,7 @@
                   @init="editorInit"
                   lang="html"
                   theme="chrome"
-        style="height: 921px" >
+        style="height: 96%" >
 
     </v-ace-editor>
   </div>
@@ -178,7 +178,7 @@ export default {
 iframe {
   border-width: 0px;
   width: 100%;
-  height: 950px;
+  height: 96%;
   background-color: #ffffff;
 }
 
