@@ -79,15 +79,7 @@
             <div class="personalInfoTitle">｜
             </div>
           </el-col>
-          <!-- <el-col id="info">-->
-          <!-- <div class="personalInfoTitle">所在地-->
-          <!-- </div>-->
-          <!-- <div class="personalInfoContent">-->
-          <!-- {{this.area}}-->
-          <!-- </div>-->
-          <!-- <div class="personalInfoTitle">｜-->
-          <!-- </div>-->
-          <!-- </el-col>-->
+
           <el-col id="info">
             <div class="personalInfoTitle">学校
             </div>
@@ -137,7 +129,7 @@
             </el-table-column>
             <el-table-column prop="language" label="编程语⾔" sortable width="120">
             </el-table-column>
-            <el-table-column prop="submitTime" label="提交时间" sortable width="130">
+            <el-table-column prop="submitTime" label="提交时间" sortable width="530">
             </el-table-column>
           </el-table>
         </div>
@@ -278,8 +270,6 @@ export default {
         "email": this.emailAlter,
         "profile": this.contentAlter
       }
-      //alert("!")
-      // 确认弹窗回调
       axios.post(
         "http://localhost:8082/api/account/user/updateInfo", param,{
             headers:{"satoken":localStorage.getItem("satoken")}
@@ -377,22 +367,6 @@ export default {
     this.updateTmpInfo()
     this.refreshP()
     this.updateHeadImg()
-    // axios.post(
-    // "http://localhost:8081/account/accountInfo"
-    // ).then(res => {
-    // console.log(res)
-    // // for(var i = 0;i<res.data.submissionCode.length();i++)
-    // // {
-    // // this.tableData.push()
-    // // res.data.submissionCode
-    // //
-    // // }
-    // for(var i = 0;i<res.data.questionNames.length();i++)
-    // {
-    // this.tableData[i].name = res.data.questionNames
-    // }
-    // this.$forceUpdate()
-    //})
   }
 }
 </script>
@@ -426,7 +400,7 @@ export default {
   color: var(--el-text-color-primary);
   text-align: center;
   line-height: 20px;
-  height: 600px;
+  height: 900px;
   width: 200px;
   border-radius: 30px;
   margin: 20px;

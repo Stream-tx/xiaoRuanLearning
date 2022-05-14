@@ -35,6 +35,8 @@
   </div>
 </template>
 
+
+
 <script>
 import axios from "axios";
 import Register from "@/views/Register";

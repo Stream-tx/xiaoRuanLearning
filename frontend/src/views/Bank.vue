@@ -356,7 +356,6 @@ export default {
       return true;
     },
     openDetails(row){
-
       window.localStorage.setItem("questionId",row.id);
       window.localStorage.setItem("currentQuestionId", row.id);
       this.$router.push("/miniSoft/bank/q/"+row.id);

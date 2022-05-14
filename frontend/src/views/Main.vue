@@ -69,6 +69,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      currentID:"",
       logOutImgSrc: require('@/assets/logOut.png'),
       recommendId:'',
       replyMessage:'',
@@ -118,54 +119,42 @@ export default {
       this.$router.push("/index");
       console.log("返回主界面");
     },
+    getCurrentId () {
+      var userInfo = JSON.parse(localStorage.getItem('token'))
+      console.log(userInfo)
+      this.currentID = userInfo.id
+    },
     sendAIMessage()
     {
       let AIReply = this.$refs.AIReply;
-      let dragArea = this.$refs.dragArea;
-      let AI = this.$refs.dragAI;
       let AIChatBox = this.$refs.dragChatBoxAI;
-      let AIInPut = this.$refs.dragInputAI
+      AIReply.style.opacity = '0'
+      AIChatBox.style.maxHeight = '50px'
       if(this.contentData!='')
       {
         AIChatBox.style.opacity = "1";
         this.sendMessages = this.contentData
-        //this.sendMessages+='>'
-
         this.replyMessage = ''
         this.contentData =''
         console.log(this.sendMessages)
-        ////
-        axios.post(
-            'http://localhost:8904/onlinetools/ai/addChatRecords?qChat='+this.sendMessages+'&&userId=2'
-            //"http://localhost:8082/api/onlinetools/reference/searchReference?searchKey="+this.contentData
-        ).then(res => {
+        let url = 'http://localhost:8082/api/onlinetools/ai/addChatRecords?qChat='+this.sendMessages+'&&userId='+this.currentID
+        console.log(url)
+        axios.post(url).then(res => {
           console.log(res)
           console.log(res.data)
-
-          this.replyMessage = res.data.data.name
-          if(res.data.data.questionId==null)
+          this.replyMessage = res.data.data.response
+          console.log(this.replyMessage)
+          this.$refs.dragChatBoxAI.style.maxHeight = '1200px'
+          this.$refs.AIReply.style.opacity = '1'
+          if(res.data.data.question.questionId=='undefined')
           {
             this.recommendId = -1
-
           }else{
-            this.recommendId = res.data.data.questionId
-
+            this.recommendId = res.data.data.question.questionId
+            this.replyMessage += ' '
+            this.replyMessage += res.data.data.question.name
           }
-
-
-
         })
-        setTimeout(()=>{
-          //this.replyMessage = 'Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.'
-          AIChatBox.style.maxHeight = '1200px'
-        },1900)
-
-
-        setTimeout(()=>{
-          //this.replyMessage = 'Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.Something went wrong. Please try again.'
-          AIReply.style.opacity = '1'
-        },2000)
-
       }
     }
     ,

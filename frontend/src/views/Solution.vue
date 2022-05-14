@@ -82,9 +82,6 @@
 
         </el-row>
 
-
-<!--        <img :src="headImgSrc" width="30" height="30" style="border-radius:50%;margin-top:5px;margin-left:5px">-->
-<!--        <h5 style="margin:6px;font-size: larger;text-align: left">[{{item.userName}}]:{{item.title}}</h5>-->
       </div>
       <el-row :gutter="20">
         <el-col :span="4">
@@ -149,8 +146,6 @@ export default {
   },
   data() {
     return {
-      //headImgSrc: 'https://tva2.sinaimg.cn/large/9bd9b167ly1fzjxyujrpaj20b40b40ta.jpg',
-
       dialogSolutionVisible: false,
       dialogNewVisible: false,
 
@@ -372,32 +367,7 @@ export default {
         console.log(err)
       })
       this.reFreshComment()
-      // this.$http.post("http://localhost:8082/api/community/comment/listComments?solutionId=" + this.solutions[this.currentIndex].id)
-      //     .then(res => {
-      //       console.log(res)
-      //       this.comments.splice(0, 1)
-      //       for (let i = 0; i < res.data.data.length; i++) {
-      //         this.comments.push({
-      //           'id': res.data.data[i].commentId,
-      //           'userName': '',
-      //           'content': res.data.data[i].content,
-      //           'userId': res.data.data[i].userId,
-      //           'sid': res.data.data[i].solutionId,
-      //           'time': res.data.data[i].commentTime,
-      //           'likes': res.data.data[i].likes,
-      //           'isThumbed': false
-      //         })
-      //         this.$http.post("http://localhost:8082/api/account/user/getUserInfo?userId="
-      //             + this.comments[i].userId)
-      //             .then(res => {
-      //               this.comments[i].userName = res.data.data
-      //             }).catch(err => {
-      //           console.log(err)
-      //         })
-      //       }
-      //     }).catch(err => {
-      //   console.log(err)
-      // })
+
     },
     deleteSolution() {
       this.$http.post("http://localhost:8082/api/oj/solution/deleteSolution?solutionId=" + this.solutions[this.currentIndex].id,{
@@ -459,7 +429,6 @@ export default {
         }).catch(err => {
       console.log(err)
     })
-
   },
 },
   mounted () {

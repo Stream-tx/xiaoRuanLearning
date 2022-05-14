@@ -8,7 +8,6 @@
 
       </li>
       <li @click="saveCode"><img :src="saveCodeImgSrc" style="height:24px;width:24px" /></li>
-
     </div>
   <div class="codeEditBox">
     <v-ace-editor id="editor"
@@ -53,7 +52,6 @@ export default {
       code: '',
       content:'',
       editor:''
-
     };
   },
   methods: {
@@ -74,15 +72,13 @@ export default {
   ed.contentEditable = true;
   ed.designMode = 'on';
 
-},downloadHTML() {
+},
+    downloadHTML() {
       let editor = ace.edit('editor')
       let blob = new Blob([editor.getValue()], {
         type: "text/plain;charset=utf-8"
       });
 
-      // let a = document.createElement('a');
-      // a.href = url
-      // a.download = fileName
       let FileSaver = require('file-saver')
       FileSaver.saveAs(blob, "miniSoft.html")
     },
@@ -91,7 +87,8 @@ export default {
       localStorage.setItem("frontEndCode", editor.getValue());
       alert('保存成功！')
     }
-  },mounted(){
+  },
+  mounted(){
     let editor = ace.edit('editor')
     console.log(editor)
     editor.session.setMode("ace/mode/html");
@@ -105,27 +102,19 @@ export default {
     editor.getSession().on('change',()=>{
       console.log(editor.getValue())
       let o = document.getElementById("iframe");
-
       let ed = o.contentDocument;
       console.log(ed)
-
       ed.open();
       ed.write('<html><head></head><body>' + editor.getValue() + '</body></html>');
       ed.close();
       ed.contentEditable = true;
       ed.designMode = 'on';
-
     })
-
-
-
     if(localStorage.getItem('frontEndCode')!=null){
       editor.setValue(localStorage.getItem('frontEndCode'));
     }
   else
       editor.setValue("the new code here");
-
-
   }
 }
 </script>

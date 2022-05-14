@@ -27,8 +27,7 @@
           @row-click="openDetails"
           :data="tableData"
           style="width: 100%; padding-left: 20%;padding-right: 5%;border-radius: 20px;"
-          :row-class-name="tableRowClassName"
-      >
+          :row-class-name="tableRowClassName">
         <el-table-column label="referenceId" align="center" prop="id" v-if="false" />
         <el-table-column
             prop="name"
@@ -42,7 +41,6 @@
             sortable
             width="660">
         </el-table-column>
-
         <el-table-column
             slot-scope="scope"
             prop="download"
@@ -73,7 +71,9 @@ export default {
         introduction:'You can find everything you need to know about data mining',
         download:'点击下载',
         url:'http://myweb.sabanciuniv.edu/rdehkharghani/files/2016/02/The-Morgan-Kaufmann-Series-in-Data-Management-Systems-Jiawei-Han-Micheline-Kamber-Jian-Pei-Data-Mining.-Concepts-and-Techniques-3rd-Edition-Morgan-Kaufmann-2011.pdf'
-      },{
+      },
+
+        {
         referenceId:'8',
         name:'Discrete Mathematics',
         introduction:'This text aims to give an introduction to select topics in discrete mathe- matics at a level appropriate for first or second year undergraduate math majors',
@@ -142,23 +142,8 @@ searchFile()
       })
     },
     downloadFile(i){
-      //alert(i)
       this.linkTo(this.tableData[i].url,this.tableData[i].name)
-      // var param = this.contentData
-      // axios.post(
-      //     "http://localhost:8081/submit", param
-      // ).then(res => {
-      //   console.log(res)
-      //   for(var i = 0;i<res.Data.length();i++)
-      //   {
-      //     tableData.push(res.Data[i])
-      //   }
-      //   for(var i = 0;i<tableData.length();i++)
-      //   {
-      //     tableData[i].download = '点击下载'
-      //   }
-      //
-      // })
+
     },
     linkTo(i,bookName){
 

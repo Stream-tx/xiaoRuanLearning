@@ -214,36 +214,6 @@ export default {
             console.log(i)
           }
           console.log(this.tableData)
-
-          //
-          // console.log("response_new", response.data.data)
-          // let tableData1 = []
-          // for (let i in response.data.data) {
-          //   tableData1.push(response.data.data[i])
-          // }
-          // this.tableData = []
-          // this.tableData = tableData1
-
-              // this.tableData.splice(0, this.tableData.length)
-              // for (let i = 0; i < response.data.data.length; i++) {
-              //   this.tableData.push({
-              //     'id': res.data.data[i].commentId,
-              //     'userName': '',
-              //     'content': res.data.data[i].content,
-              //     'userId': res.data.data[i].userId,
-              //     'sid': res.data.data[i].solutionId,
-              //     'time': res.data.data[i].commentTime,
-              //     'likes': res.data.data[i].likes,
-              //     'isThumbed': false
-              //   })
-              //
-
-
-
-
-
-
-
           console.log("table", this.tableData)
         })
         .catch(error => {
@@ -314,17 +284,9 @@ export default {
           })
           setTimeout(()=>{
             this.isPass = '通过'
-            console.log('fadssda')
             this.loaddata()
           },1200)
-
-
-
-
-
-
         }
-
         else{
           this.$http.post("http://localhost:8082/api/oj/code/saveCode", {
             "userId": JSON.parse(window.localStorage.getItem("token")).id,
@@ -337,18 +299,12 @@ export default {
           },{
             headers:{"satoken":localStorage.getItem("satoken")}
           })
-
-
           setTimeout(()=>{
             this.isPass = '未通过'
             console.log('fa')
             this.loaddata()
           },1200)
-
-
-
         }
-
       }).catch(err => {
         console.log(err)
       })

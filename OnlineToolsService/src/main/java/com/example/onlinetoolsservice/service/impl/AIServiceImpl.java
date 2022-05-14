@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 public class AIServiceImpl implements AIService {
 
 
-    private static final String CHAT_URL="http://127.0.0.1:8888/chatterbot?chat=";
+    private static final String CHAT_URL="http://192.168.1.100:8888/chatterbot?chat=";
     private final ChatRepository chatRepository;
     private final CodeRepository codeRepository;
     private final QuestionRepository questionRepository;

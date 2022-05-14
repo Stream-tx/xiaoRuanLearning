@@ -44,12 +44,6 @@ export default {
       try {
         await form.validate()
 
-        //console.log(code)
-        //var param = {
-        //  "code": code,
-        //  "input": input
-        //}
-        //console.log(param)
         axios.post(
           "http://localhost:8082/api/oj/question/compile", { "code": code },{
               headers:{"satoken":localStorage.getItem("satoken")}
