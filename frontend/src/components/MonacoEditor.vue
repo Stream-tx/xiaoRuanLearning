@@ -88,7 +88,7 @@ export default {
 <style>
 .container {
   width: 800px;
-  height: 900px;
+  height: 800px;
   text-align: left;
 }
 </style>

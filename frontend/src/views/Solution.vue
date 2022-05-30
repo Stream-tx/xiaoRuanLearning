@@ -30,7 +30,7 @@
             >
             <h5 style="text-align: left;font-size: larger;color:floralwhite;margin:10px 18px;">{{item.userName}}</h5>
             <div style="color:floralwhite;font-size: larger;text-align: left;margin-left:18px;margin-bottom:10px;">
-              <span>{{item.content}}</span>
+              <span v-html="item.content"></span>
             </div>
             <el-row :gutter="20">
               <el-col :span="4">

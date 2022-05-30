@@ -421,6 +421,7 @@ export default {
         .then(res =>{
           this.tableData.splice(0,this.tableData.length);
           const pass=[];
+          console.log(localStorage.getItem("satoken"))
           console.log(res);
           window.localStorage.setItem("maxId",res.data.data[res.data.data.length-1].questionId);
           for(let i=0;i<res.data.data.length;i++){

@@ -71,7 +71,10 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         questionRepository.save(question);
+        if(question.getPass()==null)
+            question.setPass(new Long(0));
         question.setPass(question.getPass()+1);
+
         long endTime = System.currentTimeMillis();
         return Result.success(MapUtil.builder()
                 .put("time", endTime - startTime)

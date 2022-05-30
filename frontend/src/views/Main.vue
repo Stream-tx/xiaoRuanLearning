@@ -99,13 +99,13 @@ export default {
           });
     },
     jumpToRecommand(){
-      if(this.recommandId==-1)
+      if(this.recommendId==-1)
       {
 
       }else{
-        window.localStorage.setItem("currentQuestionId", this.recommandId)
-        window.localStorage.setItem("questionId", this.recommandId)
-        this.$router.push("/miniSoft/bank/q/" +this.recommandId)
+        window.localStorage.setItem("currentQuestionId", this.recommendId)
+        window.localStorage.setItem("questionId", this.recommendId)
+        this.$router.push("/miniSoft/bank/q/" +this.recommendId)
 
       }
 
@@ -193,6 +193,7 @@ export default {
     /**
      * 监听悬浮拖拽区域
      */
+    this.getCurrentId()
     this.$nextTick(() => {
       // 获取DOM元素
       let dragArea = this.$refs.dragArea;

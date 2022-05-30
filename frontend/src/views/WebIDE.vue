@@ -5,9 +5,17 @@
     <div class="fzdm">
       <li @click="downloadHTML" >
         <img :src="downloadImgSrc" style="height:24px;width:24px"  />
-
       </li>
       <li @click="saveCode"><img :src="saveCodeImgSrc" style="height:24px;width:24px" /></li>
+      <li @click="switchTheme"><img :src="switchThemeImgSrc" style="height:24px;width:22px" /></li>
+      <li @click="searchKeyWord"><img :src="searchKeyWordImgSrc" @mouseover="showInput=true"  style="height:24px;width:22px" /></li>
+      <li ><input ref="searchBox" v-show =" showInput||inputText.length" v-model="inputText" @mouseover="showInput=true" @mouseout="showInput=false" style="font-size:17px;width:140px;height:18px;margin-top:3px;margin-bottom:2px"/></li>
+<!--      v-if=" showInput||inputText.length"-->
+      <li @click="replace"><img :src="replaceImgSrc" @mouseover="showReplace=true"  style="height:24px;width:23px" /></li>
+      <li><input v-if=" showReplace||replaceText.length"  v-model="replaceTextAfter" @mouseover="showReplace=true"  style="font-size:18px;width:140px;height:20px;margin-top:2px;margin-bottom:2px"/></li>
+      <li id="replaceLabel" v-if=" showReplace||replaceText.length" @mouseover="showReplace=true"  style="font-size:20px;">替换为</li>
+      <li><input v-if=" showReplace||replaceText.length"  v-model="replaceText" @mouseover="showReplace=true" @mouseout="showReplace=false" style="font-size:18px;width:140px;height:20px;margin-top:2px;margin-bottom:2px"/></li>
+<!--      showInput||inputText.length-->
     </div>
   <div class="codeEditBox">
     <v-ace-editor id="editor"
@@ -45,22 +53,103 @@ export default {
   components: {
     VAceEditor,
   },
+
   data() {
     return {
+      replaceText:"",
+      replaceTextAfter:"",
+      showReplace:"",
+
+      inputText:"",
+      showInput:'',
+      replaceImgSrc: require('@/assets/replace.png'),
       downloadImgSrc: require('@/assets/downLoad.png'),
+      searchKeyWordImgSrc:require("@/assets/searchKeyWord.png"),
       saveCodeImgSrc: require('@/assets/saveCode.png'),
+      switchThemeImgSrc:require('@/assets/switchTheme.png'),
       code: '',
       content:'',
-      editor:''
+      editor:'',
+      themeIndex:0,
+      themeArr:["ace/theme/clouds_midnight","ace/theme/chrome","ace/theme/mono_industrial","ace/theme/solarized_light"]
     };
   },
+  // computed:{
+  //   nice:{
+  //     function(){
+  //       if(this.inputText)
+  //         console.log('@')
+  //       return '5'
+  //     }
+  //   }
+  // }
+  // ,
+  // watch:{
+  //   inputText: {
+  //     handler() {
+  //       console.log('@')
+  //       //let searchBox = this.$refs.searchBox
+  //       //console.log(searchBox)
+  //       if (1) {
+  //         //searchBox.style.opacity = '1'
+  //       } else {
+  //        // searchBox.style.opacity = '0'
+  //       }
+  //
+  //     },
+  //     deep: true,
+  //     immediate:true
+  //   }
+  //
+  // },
   methods: {
+    replace(){
+
+      let editor = ace.edit('editor')
+      editor.find(this.replaceText,{
+        backwards: false,
+        wrap: true,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false
+      });
+      editor.replaceAll(this.replaceTextAfter)
+
+    },
+    searchKeyWord(){
+      //this.showInput = false
+      //console.log(this.showInput)
+      let editor = ace.edit('editor')
+      editor.find(this.inputText,{
+        backwards: false,
+        wrap: true,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false
+      });
+      //editor.findNext();
+
+    },
+    switchTheme(){
+      console.log(this.showInput)
+      let editor = ace.edit('editor')
+      //console.log(editor)
+      //editor.session.setMode("ace/mode/html");
+
+      this.themeIndex = (this.themeIndex+1)%this.themeArr.length
+      console.log(this.themeIndex)
+      editor.setTheme(this.themeArr[this.themeIndex])
+
+      //editor.findPrevious();
+      //editor.setTheme("ace/theme/solarized_dark")
+
+    },
     codeChange(val){
       console.log(val);
     },
     Run() {
       let editor = ace.edit('editor')
-      console.log(123)
+      //console.log(123)
   var o = document.getElementById("iframe");
 
   let ed = o.contentDocument;
@@ -89,6 +178,7 @@ export default {
     }
   },
   mounted(){
+    window.vue = this
     let editor = ace.edit('editor')
     console.log(editor)
     editor.session.setMode("ace/mode/html");
@@ -202,6 +292,9 @@ iframe {
 
 .fzdm li:hover {
   background-color: rgba(32, 103, 229, 1.00);
+}
+#replaceLabel:hover {
+  background-color: rgba(39, 39, 39, 1.00);
 }
 
 </style>

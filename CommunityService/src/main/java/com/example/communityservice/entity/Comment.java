@@ -21,5 +21,4 @@ public class Comment {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate commentTime;
 
-
 }
