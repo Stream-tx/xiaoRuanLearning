@@ -158,19 +158,28 @@ public class AIServiceImpl implements AIService {
         if(questions.size()==0){
             return null;
         }
+        List<QuestionEntity> an=questionRepository.listQuestion();
+        an.removeAll(questionList);
+        an.removeAll(questions);
         for(QuestionEntity qus:questions){
             if(res!=null) {
-                System.out.println(qus.getQuestionId());
-                System.out.println(qus.getLabels());
                 if (qus.getLabels().contains(res)) {
-                    return qus;
+                    an.add(qus);
                 }
             }
             else {
                 return qus;
             }
         }
-        return questions.get(1);
+        if(an.size()!=0)
+        {
+            Random random = new Random();
+            int n = random.nextInt(an.size());
+            return an.get(n);
+        }
+        Random random = new Random();
+        int n = random.nextInt(questions.size());
+        return questions.get(n);
     }
 
     public User findUserById(Long id) {
