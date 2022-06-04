@@ -112,7 +112,10 @@ export default {
                   console.log('登录失败');
                   return false;
                 }
-              })
+              }).catch(err => {
+                  alert("由于未知原因，登录失败")
+                  console.log(err)
+                })
         } else {
           console.log('登录失败');
           return false;

@@ -28,9 +28,9 @@
         <el-collapse-item title="评论" name="3">
           <el-card style="background-color: #444444" class="box-card" v-for="item in comments" :key="item.id"
             >
-            <h5 style="text-align: left;font-size: larger;color:floralwhite;margin:10px 18px;">{{item.userName}}</h5>
+            <h5 style="text-align: left;font-size: larger;color:floralwhite;margin:10px 18px;" @click="checkUser(item.userId)">{{item.userName}}</h5>
             <div style="color:floralwhite;font-size: larger;text-align: left;margin-left:18px;margin-bottom:10px;">
-              <span v-html="item.content"></span>
+              <span>{{item.content}}</span>
             </div>
             <el-row :gutter="20">
               <el-col :span="4">
@@ -71,10 +71,10 @@
       <div slot="header" class="clearfix">
         <el-row :gutter="20" style="margin-top: 7px;margin-bottom: 15px;">
           <el-col :span="1">
-            <img :src="item.headImgSrc" width="28" height="28"  style="border-radius:50%;margin-right:1px">
+            <img @click="checkUser(item.userid)" :src="item.headImgSrc" width="28" height="28"  style="border-radius:50%;margin-right:1px">
           </el-col>
           <el-col :span="8">
-            <p style="margin:1px;font-size: larger;text-align: left">{{item.userName}}</p>
+            <p style="margin:1px;font-size: larger;text-align: left" @click="checkUser(item.userid)">{{item.userName}}</p>
           </el-col>
           <el-col :span="7">
             <p style="margin:1px;font-size: larger;font-weight:bold;text-align: left">{{item.title}}</p>
@@ -181,6 +181,15 @@ export default {
     }
   },
   methods: {
+    checkUser(id){
+      window.localStorage.setItem("otherId", id)
+      var userInfo = JSON.parse(localStorage.getItem('token'))
+      console.log(userInfo)
+      if(userInfo.id==id)
+        this.$router.push("/miniSoft/myInfo")
+      else
+        this.$router.push("/miniSoft/otherInfo")
+    },
     updateHeadImg (currentID) {
       let avatar = ''
       if (currentID % 7 == 1) {

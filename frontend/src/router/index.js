@@ -44,6 +44,11 @@ const routes = [
         component: () => import('../views/MyInfo.vue'),
       },
       {
+        path: '/miniSoft/otherInfo',
+        //component: () => import('../views/mainPage.vue'),
+        component: () => import('../views/OtherInfo.vue'),
+      },
+      {
         path: '/miniSoft/alterInfo',
         //component: () => import('../views/mainPage.vue'),
         component: () => import('../views/alterMyInfo.vue'),
